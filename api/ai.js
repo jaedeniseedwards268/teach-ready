@@ -44,9 +44,11 @@ export default async function handler(req, res) {
     }
 
     const data = await r.json();
+    console.log("RAW OPENAI RESPONSE:", JSON.stringify(data, null, 2));
+
 
     // Robust extraction for all Responses API formats
-    const text = data.output
+     const text = data.output
       ?.flatMap(o => o.content)
       ?.filter(c => c.type === "output_text")
       ?.map(c => c.text)
