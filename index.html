@@ -96,6 +96,70 @@
   </div>
 
 <script>
+/* ---------------------- AI REQUEST FUNCTION ---------------------- */
+async function realAIRequest(prompt) {
+  const response = await fetch("/api/ai", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ prompt })
+  });
+
+  const data = await response.json();
+  return data.text || "No response received.";
+}
+
+/* ---------------------- SNAPSHOT BUILDER ---------------------- */
+function updateSnapshot(section, content) {
+  const snapshot = document.getElementById("snapshot");
+
+  let current = snapshot.textContent;
+  if (current === "Your lesson plan will appear here...") current = "";
+
+  const lines = current.split("\n").filter(l => l.trim() !== "");
+
+  const filtered = lines.filter(l => !l.startsWith(section + ":"));
+
+  filtered.push(section + ":\n" + content.trim());
+
+  snapshot.textContent = filtered.join("\n\n");
+}
+
+/* ---------------------- AI BUTTON HANDLERS ---------------------- */
+document.getElementById("aiObjectiveBtn").addEventListener("click", async () => {
+  const prompt = "Generate a clear, measurable learning objective for a K–12 computer science lesson.";
+  const result = await realAIRequest(prompt);
+  updateSnapshot("Objective", result);
+});
+
+document.getElementById("aiTaskBtn").addEventListener("click", async () => {
+  const prompt = "Generate a student-facing learning task for a K–12 computer science lesson.";
+  const result = await realAIRequest(prompt);
+  updateSnapshot("Learning Task", result);
+});
+
+document.getElementById("aiAssessmentBtn").addEventListener("click", async () => {
+  const prompt = "Generate a formative assessment aligned to a K–12 computer science lesson.";
+  const result = await realAIRequest(prompt);
+  updateSnapshot("Assessment", result);
+});
+
+document.getElementById("aiUDLBtn").addEventListener("click", async () => {
+  const prompt = "Generate UDL supports for engagement, representation, and action/expression for a K–12 computer science lesson.";
+  const result = await realAIRequest(prompt);
+  updateSnapshot("UDL Supports", result);
+});
+
+document.getElementById("aiFullLessonBtn").addEventListener("click", async () => {
+  const prompt = "Generate a full K–12 computer science lesson including objective, task, assessment, and UDL supports.";
+  const result = await realAIRequest(prompt);
+  updateSnapshot("Full Lesson", result);
+});
+
+/* ---------------------- RESET ---------------------- */
+document.getElementById("clearBtn").addEventListener("click", () => {
+  document.getElementById("snapshot").textContent = "Your lesson plan will appear here...";
+});
+
 /* ---------------------- EXPORT AS .TXT ---------------------- */
 document.getElementById("exportTxtBtn").addEventListener("click", () => {
   const snapshot = document.getElementById("snapshot").textContent;
@@ -109,7 +173,6 @@ document.getElementById("exportTxtBtn").addEventListener("click", () => {
 
   URL.revokeObjectURL(url);
 });
-
 
 /* ---------------------- EXPORT AS PDF ---------------------- */
 document.getElementById("exportPdfBtn").addEventListener("click", () => {
@@ -133,7 +196,6 @@ document.getElementById("exportPdfBtn").addEventListener("click", () => {
   win.print();
 });
 
-
 /* ---------------------- EXPORT AS .DOCX ---------------------- */
 document.getElementById("exportDocxBtn").addEventListener("click", async () => {
   const snapshot = document.getElementById("snapshot").textContent;
@@ -143,11 +205,9 @@ document.getElementById("exportDocxBtn").addEventListener("click", async () => {
     AlignmentType, WidthType, Footer, PageNumber, HeadingLevel, ImageRun
   } = window.docx;
 
-  /* Load the logo file directly */
   const logoBlob = await fetch("TeachReadyLogo.png").then(r => r.blob());
   const logoArrayBuffer = await logoBlob.arrayBuffer();
 
-  /* Header with logo + title */
   const header = new Paragraph({
     children: [
       new ImageRun({
@@ -165,7 +225,6 @@ document.getElementById("exportDocxBtn").addEventListener("click", async () => {
     spacing: { after: 300 }
   });
 
-  /* Convert snapshot into table rows */
   const lines = snapshot.split("\n");
   const rows = [];
   let currentLabel = "";
@@ -218,7 +277,6 @@ document.getElementById("exportDocxBtn").addEventListener("click", async () => {
     width: { size: 100, type: WidthType.PERCENTAGE }
   });
 
-  /* Footer with page numbers */
   const footer = new Footer({
     children: [
       new Paragraph({
