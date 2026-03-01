@@ -15,12 +15,18 @@ export default async function handler(req, res) {
     }
 
     const payload = {
-      model: "gpt-4o-mini",
-      messages: [
-        { role: "user", content: prompt }
-      ],
-      max_output_tokens: 800
-    };
+    model: "gpt-4o-mini",
+    messages: [
+      {
+        role: "user",
+        content: [
+          { type: "text", text: prompt }
+        ]
+      }
+    ],
+    max_output_tokens: 800
+  };
+
 
     const r = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
