@@ -70,7 +70,7 @@
 
     <!-- HEADER WITH LOGO -->
     <div class="card-header">
-      <img src="teachready-logo.png" alt="TeachReady Toolkit Logo" style="height:100px;">
+      <img src="TeachReadyLogo.png" alt="TeachReady Toolkit Logo" style="height:100px;">
       <h1>CSTA TeachReady Toolkit</h1>
       <h2>Lesson Planner</h2>
     </div>
@@ -119,7 +119,7 @@ document.getElementById("exportPdfBtn").addEventListener("click", () => {
 
   printable.innerHTML = `
     <div style="text-align:center;">
-      <img src="teachready-logo.png" style="height:120px;">
+      <img src="TeachReadyLogo.png" style="height:120px;">
       <h1>CSTA TeachReady Toolkit</h1>
     </div>
     <h2>Lesson Plan</h2>
@@ -144,7 +144,7 @@ document.getElementById("exportDocxBtn").addEventListener("click", async () => {
   } = window.docx;
 
   /* Load the logo file directly */
-  const logoBlob = await fetch("teachready-logo.png").then(r => r.blob());
+  const logoBlob = await fetch("TeachReadyLogo.png").then(r => r.blob());
   const logoArrayBuffer = await logoBlob.arrayBuffer();
 
   /* Header with logo + title */
