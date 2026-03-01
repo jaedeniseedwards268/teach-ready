@@ -14,13 +14,13 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: "Missing OPENAI_API_KEY" });
     }
 
-   const payload = {
-  model: "gpt-4o-mini",
-  messages: [
-    { role: "user", content: prompt }
-  ],
-  max_output_tokens: 800
-  };
+    const payload = {
+      model: "gpt-4o-mini",
+      messages: [
+        { role: "user", content: prompt }
+      ],
+      max_output_tokens: 800
+    };
 
     const r = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
@@ -38,13 +38,14 @@ export default async function handler(req, res) {
     }
 
     const data = await r.json();
-    const text = data.text;
-    ?.flatMap(o => o.content)
-    ?.filter(c => c.type === "output_text")
-    ?.map(c => c.text)
-    ?.join("\n")
-    ?.trim() || "";
 
+    // Robust extraction for all Responses API formats
+    const text = data.output
+      ?.flatMap(o => o.content)
+      ?.filter(c => c.type === "output_text")
+      ?.map(c => c.text)
+      ?.join("\n")
+      ?.trim() || "";
 
     return res.status(200).json({ text });
 
