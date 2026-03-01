@@ -55,6 +55,7 @@
       color: var(--text-muted);
       font-size: 0.9rem;
     }
+    <img src="TeachReadyLogo.png" alt="TeachReady Toolkit Logo" style="height:80px; margin-bottom:0.5rem;">
 
     .card {
       background: var(--bg-card);
@@ -165,6 +166,10 @@
       gap: 0.5rem;
       margin-top: 1.25rem;
       margin-bottom: 0.75rem;
+      <button id="clearBtn" class="secondary">Reset All</button>
+      <button id="exportTxtBtn" class="outline">Export as .txt</button>
+      <button id="exportDocxBtn" class="outline">Export as .docx</button>
+      <button id="exportPdfBtn" class="outline">Export as PDF</button>     
     }
 
     button {
@@ -180,7 +185,7 @@
       align-items: center;
       gap: 0.25rem;
     }
-
+    
     button:hover {
       background-color: #1d4ed8;
     }
@@ -252,6 +257,8 @@
       }
     }
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.3.2/docx.min.js"></script>
+
 </head>
 <body>
   <main class="page">
@@ -840,7 +847,126 @@
           updateEquityWarning();
         });
       });
+    document.getElementById("exportDocxBtn").addEventListener("click", async () => {
+  const snapshot = document.getElementById("snapshot").textContent;
+  const lines = snapshot.split("\n");
 
+  const { 
+    Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
+    AlignmentType, WidthType, Footer, PageNumber, HeadingLevel 
+  } = window.docx;
+
+  // Optional school branding
+  const header = new Paragraph({
+    children: [
+      new TextRun({
+        text: "TeachReady Lesson Plan",
+        bold: true,
+        size: 32
+      })
+    ],
+    alignment: AlignmentType.CENTER,
+    spacing: { after: 300 }
+  });
+
+  // Convert snapshot into table rows
+  const rows = [];
+  let currentLabel = "";
+  let currentValue = "";
+
+  lines.forEach(line => {
+    if (line.endsWith(":")) {
+      if (currentLabel) {
+        rows.push(
+          new TableRow({
+            children: [
+              new TableCell({
+                children: [new Paragraph({ text: currentLabel, bold: true })],
+                width: { size: 30, type: WidthType.PERCENTAGE }
+              }),
+              new TableCell({
+                children: [new Paragraph(currentValue.trim())],
+                width: { size: 70, type: WidthType.PERCENTAGE }
+              })
+            ]
+          })
+        );
+      }
+      currentLabel = line.replace(":", "");
+      currentValue = "";
+    } else {
+      currentValue += line + "\n";
+    }
+  });
+
+  // Add last row
+  if (currentLabel) {
+    rows.push(
+      new TableRow({
+        children: [
+          new TableCell({
+            children: [new Paragraph({ text: currentLabel, bold: true })],
+            width: { size: 30, type: WidthType.PERCENTAGE }
+          }),
+          new TableCell({
+            children: [new Paragraph(currentValue.trim())],
+            width: { size: 70, type: WidthType.PERCENTAGE }
+          })
+        ]
+      })
+    );
+  }
+
+  const table = new Table({
+    rows,
+    width: { size: 100, type: WidthType.PERCENTAGE }
+  });
+
+    // Footer with page numbers
+    const footer = new Footer({
+      children: [
+        new Paragraph({
+          children: [
+            new TextRun("Page "),
+            PageNumber.CURRENT,
+            new TextRun(" of "),
+            PageNumber.TOTAL_PAGES
+          ],
+          alignment: AlignmentType.CENTER
+        })
+      ]
+    });
+  
+    const doc = new Document({
+      sections: [
+        {
+          headers: { default: header },
+          footers: { default: footer },
+          children: [
+            new Paragraph({
+              text: "Lesson Plan",
+              heading: HeadingLevel.HEADING_1,
+              spacing: { after: 300 }
+            }),
+            table
+          ]
+        }
+      ]
+    });
+
+  const blob = await Packer.toBlob(doc);
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "lesson-plan.docx";
+  a.click();
+
+  URL.revokeObjectURL(url);
+});
+ 
+      
+      
       // example loader
       document.getElementById("exampleLoader").addEventListener("change", (e) => {
         const key = e.target.value;
@@ -930,6 +1056,299 @@
       buildSnapshot();
       updateEquityWarning();
     });
+    document.getElementById("exportTxtBtn").addEventListener("click", () => {
+  const snapshot = document.getElementById("snapshot").textContent;
+  const blob = new Blob([snapshot], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "lesson-plan.txt";
+  a.click();
+
+  URL.revokeObjectURL(url);
+});
+   document.getElementById("exportDocxBtn").addEventListener("click", async () => {
+  const snapshot = document.getElementById("snapshot").textContent;
+
+  const {
+    Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
+    AlignmentType, WidthType, Footer, PageNumber, HeadingLevel, ImageRun
+  } = window.docx;
+
+  // Load the logo file directly
+  const logoBlob = await fetch("TeachReadyLogo.png").then(r => r.blob());
+  const logoArrayBuffer = await logoBlob.arrayBuffer();
+
+  const header = new Paragraph({
+    children: [
+      new ImageRun({
+        data: logoArrayBuffer,
+        transformation: { width: 140, height: 140 }
+      }),
+      new TextRun({
+        text: "CSTA TeachReady Toolkit",
+        bold: true,
+        size: 32,
+        break: 1
+      })
+    ],
+    alignment: AlignmentType.CENTER,
+    spacing: { after: 300 }
+  });
+
+  const lines = snapshot.split("\n");
+  const rows = [];
+  let currentLabel = "";
+  let currentValue = "";
+
+  lines.forEach(line => {
+    if (line.endsWith(":")) {
+      if (currentLabel) {
+        rows.push(
+          new TableRow({
+            children: [
+              new TableCell({
+                children: [new Paragraph({ text: currentLabel, bold: true })],
+                width: { size: 30, type: WidthType.PERCENTAGE }
+              }),
+              new TableCell({
+                children: [new Paragraph(currentValue.trim())],
+                width: { size: 70, type: WidthType.PERCENTAGE }
+              })
+            ]
+          })
+        );
+      }
+      currentLabel = line.replace(":", "");
+      currentValue = "";
+    } else {
+      currentValue += line + "\n";
+    }
+  });
+
+  if (currentLabel) {
+    rows.push(
+      new TableRow({
+        children: [
+          new TableCell({
+            children: [new Paragraph({ text: currentLabel, bold: true })],
+            width: { size: 30, type: WidthType.PERCENTAGE }
+          }),
+          new TableCell({
+            children: [new Paragraph(currentValue.trim())],
+            width: { size: 70, type: WidthType.PERCENTAGE }
+          })
+        ]
+      })
+    );
+  }
+
+  const table = new Table({
+    rows,
+    width: { size: 100, type: WidthType.PERCENTAGE }
+  });
+
+  const footer = new Footer({
+    children: [
+      new Paragraph({
+        children: [
+          new TextRun("Page "),
+          PageNumber.CURRENT,
+          new TextRun(" of "),
+          PageNumber.TOTAL_PAGES
+        ],
+        alignment: AlignmentType.CENTER
+      })
+    ]
+  });
+
+  const doc = new Document({
+    sections: [
+      {
+        headers: { default: header },
+        footers: { default: footer },
+        children: [
+          new Paragraph({
+            text: "Lesson Plan",
+            heading: HeadingLevel.HEADING_1,
+            spacing: { after: 300 }
+          }),
+          table
+        ]
+      }
+    ]
+  });
+
+  const blob = await Packer.toBlob(doc);
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "lesson-plan.docx";
+  a.click();
+
+  URL.revokeObjectURL(url);
+});
+
+
+  // Convert snapshot into table rows
+  const lines = snapshot.split("\n");
+  const rows = [];
+  let currentLabel = "";
+  let currentValue = "";
+
+  lines.forEach(line => {
+    if (line.endsWith(":")) {
+      if (currentLabel) {
+        rows.push(
+          new TableRow({
+            children: [
+              new TableCell({
+                children: [new Paragraph({ text: currentLabel, bold: true })],
+                width: { size: 30, type: WidthType.PERCENTAGE }
+              }),
+              new TableCell({
+                children: [new Paragraph(currentValue.trim())],
+                width: { size: 70, type: WidthType.PERCENTAGE }
+              })
+            ]
+          })
+        );
+      }
+      currentLabel = line.replace(":", "");
+      currentValue = "";
+    } else {
+      currentValue += line + "\n";
+    }
+  });
+
+  // Add last row
+  if (currentLabel) {
+    rows.push(
+      new TableRow({
+        children: [
+          new TableCell({
+            children: [new Paragraph({ text: currentLabel, bold: true })],
+            width: { size: 30, type: WidthType.PERCENTAGE }
+          }),
+          new TableCell({
+            children: [new Paragraph(currentValue.trim())],
+            width: { size: 70, type: WidthType.PERCENTAGE }
+          })
+        ]
+      })
+    );
+  }
+
+  const table = new Table({
+    rows,
+    width: { size: 100, type: WidthType.PERCENTAGE }
+  });
+
+  // Footer with page numbers
+  const footer = new Footer({
+    children: [
+      new Paragraph({
+        children: [
+          new TextRun("Page "),
+          PageNumber.CURRENT,
+          new TextRun(" of "),
+          PageNumber.TOTAL_PAGES
+        ],
+        alignment: AlignmentType.CENTER
+      })
+    ]
+  });
+
+  const doc = new Document({
+    sections: [
+      {
+        headers: { default: header },
+        footers: { default: footer },
+        children: [
+          new Paragraph({
+            text: "Lesson Plan",
+            heading: HeadingLevel.HEADING_1,
+            spacing: { after: 300 }
+          }),
+          table
+        ]
+      }
+    ]
+  });
+
+  const blob = await Packer.toBlob(doc);
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "lesson-plan.docx";
+  a.click();
+
+  URL.revokeObjectURL(url);
+});
+
+  const lines = snapshot.split("\n").map(line => {
+    if (line.endsWith(":")) {
+      return new Paragraph({
+        children: [new TextRun({ text: line, bold: true })],
+        spacing: { after: 200 }
+      });
+    } else {
+      return new Paragraph({
+        children: [new TextRun(line)],
+        spacing: { after: 100 }
+      });
+    }
+  });
+
+  const doc = new Document({
+    sections: [{ properties: {}, children: lines }]
+  });
+
+  const blob = await Packer.toBlob(doc);
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "lesson-plan.docx";
+  a.click();
+
+  URL.revokeObjectURL(url);
+});
+    document.getElementById("exportPdfBtn").addEventListener("click", () => {
+  const printable = document.createElement("div");
+  printable.style.padding = "2rem";
+  printable.style.fontFamily = "serif";
+  printable.innerHTML = "<h1>Lesson Plan</h1><pre>" + 
+    document.getElementById("snapshot").textContent +
+    "</pre>";
+
+  const win = window.open("", "_blank");
+  win.document.write(printable.outerHTML);
+  win.document.close();
+  win.focus();
+  win.print();
+});
+async function imageUrlToBase64(url) {
+  const res = await fetch(url);
+  const blob = await res.blob();
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result.split(",")[1]);
+    reader.readAsDataURL(blob);
+  });
+}
+printable.innerHTML = `
+  <div style="text-align:center;">
+    <img src="YOUR_LOGO_FILE_NAME.png" style="height:120px;">
+    <h1>CSTA TeachReady Toolkit</h1>
+  </div>
+  <h2>Lesson Plan</h2>
+  <pre>${document.getElementById("snapshot").textContent}</pre>
+`;
+
   </script>
 </body>
 </html>
