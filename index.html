@@ -1,324 +1,891 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TeachReady Toolkit Lesson Planner</title>
-
-  <!-- docx.js for .docx export -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.3.2/docx.min.js"></script>
-
+  <meta charset="utf-8" />
+  <title>CS Teaching Toolkit — AI‑Powered Lesson Planner</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      margin: 0;
-      padding: 0;
+    :root{
+      --bg:#f7f7fb;--card:#fff;--border:#d0d0e0;--accent:#2b6cb0;--accent-soft:#ebf4ff;
+      --text:#1a202c;--muted:#4a5568;--danger:#c53030;--radius:8px;--font:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     }
-
-    .container {
-      max-width: 900px;
-      margin: 2rem auto;
-      background: white;
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-
-    .card-header {
-      text-align: center;
-      margin-bottom: 1rem;
-    }
-
-    .button-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-    }
-
-    button {
-      padding: 0.6rem 1rem;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      font-size: 0.9rem;
-    }
-
-    button.outline {
-      border: 1px solid #444;
-      background: white;
-    }
-
-    button.secondary {
-      background: #ddd;
-    }
-
-    #snapshot {
-      white-space: pre-wrap;
-      background: #fafafa;
-      padding: 1rem;
-      border-radius: 6px;
-      border: 1px solid #ddd;
-      min-height: 200px;
+    *{box-sizing:border-box}
+    body{margin:0;padding:1rem;font-family:var(--font);background:var(--bg);color:var(--text)}
+    h1,h2,h3{margin:0;color:var(--accent)}
+    .page{max-width:1300px;margin:0 auto;display:grid;grid-template-columns:2fr 1.3fr;gap:1.25rem}
+    @media(max-width:1000px){.page{grid-template-columns:1fr}}
+    .card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:1rem;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+    .card-header{display:flex;justify-content:space-between;align-items:baseline;gap:.5rem;margin-bottom:.5rem}
+    label{font-weight:600;display:inline-block;margin-bottom:.25rem}
+    input[type="text"],textarea,select{width:100%;padding:.4rem .5rem;border-radius:4px;border:1px solid var(--border);font:inherit;background:#fff}
+    textarea{min-height:80px;resize:vertical}
+    .row{display:flex;flex-wrap:wrap;gap:.75rem}
+    .row>.field{flex:1 1 180px;min-width:0}
+    .field{margin-bottom:.75rem}
+    .checkbox-group{display:flex;flex-wrap:wrap;gap:.4rem .75rem}
+    .checkbox-pill{display:inline-flex;align-items:center;gap:.25rem;padding:.25rem .5rem;border-radius:999px;border:1px solid var(--border);background:var(--accent-soft);font-size:.85rem;cursor:pointer}
+    .checkbox-pill input{margin:0}
+    .section-title{margin-top:.75rem;margin-bottom:.25rem;font-size:.95rem;font-weight:700;color:var(--text)}
+    .hint{font-size:.8rem;color:var(--muted);margin-bottom:.25rem}
+    .buttons{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.75rem}
+    button{border-radius:999px;border:1px solid var(--accent);background:var(--accent);color:#fff;padding:.4rem .9rem;font:inherit;cursor:pointer}
+    button.secondary{background:transparent;color:var(--accent)}
+    button.danger{border-color:var(--danger);color:var(--danger);background:transparent}
+    .snapshot-empty{color:var(--muted);font-style:italic}
+    .badge{display:inline-block;padding:.1rem .4rem;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:.75rem;margin-left:.25rem}
+    .warning{color:var(--danger);font-size:.8rem;margin-top:.25rem}
+    .snapshot h3{margin:.4rem 0 .1rem;font-size:1rem}
+    .snapshot p{margin:.1rem 0 .3rem}
+    .snapshot ul{margin:.1rem 0 .3rem;padding-left:1.1rem}
+    .right-column{display:flex;flex-direction:column;gap:.75rem}
+    .ai-quick-actions{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.5rem}
+    .ai-quick-actions button{font-size:.8rem;padding:.25rem .6rem}
+    .ai-output{border:1px solid var(--border);border-radius:6px;padding:.5rem;max-height:180px;overflow:auto;font-size:.85rem;background:#fff}
+    .ai-output p{margin:.2rem 0}
+    .ai-label{font-weight:600;color:var(--accent);margin-bottom:.25rem}
+    .ai-chat-log{border:1px solid var(--border);border-radius:6px;padding:.5rem;max-height:160px;overflow:auto;font-size:.85rem;background:#fff;margin-bottom:.4rem}
+    .ai-msg-user{margin:.15rem 0;color:var(--text)}
+    .ai-msg-user span{font-weight:600;color:var(--accent)}
+    .ai-msg-assistant{margin:.15rem 0;color:var(--muted)}
+    .ai-chat-input{display:flex;gap:.4rem;margin-top:.25rem}
+    .ai-chat-input textarea{min-height:40px;max-height:80px}
+    .apply-row{display:flex;gap:.4rem;margin-top:.4rem;flex-wrap:wrap}
+    .apply-row button{font-size:.8rem;padding:.25rem .6rem}
+    .small-muted{font-size:.8rem;color:var(--muted)}
+    .ai-top{margin-bottom:.5rem}
+    @media print{
+      body{padding:0;background:#fff}
+      .buttons,.ai-chat-input,.ai-quick-actions{display:none !important}
     }
   </style>
+  <!-- jsPDF for branded PDF export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
-
 <body>
-  <div class="container">
+  <main class="page">
 
-    <!-- HEADER WITH LOGO -->
-    <div class="card-header">
-      <img src="TeachReadyLogo.png" alt="TeachReady Toolkit Logo" style="height:100px;">
-      <h1>CSTA TeachReady Toolkit</h1>
-      <h2>Lesson Planner</h2>
+    <!-- AI LESSON ASSISTANT — FULL WIDTH, TOP, SPANNING BOTH COLUMNS -->
+    <section class="card ai-top" aria-label="AI assistant" style="grid-column:1 / -1;">
+      <div class="card-header">
+        <h2>AI Lesson Assistant</h2>
+        <small class="small-muted">Structured prompts + chat, aligned to your current plan.</small>
+      </div>
+
+      <div class="section-title">Quick AI Prompts</div>
+      <div class="hint">Uses your current grade band, CT practice, and CS standards.</div>
+      <div class="ai-quick-actions" role="toolbar" aria-label="AI quick actions">
+        <button id="aiObjectiveBtn">Generate Objective</button>
+        <button id="aiTaskBtn">Generate Student Task</button>
+        <button id="aiAssessmentBtn">Assessment Ideas</button>
+        <button id="aiUDLBtn">UDL & Equity Supports</button>
+        <button id="aiFullLessonBtn">Full Lesson Draft</button>
+      </div>
+
+      <div class="section-title">AI Output</div>
+      <div id="aiOutput" class="ai-output" aria-live="polite">
+        <p class="ai-label">AI suggestions will appear here.</p>
+        <p class="small-muted">Use quick buttons or ask a question below. Responses can be applied to fields.</p>
+      </div>
+
+      <div class="apply-row" id="applyRow" style="display:none">
+        <button id="applyObjective" class="secondary">Insert Objective</button>
+        <button id="applyTask" class="secondary">Insert Student Task</button>
+        <button id="applyAssessment" class="secondary">Insert Assessment</button>
+        <button id="applyUDL" class="secondary">Insert UDL Supports</button>
+        <button id="applyFull" class="secondary">Apply Full Lesson</button>
+      </div>
+
+      <div class="section-title" style="margin-top:.75rem">Chat with the Assistant</div>
+      <div id="aiChatLog" class="ai-chat-log" aria-live="polite">
+        <div class="ai-msg-assistant">Assistant: Ask for adaptations, simplifications, or extensions.</div>
+      </div>
+      <div class="ai-chat-input">
+        <textarea id="aiChatInput" placeholder="Ask for an unplugged version, UDL supports, extensions, etc."></textarea>
+        <button id="aiChatSendBtn">Send</button>
+      </div>
+    </section>
+
+    <!-- LEFT COLUMN: LESSON PLAN FORM -->
+    <section class="card" aria-label="Lesson plan form">
+      <div class="card-header">
+        <div>
+          <h1>CS Teaching Toolkit – Lesson Plan</h1>
+          <small class="small-muted">UDL, accessibility, and CS standards built in.</small>
+        </div>
+      </div>
+
+      <section>
+        <label for="exampleLoader">Load Example Lesson</label>
+        <select id="exampleLoader" aria-label="Load example lesson">
+          <option value="">Choose an example…</option>
+          <option value="ex1">Debugging with Story Sequences (K–2)</option>
+          <option value="ex2">Pattern Recognition with Emoji Sorting (3–5)</option>
+          <option value="ex3">Intro to Variables with Scratch (6–8)</option>
+          <option value="ex4">Data Visualizations with Spreadsheets (9–12)</option>
+        </select>
+      </section>
+
+      <hr />
+
+      <section>
+        <h2>Lesson Information</h2>
+
+        <div class="field">
+          <label for="lessonTitle">Lesson Title</label>
+          <input id="lessonTitle" type="text" />
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="gradeBand">Grade Band</label>
+            <select id="gradeBand">
+              <option value="">Select…</option>
+              <option>K–2</option>
+              <option>3–5</option>
+              <option>6–8</option>
+              <option>9–12</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="timeEstimate">Estimated Time</label>
+            <input id="timeEstimate" type="text" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="learningObjective">Learning Objective</label>
+          <textarea id="learningObjective" aria-label="Learning objective"></textarea>
+        </div>
+      </section>
+
+      <hr />
+
+      <section>
+        <h2>CS Standards Alignment</h2>
+        <div class="hint">Select all CSTA student standards this lesson supports.</div>
+        <div class="checkbox-group" id="csStudentStandards" role="group" aria-label="CS student standards">
+          <label class="checkbox-pill"><input type="checkbox" value="Computing Systems" />Computing Systems</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Networks and the Internet" />Networks & Internet</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Data and Analysis" />Data & Analysis</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Algorithms and Programming" />Algorithms & Programming</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Impacts of Computing" />Impacts of Computing</label>
+        </div>
+
+        <div class="section-title">Specific CSTA Codes (Auto‑Generated)</div>
+        <div id="cstaCodes" class="hint">Select a grade band + standards to generate codes.</div>
+      </section>
+
+      <hr />
+
+      <section>
+        <h2>Computational Thinking Practice</h2>
+        <select id="ctPractice">
+          <option value="">Select…</option>
+          <option>Decomposition</option>
+          <option>Pattern Recognition</option>
+          <option>Abstraction</option>
+          <option>Algorithmic Thinking</option>
+          <option>Debugging</option>
+        </select>
+      </section>
+
+      <hr />
+
+      <section>
+        <h2>Activity Selection & Equity Check</h2>
+
+        <label>Primary Activity Type</label>
+        <select id="activityType">
+          <option value="">Select…</option>
+          <option>Unplugged / Low-Tech Activity</option>
+          <option>Guided Coding Practice</option>
+          <option>Discussion or Reasoning Task</option>
+          <option>Simulation or Modeling</option>
+          <option>Game-Based or Challenge Activity</option>
+          <option>Project / Creation Task</option>
+        </select>
+
+        <div class="section-title">Why this activity?</div>
+        <div class="checkbox-group" id="activityRationale">
+          <label class="checkbox-pill"><input type="checkbox" value="Supports CS standard" />Supports CS standard</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Emphasizes CT practice" />Emphasizes CT practice</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Reasoning over speed" />Reasoning over speed</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Adaptable if conditions change" />Adaptable</label>
+        </div>
+
+        <div class="section-title">Equity Check</div>
+        <div class="hint">Select at least one. If none apply, revise the activity.</div>
+        <div class="checkbox-group" id="equityCheck">
+          <label class="checkbox-pill"><input type="checkbox" value="Low-tech option" />Low-tech option</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Multiple ways to engage" />Multiple ways to engage</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Predictable routine" />Predictable routine</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Reduced load" />Reduced load</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Peer-supported" />Peer-supported</label>
+        </div>
+
+        <div class="section-title">Tool Dependence Check</div>
+        <div class="checkbox-group" id="toolCheck">
+          <label class="checkbox-pill"><input type="checkbox" value="Tool essential" />Tool essential</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Tool supports practice" />Supports practice</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Tool optional" />Tool optional</label>
+        </div>
+
+        <div id="equityWarning" class="warning" aria-live="polite"></div>
+      </section>
+
+      <hr />
+
+      <section>
+        <h2>Student Task Description</h2>
+        <textarea id="studentTask"></textarea>
+      </section>
+
+      <hr />
+
+      <section>
+        <h2>Assessment / Evidence of Learning</h2>
+        <div class="checkbox-group" id="assessmentTypes">
+          <label class="checkbox-pill"><input type="checkbox" value="Exit Ticket" />Exit Ticket</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Product / Artifact" />Product / Artifact</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Discussion / Explanation" />Discussion / Explanation</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Observation / Checklist" />Observation / Checklist</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Reflection" />Reflection</label>
+        </div>
+      </section>
+
+      <hr />
+
+      <section>
+        <h2>Accessibility & Inclusivity Design</h2>
+        <div class="checkbox-group" id="accessDesign">
+          <label class="checkbox-pill"><input type="checkbox" value="Low-tech alternative" />Low-tech alternative</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Multiple ways to engage" />Multiple ways to engage</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Multiple ways to show learning" />Multiple ways to show learning</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Predictable routine" />Predictable routine</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Reduced reading/writing" />Reduced reading/writing</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Flexible pacing" />Flexible pacing</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Collaborative option" />Collaborative option</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Language supports" />Language supports</label>
+        </div>
+      </section>
+
+      <hr />
+
+      <section>
+        <h2>AI & Digital Tool Use</h2>
+        <div class="checkbox-group" id="aiUse">
+          <label class="checkbox-pill"><input type="checkbox" value="No digital tools" />No digital tools</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Supports exploration" />Supports exploration</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Supports feedback" />Supports feedback</label>
+          <label class="checkbox-pill"><input type="checkbox" value="AI for brainstorming" />AI for brainstorming</label>
+          <label class="checkbox-pill"><input type="checkbox" value="AI restricted" />AI restricted</label>
+        </div>
+      </section>
+
+      <hr />
+
+      <section>
+        <h2>Teacher Reflection / Iteration Notes</h2>
+        <textarea id="teacherReflection"></textarea>
+      </section>
+
+      <div class="buttons">
+        <button id="exportTxtBtn">Export as Text</button>
+        <button id="exportDocxBtn" class="secondary">Export as DOCX</button>
+        <button id="exportPdfBtn" class="secondary">Export Branded PDF</button>
+        <button class="secondary" id="printBtn">Print / Browser PDF</button>
+        <button class="danger" id="clearBtn">Clear All</button>
+      </div>
+    </section>
+
+    <!-- RIGHT COLUMN: SNAPSHOT -->
+    <section class="right-column" aria-label="Snapshot column">
+      <aside class="card" aria-label="Lesson snapshot">
+        <div class="card-header">
+          <h2>Lesson Snapshot</h2>
+          <small class="small-muted">Auto‑updates as you plan.</small>
+        </div>
+        <div id="snapshot" class="snapshot snapshot-empty">Start filling in the lesson plan on the left.</div>
+      </aside>
+    </section>
+
+  </main>
+
+  <script>
+    /* ---------------------------
+       Prompt templates and builder
+       --------------------------- */
+    function buildPrompt(type, context, userMessage = "") {
+      const standardsText = context.standards.length ? context.standards.join(", ") : "[none selected]";
+      const grade = context.grade || "[grade not set]";
+      const ct = context.ct || "[CT practice not set]";
+      const activity = context.activityType || "[activity not set]";
+
+      const templates = {
+        objective: `You are an instructional coach helping a preservice teacher write a clear, student-friendly learning objective.
+
+GRADE BAND: ${grade}
+CS STANDARDS: ${standardsText}
+CT PRACTICE: ${ct}
+ACTIVITY TYPE: ${activity}
+
+Write a single "I can..." objective that:
+- Uses student-friendly language
+- Connects directly to the CS standard(s)
+- Reflects the CT practice
+- Fits the activity type
+- Is appropriate for the grade band
+Respond with a single concise sentence starting with "I can".`,
+
+        task: `You are designing a student task for a CS lesson.
+
+GRADE BAND: ${grade}
+CS STANDARDS: ${standardsText}
+CT PRACTICE: ${ct}
+ACTIVITY TYPE: ${activity}
+
+Write a student task description that:
+- Clearly describes what students will do
+- Includes an unplugged or low-tech option if possible
+- Emphasizes reasoning over speed
+- Supports collaboration and accessibility
+- Fits the selected CT practice and CS standard
+Keep it practical and classroom-ready; limit to 3-6 sentences.`,
+
+        assessment: `You are generating assessment options for a CS lesson.
+
+GRADE BAND: ${grade}
+CS STANDARDS: ${standardsText}
+CT PRACTICE: ${ct}
+ACTIVITY TYPE: ${activity}
+
+Provide 3–5 assessment ideas that:
+- Are quick and practical
+- Show evidence of understanding
+- Include at least one low‑barrier option
+- Are appropriate for the grade band
+Return each idea as a short bullet.`,
+
+        udl: `You are adding UDL and equity supports to a CS lesson.
+
+GRADE BAND: ${grade}
+CS STANDARDS: ${standardsText}
+CT PRACTICE: ${ct}
+ACTIVITY TYPE: ${activity}
+
+Provide supports that:
+- Offer multiple ways to engage
+- Offer multiple ways to show learning
+- Reduce reading/writing load
+- Support English learners
+- Support students who need more structure
+Return 4-6 concrete, classroom-ready supports.`,
+
+        full: `You are generating a full CS lesson draft for a preservice teacher.
+
+GRADE BAND: ${grade}
+CS STANDARDS: ${standardsText}
+CT PRACTICE: ${ct}
+ACTIVITY TYPE: ${activity}
+
+Write a short, clear lesson draft including labeled sections:
+Objective:
+Student Task:
+Assessment:
+UDL & Equity Supports:
+Keep each section concise and practical for novice teachers.`,
+
+        chat: `You are an instructional coach helping a preservice teacher refine a CS lesson.
+
+GRADE BAND: ${grade}
+CS STANDARDS: ${standardsText}
+CT PRACTICE: ${ct}
+ACTIVITY TYPE: ${activity}
+
+Teacher request:
+"${userMessage}"
+
+Respond with:
+- A clear explanation
+- A concrete suggestion
+- A classroom-ready example`
+      };
+
+      return templates[type] || "";
+    }
+
+    /* ---------------------------
+       Server call wrapper
+       --------------------------- */
+
+    const API_ENDPOINT = "/api/ai"; // update to your serverless endpoint (recommended)
+    const USE_CLIENT_KEY = false;    // set true only if you will embed a key (not recommended)
+
+    async function realAIRequest(type, context, userMessage = "") {
+      const prompt = buildPrompt(type, context, userMessage);
+
+      try {
+        const res = await fetch(API_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt, type })
+        });
+
+        if (!res.ok) {
+          console.warn("AI endpoint returned error, falling back to local generator.");
+          return fakeAIResponse(type, context, userMessage);
+        }
+
+        const data = await res.json();
+        return (data && (data.text || data.result || data.output)) || fakeAIResponse(type, context, userMessage);
+      } catch (err) {
+        console.warn("AI request failed, using local fallback.", err);
+        return fakeAIResponse(type, context, userMessage);
+      }
+    }
+
+    /* ---------------------------
+       Local fallback generator
+       --------------------------- */
+    function fakeAIResponse(type, context, userMessage = "") {
+      const grade = context.grade || "[grade not set]";
+      const ct = context.ct || "[CT practice not set]";
+      const standards = context.standards.length ? context.standards.join(", ") : "[standards not set]";
+      const activity = context.activityType || "[activity not set]";
+
+      if (type === "objective") {
+        return `I can use ${ct.toLowerCase()} to explore ${standards.toLowerCase()} through a ${activity.toLowerCase()} in ${grade}.`;
+      }
+      if (type === "task") {
+        return `Students will complete a ${activity.toLowerCase()} where they apply ${ct.toLowerCase()} to a concrete problem related to ${standards.toLowerCase()}. Include a low-tech option using paper or manipulatives.`;
+      }
+      if (type === "assessment") {
+        return `• Exit ticket: one-sentence explanation of how they used ${ct.toLowerCase()}.\n• Observation checklist focused on reasoning.\n• Product sample or quick peer explanation.`;
+      }
+      if (type === "udl") {
+        return `Provide a visual model, a sentence starter bank, a hands-on alternative, options to respond verbally or in writing, and a predictable agenda with time checks.`;
+      }
+      if (type === "full") {
+        return `Objective: I can use ${ct.toLowerCase()} to explore ${standards.toLowerCase()} through a ${activity.toLowerCase()} in ${grade}.\n\nStudent Task: Students work in pairs to complete a ${activity.toLowerCase()} applying ${ct.toLowerCase()}, explain their reasoning, and share one example.\n\nAssessment: Observation checklist and a short exit ticket asking how they used ${ct.toLowerCase()}.\n\nUDL & Equity Supports: Visual model, sentence starters, low-tech option, peer support, and flexible pacing.`;
+      }
+      if (type === "chat") {
+        return `Suggestion: ${userMessage}. Try simplifying the task into 3 steps, provide a visual example, and offer a low-tech alternative for students without devices.`;
+      }
+      return "No response available.";
+    }
+
+    /* ---------------------------
+       Helpers: context, parsing, applying AI output
+       --------------------------- */
+    function getPlanningContext() {
+      return {
+        grade: document.getElementById("gradeBand").value,
+        ct: document.getElementById("ctPractice").value,
+        standards: getCheckedValues("csStudentStandards"),
+        activityType: document.getElementById("activityType").value,
+        objective: document.getElementById("learningObjective").value.trim(),
+        task: document.getElementById("studentTask").value.trim()
+      };
+    }
+
+    function getCheckedValues(containerId) {
+      return Array.from(document.querySelectorAll(`#${containerId} input[type="checkbox"]:checked`)).map(cb => cb.value);
+    }
+
+    function setChecks(containerId, values) {
+      document.querySelectorAll(`#${containerId} input[type="checkbox"]`).forEach(cb => cb.checked = values.includes(cb.value));
+    }
+
+    function generateCSTACodes() {
+      const cstaMap = {
+        "K–2": {"Computing Systems":["1A-CS-01","1A-CS-02"],"Networks and the Internet":["1A-NI-04"],"Data and Analysis":["1A-DA-05"],"Algorithms and Programming":["1A-AP-08","1A-AP-09"],"Impacts of Computing":["1A-IC-16"]},
+        "3–5": {"Computing Systems":["1B-CS-01","1B-CS-02"],"Networks and the Internet":["1B-NI-05"],"Data and Analysis":["1B-DA-07","1B-DA-08"],"Algorithms and Programming":["1B-AP-10","1B-AP-12","1B-AP-13"],"Impacts of Computing":["1B-IC-18"]},
+        "6–8": {"Computing Systems":["2-CS-01","2-CS-02"],"Networks and the Internet":["2-NI-04"],"Data and Analysis":["2-DA-08","2-DA-09"],"Algorithms and Programming":["2-AP-10","2-AP-13","2-AP-17"],"Impacts of Computing":["2-IC-21"]},
+        "9–12": {"Computing Systems":["3A-CS-01","3A-CS-02"],"Networks and the Internet":["3A-NI-04"],"Data and Analysis":["3A-DA-09","3A-DA-11"],"Algorithms and Programming":["3A-AP-13","3A-AP-17"],"Impacts of Computing":["3A-IC-25"]}
+      };
+      const grade = document.getElementById("gradeBand").value;
+      const selected = getCheckedValues("csStudentStandards");
+      const container = document.getElementById("cstaCodes");
+      if (!grade || selected.length === 0) { container.innerHTML = "Select a grade band + standards to generate codes."; return; }
+      const map = cstaMap[grade] || {};
+      let codes = [];
+      selected.forEach(s => { if (map[s]) codes = codes.concat(map[s]); });
+      if (!codes.length) { container.innerHTML = "No mapped codes for this combination yet."; return; }
+      container.innerHTML = "<strong>Suggested CSTA codes:</strong> " + [...new Set(codes)].join(", ");
+    }
+
+    function buildSnapshot() {
+      const snapshot = document.getElementById("snapshot");
+      snapshot.classList.remove("snapshot-empty");
+      snapshot.innerHTML = "";
+
+      const title = document.getElementById("lessonTitle").value.trim();
+      const gradeBand = document.getElementById("gradeBand").value;
+      const timeEstimate = document.getElementById("timeEstimate").value.trim();
+      const objective = document.getElementById("learningObjective").value.trim();
+      const ctPractice = document.getElementById("ctPractice").value;
+      const activityType = document.getElementById("activityType").value;
+      const studentTask = document.getElementById("studentTask").value.trim();
+      const reflection = document.getElementById("teacherReflection").value.trim();
+
+      const csStudent = getCheckedValues("csStudentStandards");
+      const rationale = getCheckedValues("activityRationale");
+      const equity = getCheckedValues("equityCheck");
+      const tool = getCheckedValues("toolCheck");
+      const assessment = getCheckedValues("assessmentTypes");
+      const accessDesign = getCheckedValues("accessDesign");
+      const aiUse = getCheckedValues("aiUse");
+      const cstaCodesText = document.getElementById("cstaCodes").textContent;
+
+      function addSection(titleText, html) {
+        if (!html) return;
+        const h = document.createElement("h3"); h.textContent = titleText; snapshot.appendChild(h);
+        const div = document.createElement("div"); div.innerHTML = html; snapshot.appendChild(div);
+      }
+
+      const headerParts = [];
+      if (title) headerParts.push("<strong>" + title + "</strong>");
+      if (gradeBand) headerParts.push("Grade band: " + gradeBand);
+      if (timeEstimate) headerParts.push("Time: " + timeEstimate);
+      if (headerParts.length) { const p = document.createElement("p"); p.innerHTML = headerParts.join(" &nbsp;•&nbsp; "); snapshot.appendChild(p); }
+
+      if (objective) addSection("Learning Objective", "<p>" + objective + "</p>");
+      if (csStudent.length || (cstaCodesText && cstaCodesText.includes("Suggested CSTA codes"))) {
+        let html = "";
+        if (csStudent.length) { html += "<p><strong>Student standards:</strong></p><ul>"; csStudent.forEach(s => html += "<li>" + s + "</li>"); html += "</ul>"; }
+        if (cstaCodesText && cstaCodesText.includes("Suggested CSTA codes")) html += "<p><span class='badge'>Codes</span> " + cstaCodesText.replace("Suggested CSTA codes:", "") + "</p>";
+        addSection("CS Standards Alignment", html);
+      }
+      if (ctPractice) addSection("Computational Thinking Focus", "<p>" + ctPractice + "</p>");
+
+      if (activityType || rationale.length || equity.length || tool.length) {
+        let html = "";
+        if (activityType) html += "<p><strong>Primary activity:</strong> " + activityType + "</p>";
+        if (rationale.length) { html += "<p><strong>Why this activity?</strong></p><ul>"; rationale.forEach(r => html += "<li>" + r + "</li>"); html += "</ul>"; }
+        if (equity.length) { html += "<p><strong>Equity check:</strong></p><ul>"; equity.forEach(e => html += "<li>" + e + "</li>"); html += "</ul>"; }
+        if (tool.length) { html += "<p><strong>Tool dependence:</strong></p><ul>"; tool.forEach(t => html += "<li>" + t + "</li>"); html += "</ul>"; }
+        addSection("Activity & Equity", html);
+      }
+
+      if (studentTask) addSection("Student Task", "<p>" + studentTask + "</p>");
+      if (assessment.length) { let html = "<ul>"; assessment.forEach(a => html += "<li>" + a + "</li>"); html += "</ul>"; addSection("Assessment / Evidence of Learning", html); }
+      if (accessDesign.length) { let html = "<ul>"; accessDesign.forEach(a => html += "<li>" + a + "</li>"); html += "</ul>"; addSection("Accessibility & Inclusivity Design", html); }
+      if (aiUse.length) { let html = "<ul>"; aiUse.forEach(a => html += "<li>" + a + "</li>"); html += "</ul>"; addSection("AI & Digital Tool Use", html); }
+      if (reflection) addSection("Teacher Reflection / Iteration Notes", "<p>" + reflection + "</p>");
+
+      if (!snapshot.innerHTML.trim()) { snapshot.classList.add("snapshot-empty"); snapshot.textContent = "Start filling in the lesson plan on the left."; }
+    }
+
+    function updateEquityWarning() {
+      const equity = getCheckedValues("equityCheck");
+      const tool = getCheckedValues("toolCheck");
+      const warning = document.getElementById("equityWarning");
+      if (!equity.length || !tool.length) warning.textContent = "If no box can be checked in the Equity or Tool sections, revise the activity before moving on."; else warning.textContent = "";
+    }
+
+    /* ---------------------------
+       Example lessons loader
+       --------------------------- */
+    const examples = {
+      ex1: { title:"Debugging with Story Sequences", grade:"K–2", time:"30 minutes", objective:"I can put steps in the correct order to fix a problem.", standards:["Algorithms and Programming"], ct:"Debugging", activity:"Unplugged / Low-Tech Activity", rationale:["Supports CS standard","Emphasizes CT practice"], equity:["Low-tech option","Predictable routine"], tool:["Tool optional"], task:"Students reorder picture cards to fix a scrambled story. They explain what changed and why it fixed the problem.", assessment:["Observation / Checklist"], access:["Low-tech alternative","Multiple ways to engage"], ai:["No digital tools"], reflection:"" },
+      ex2: { title:"Pattern Recognition with Emoji Sorting", grade:"3–5", time:"45 minutes", objective:"I can find and describe patterns in data.", standards:["Data and Analysis"], ct:"Pattern Recognition", activity:"Discussion or Reasoning Task", rationale:["Supports CS standard","Reasoning over speed"], equity:["Multiple ways to engage"], tool:["Tool optional"], task:"Students sort emoji cards into groups, then describe the rules they used and compare with peers.", assessment:["Discussion / Explanation"], access:["Multiple ways to show learning"], ai:["AI for brainstorming"], reflection:"" },
+      ex3: { title:"Intro to Variables with Scratch", grade:"6–8", time:"60 minutes", objective:"I can create and update a variable in Scratch to keep score in a game.", standards:["Algorithms and Programming"], ct:"Abstraction", activity:"Guided Coding Practice", rationale:["Supports CS standard","Emphasizes CT practice"], equity:["Peer-supported"], tool:["Tool essential"], task:"Students modify a starter Scratch project to add a score variable that increases when a sprite is clicked.", assessment:["Product / Artifact"], access:["Flexible pacing"], ai:["Supports feedback"], reflection:"" },
+      ex4: { title:"Data Visualizations with Spreadsheets", grade:"9–12", time:"90 minutes", objective:"I can create a chart that communicates a data story clearly.", standards:["Data and Analysis"], ct:"Abstraction", activity:"Project / Creation Task", rationale:["Supports CS standard","Reasoning over speed","Adaptable if conditions change"], equity:["Multiple ways to engage","Reduced load"], tool:["Tool supports practice"], task:"Students choose a small dataset, create at least two different charts, and justify which chart best tells the story.", assessment:["Product / Artifact","Reflection"], access:["Multiple ways to show learning","Reduced reading/writing"], ai:["Supports feedback","AI restricted"], reflection:"" }
+    };
+
+    function loadExample(example) {
+      document.getElementById("lessonTitle").value = example.title;
+      document.getElementById("gradeBand").value = example.grade;
+      document.getElementById("timeEstimate").value = example.time;
+      document.getElementById("learningObjective").value = example.objective;
+      document.getElementById("ctPractice").value = example.ct;
+      document.getElementById("activityType").value = example.activity;
+      document.getElementById("studentTask").value = example.task;
+      document.getElementById("teacherReflection").value = example.reflection;
+
+      setChecks("csStudentStandards", example.standards);
+      setChecks("activityRationale", example.rationale);
+      setChecks("equityCheck", example.equity);
+      setChecks("toolCheck", example.tool);
+      setChecks("assessmentTypes", example.assessment);
+      setChecks("accessDesign", example.access);
+      setChecks("aiUse", example.ai);
+
+      generateCSTACodes();
+      buildSnapshot();
+      updateEquityWarning();
+    }
+
+    /* ---------------------------
+       AI output parsing and apply helpers
+       --------------------------- */
+    function showAIOutput(text, label) {
+      const out = document.getElementById("aiOutput");
+      out.innerHTML = "";
+      const pLabel = document.createElement("p"); pLabel.className = "ai-label"; pLabel.textContent = label || "AI suggestion"; out.appendChild(pLabel);
+      const p = document.createElement("pre"); p.style.whiteSpace = "pre-wrap"; p.style.margin = "0.25rem 0"; p.textContent = text; out.appendChild(p);
+      document.getElementById("applyRow").style.display = "flex";
+      out.dataset.last = text;
+      out.dataset.label = label || "";
+    }
+
+    function applyAIToField(kind) {
+      const out = document.getElementById("aiOutput");
+      const text = out.dataset.last || "";
+      if (!text) return;
+      if (kind === "objective") {
+        const m = text.match(/Objective[:\-]\s*([\s\S]*?)(?:\n\n|$)/i);
+        document.getElementById("learningObjective").value = m ? m[1].trim() : text.trim();
+      } else if (kind === "task") {
+        const m = text.match(/Student Task[:\-]\s*([\s\S]*?)(?:\n\n|$)/i);
+        document.getElementById("studentTask").value = m ? m[1].trim() : text.trim();
+      } else if (kind === "assessment") {
+        const m = text.match(/Assessment[:\-]\s*([\s\S]*?)(?:\n\n|$)/i);
+        const val = m ? m[1].trim() : text.trim();
+        document.getElementById("teacherReflection").value = val;
+      } else if (kind === "udl") {
+        const m = text.match(/UDL|UDL & Equity|UDL & Equity Supports[:\-]\s*([\s\S]*?)(?:\n\n|$)/i);
+        const val = m ? m[1].trim() : text.trim();
+        document.getElementById("teacherReflection").value = val;
+      } else if (kind === "full") {
+        const obj = (text.match(/Objective[:\-]\s*([\s\S]*?)(?:\n\n|$)/i) || [])[1];
+        const task = (text.match(/Student Task[:\-]\s*([\s\S]*?)(?:\n\n|$)/i) || [])[1];
+        const assess = (text.match(/Assessment[:\-]\s*([\s\S]*?)(?:\n\n|$)/i) || [])[1];
+        const udl = (text.match(/UDL|UDL & Equity|UDL & Equity Supports[:\-]\s*([\s\S]*?)(?:\n\n|$)/i) || [])[1];
+        if (obj) document.getElementById("learningObjective").value = obj.trim();
+        if (task) document.getElementById("studentTask").value = task.trim();
+        if (assess) document.getElementById("teacherReflection").value = assess.trim();
+        if (udl) document.getElementById("teacherReflection").value += (document.getElementById("teacherReflection").value ? "\n\n" : "") + udl.trim();
+      }
+      buildSnapshot();
+    }
+
+    /* ---------------------------
+       Export helpers (shared)
+       --------------------------- */
+    function collectLessonFields() {
+      return {
+        "Lesson Title": document.getElementById("lessonTitle").value.trim(),
+        "Grade Band": document.getElementById("gradeBand").value,
+        "Estimated Time": document.getElementById("timeEstimate").value.trim(),
+        "Learning Objective": document.getElementById("learningObjective").value.trim(),
+        "CS Student Standards": getCheckedValues("csStudentStandards").join("; "),
+        "Suggested CSTA Codes": document.getElementById("cstaCodes").textContent,
+        "CT Practice": document.getElementById("ctPractice").value,
+        "Primary Activity Type": document.getElementById("activityType").value,
+        "Activity Rationale": getCheckedValues("activityRationale").join("; "),
+        "Equity Check": getCheckedValues("equityCheck").join("; "),
+        "Tool Dependence Check": getCheckedValues("toolCheck").join("; "),
+        "Student Task Description": document.getElementById("studentTask").value.trim(),
+        "Assessment / Evidence of Learning": getCheckedValues("assessmentTypes").join("; "),
+        "Accessibility & Inclusivity Design": getCheckedValues("accessDesign").join("; "),
+        "AI & Digital Tool Use": getCheckedValues("aiUse").join("; "),
+        "Teacher Reflection / Iteration Notes": document.getElementById("teacherReflection").value.trim()
+      };
+    }
+
+    function buildLessonText() {
+      const fields = collectLessonFields();
+      let text = "CS Teaching Toolkit – Lesson Plan\n\n";
+      for (const [label, value] of Object.entries(fields)) {
+        text += label + ":\n" + (value || "[Not specified]") + "\n\n";
+      }
+      // include AI chat log
+      const chatLog = document.getElementById("aiChatLog");
+      const chatText = chatLog ? chatLog.innerText.trim() : "";
+      text += "AI Lesson Assistant Log:\n" + (chatText || "[No chat messages]") + "\n";
+      return text;
+    }
+
+    function buildToolkitHtml(includeChat = true) {
+      const fields = collectLessonFields();
+      const chatLog = document.getElementById("aiChatLog");
+      const chatHtml = chatLog ? chatLog.innerHTML : "";
+
+      let rows = "";
+      for (const [label, value] of Object.entries(fields)) {
+        rows += `<tr><td style="font-weight:bold;padding:4px 8px;border:1px solid #ccc;">${label}</td><td style="padding:4px 8px;border:1px solid #ccc;">${value || "[Not specified]"}</td></tr>`;
+      }
+
+      const chatSection = includeChat ? `
+        <h2 style="margin-top:24px;">AI Lesson Assistant Log</h2>
+        <div>${chatHtml || "<p>[No chat messages]</p>"}</div>
+      ` : "";
+
+      return `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>CS Teaching Toolkit – Lesson Plan</title>
+</head>
+<body style="font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+    <img src="TeachReadyLogo.png" alt="TeachReady Toolkit Logo" style="height:48px;">
+    <div>
+      <h1 style="margin:0;font-size:20px;">CS Teaching Toolkit – Lesson Plan</h1>
+      <p style="margin:0;font-size:12px;color:#555;">UDL, accessibility, and CS standards built in.</p>
     </div>
-
-    <!-- BUTTONS -->
-    <div class="button-row">
-      <button id="aiObjectiveBtn">Generate Objective</button>
-      <button id="aiTaskBtn">Generate Task</button>
-      <button id="aiAssessmentBtn">Generate Assessment</button>
-      <button id="aiUDLBtn">Generate UDL Supports</button>
-      <button id="aiFullLessonBtn">Generate Full Lesson</button>
-      <button id="clearBtn" class="secondary">Reset All</button>
-
-      <!-- EXPORT BUTTONS -->
-      <button id="exportTxtBtn" class="outline">Export as .txt</button>
-      <button id="exportDocxBtn" class="outline">Export as .docx</button>
-      <button id="exportPdfBtn" class="outline">Export as PDF</button>
-    </div>
-
-    <!-- SNAPSHOT OUTPUT -->
-    <div id="snapshot">Your lesson plan will appear here...</div>
-
   </div>
 
-<script>
-/* ---------------------- AI REQUEST FUNCTION ---------------------- */
-async function realAIRequest(prompt) {
-  const response = await fetch("/api/ai", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ prompt })
-  });
+  <table style="border-collapse:collapse;width:100%;font-size:13px;">
+    ${rows}
+  </table>
 
-  const data = await response.json();
-  return data.text || "No response received.";
-}
-
-/* ---------------------- SNAPSHOT BUILDER ---------------------- */
-function updateSnapshot(section, content) {
-  const snapshot = document.getElementById("snapshot");
-
-  let current = snapshot.textContent;
-  if (current === "Your lesson plan will appear here...") current = "";
-
-  const lines = current.split("\n").filter(l => l.trim() !== "");
-
-  const filtered = lines.filter(l => !l.startsWith(section + ":"));
-
-  filtered.push(section + ":\n" + content.trim());
-
-  snapshot.textContent = filtered.join("\n\n");
-}
-
-/* ---------------------- AI BUTTON HANDLERS ---------------------- */
-document.getElementById("aiObjectiveBtn").addEventListener("click", async () => {
-  const prompt = "Generate a clear, measurable learning objective for a K–12 computer science lesson.";
-  const result = await realAIRequest(prompt);
-  updateSnapshot("Objective", result);
-});
-
-document.getElementById("aiTaskBtn").addEventListener("click", async () => {
-  const prompt = "Generate a student-facing learning task for a K–12 computer science lesson.";
-  const result = await realAIRequest(prompt);
-  updateSnapshot("Learning Task", result);
-});
-
-document.getElementById("aiAssessmentBtn").addEventListener("click", async () => {
-  const prompt = "Generate a formative assessment aligned to a K–12 computer science lesson.";
-  const result = await realAIRequest(prompt);
-  updateSnapshot("Assessment", result);
-});
-
-document.getElementById("aiUDLBtn").addEventListener("click", async () => {
-  const prompt = "Generate UDL supports for engagement, representation, and action/expression for a K–12 computer science lesson.";
-  const result = await realAIRequest(prompt);
-  updateSnapshot("UDL Supports", result);
-});
-
-document.getElementById("aiFullLessonBtn").addEventListener("click", async () => {
-  const prompt = "Generate a full K–12 computer science lesson including objective, task, assessment, and UDL supports.";
-  const result = await realAIRequest(prompt);
-  updateSnapshot("Full Lesson", result);
-});
-
-/* ---------------------- RESET ---------------------- */
-document.getElementById("clearBtn").addEventListener("click", () => {
-  document.getElementById("snapshot").textContent = "Your lesson plan will appear here...";
-});
-
-/* ---------------------- EXPORT AS .TXT ---------------------- */
-document.getElementById("exportTxtBtn").addEventListener("click", () => {
-  const snapshot = document.getElementById("snapshot").textContent;
-  const blob = new Blob([snapshot], { type: "text/plain" });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "lesson-plan.txt";
-  a.click();
-
-  URL.revokeObjectURL(url);
-});
-
-/* ---------------------- EXPORT AS PDF ---------------------- */
-document.getElementById("exportPdfBtn").addEventListener("click", () => {
-  const printable = document.createElement("div");
-  printable.style.padding = "2rem";
-  printable.style.fontFamily = "serif";
-
-  printable.innerHTML = `
-    <div style="text-align:center;">
-      <img src="TeachReadyLogo.png" style="height:120px;">
-      <h1>CSTA TeachReady Toolkit</h1>
-    </div>
-    <h2>Lesson Plan</h2>
-    <pre>${document.getElementById("snapshot").textContent}</pre>
-  `;
-
-  const win = window.open("", "_blank");
-  win.document.write(printable.outerHTML);
-  win.document.close();
-  win.focus();
-  win.print();
-});
-
-/* ---------------------- EXPORT AS .DOCX ---------------------- */
-document.getElementById("exportDocxBtn").addEventListener("click", async () => {
-  const snapshot = document.getElementById("snapshot").textContent;
-
-  const {
-    Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
-    AlignmentType, WidthType, Footer, PageNumber, HeadingLevel, ImageRun
-  } = window.docx;
-
-  const logoBlob = await fetch("TeachReadyLogo.png").then(r => r.blob());
-  const logoArrayBuffer = await logoBlob.arrayBuffer();
-
-  const header = new Paragraph({
-    children: [
-      new ImageRun({
-        data: logoArrayBuffer,
-        transformation: { width: 140, height: 140 }
-      }),
-      new TextRun({
-        text: "CSTA TeachReady Toolkit",
-        bold: true,
-        size: 32,
-        break: 1
-      })
-    ],
-    alignment: AlignmentType.CENTER,
-    spacing: { after: 300 }
-  });
-
-  const lines = snapshot.split("\n");
-  const rows = [];
-  let currentLabel = "";
-  let currentValue = "";
-
-  lines.forEach(line => {
-    if (line.endsWith(":")) {
-      if (currentLabel) {
-        rows.push(
-          new TableRow({
-            children: [
-              new TableCell({
-                children: [new Paragraph({ text: currentLabel, bold: true })],
-                width: { size: 30, type: WidthType.PERCENTAGE }
-              }),
-              new TableCell({
-                children: [new Paragraph(currentValue.trim())],
-                width: { size: 70, type: WidthType.PERCENTAGE }
-              })
-            ]
-          })
-        );
-      }
-      currentLabel = line.replace(":", "");
-      currentValue = "";
-    } else {
-      currentValue += line + "\n";
+  ${chatSection}
+</body>
+</html>`;
     }
-  });
 
-  if (currentLabel) {
-    rows.push(
-      new TableRow({
-        children: [
-          new TableCell({
-            children: [new Paragraph({ text: currentLabel, bold: true })],
-            width: { size: 30, type: WidthType.PERCENTAGE }
-          }),
-          new TableCell({
-            children: [new Paragraph(currentValue.trim())],
-            width: { size: 70, type: WidthType.PERCENTAGE }
-          })
-        ]
-      })
-    );
-  }
-
-  const table = new Table({
-    rows,
-    width: { size: 100, type: WidthType.PERCENTAGE }
-  });
-
-  const footer = new Footer({
-    children: [
-      new Paragraph({
-        children: [
-          new TextRun("Page "),
-          PageNumber.CURRENT,
-          new TextRun(" of "),
-          PageNumber.TOTAL_PAGES
-        ],
-        alignment: AlignmentType.CENTER
-      })
-    ]
-  });
-
-  const doc = new Document({
-    sections: [
-      {
-        headers: { default: header },
-        footers: { default: footer },
-        children: [
-          new Paragraph({
-            text: "Lesson Plan",
-            heading: HeadingLevel.HEADING_1,
-            spacing: { after: 300 }
-          }),
-          table
-        ]
+    async function exportBrandedPdf() {
+      const { jsPDF } = window.jspdf || {};
+      if (!jsPDF) {
+        alert("PDF library not loaded.");
+        return;
       }
-    ]
-  });
+      const doc = new jsPDF({ unit: "pt", format: "letter" });
 
-  const blob = await Packer.toBlob(doc);
-  const url = URL.createObjectURL(blob);
+      // Load logo
+      let logoDataUrl = null;
+      try {
+        const res = await fetch("TeachReadyLogo.png");
+        const blob = await res.blob();
+        const reader = new FileReader();
+        logoDataUrl = await new Promise((resolve, reject) => {
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        });
+      } catch (e) {
+        console.warn("Could not load logo for PDF, continuing without it.", e);
+      }
 
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "lesson-plan.docx";
-  a.click();
+      let y = 40;
+      if (logoDataUrl) {
+        doc.addImage(logoDataUrl, "PNG", 40, y, 80, 80);
+        y += 20;
+      }
 
-  URL.revokeObjectURL(url);
-});
-</script>
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(16);
+      doc.text("CS Teaching Toolkit – Lesson Plan", 140, 60);
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      doc.text("UDL, accessibility, and CS standards built in.", 140, 75);
 
+      y = 110;
+      const text = buildLessonText();
+      const lines = doc.splitTextToSize(text, 520);
+      doc.text(lines, 40, y);
+
+      doc.save("CS_Lesson_Plan_TeachReady.pdf");
+    }
+
+    function exportDocxHtml() {
+      const html = buildToolkitHtml(true);
+      const blob = new Blob([html], {
+        type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "CS_Lesson_Plan_TeachReady.docx";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    /* ---------------------------
+       Wiring: events and AI calls
+       --------------------------- */
+    document.addEventListener("DOMContentLoaded", () => {
+      // live updates
+      const inputs = document.querySelectorAll("input[type='text'], textarea, select, input[type='checkbox']");
+      inputs.forEach(el => {
+        el.addEventListener("input", () => { if (el.id === "gradeBand" || el.closest("#csStudentStandards")) generateCSTACodes(); buildSnapshot(); updateEquityWarning(); });
+        el.addEventListener("change", () => { if (el.id === "gradeBand" || el.closest("#csStudentStandards")) generateCSTACodes(); buildSnapshot(); updateEquityWarning(); });
+      });
+
+      // example loader
+      document.getElementById("exampleLoader").addEventListener("change", (e) => {
+        const key = e.target.value; if (examples[key]) loadExample(examples[key]);
+      });
+
+      // TEXT export
+      document.getElementById("exportTxtBtn").addEventListener("click", () => {
+        const text = buildLessonText();
+        const blob = new Blob([text], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a"); a.href = url; a.download = "CS_Lesson_Plan.txt"; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+      });
+
+      // DOCX export (HTML-based)
+      document.getElementById("exportDocxBtn").addEventListener("click", exportDocxHtml);
+
+      // Branded PDF export
+      document.getElementById("exportPdfBtn").addEventListener("click", exportBrandedPdf);
+
+      // Print
+      document.getElementById("printBtn").addEventListener("click", () => window.print());
+
+      // Clear
+      document.getElementById("clearBtn").addEventListener("click", () => {
+        if (!confirm("Clear all fields in this lesson plan?")) return;
+        document.querySelectorAll("input[type='text'], textarea").forEach(el => el.value = "");
+        document.querySelectorAll("select").forEach(el => el.value = "");
+        document.querySelectorAll("input[type='checkbox']").forEach(el => el.checked = false);
+        document.getElementById("cstaCodes").innerHTML = "Select a grade band + standards to generate codes.";
+        document.getElementById("aiOutput").innerHTML = '<p class="ai-label">AI suggestions will appear here.</p><p class="small-muted">Use quick buttons or ask a question below. Responses can be applied to fields.</p>';
+        document.getElementById("applyRow").style.display = "none";
+        const chatLog = document.getElementById("aiChatLog");
+        chatLog.innerHTML = '<div class="ai-msg-assistant">Assistant: Ask for adaptations, simplifications, or extensions.</div>';
+        buildSnapshot(); updateEquityWarning();
+      });
+
+      // AI quick actions
+      async function runAI(type) {
+        const ctx = getPlanningContext();
+        showAIOutput("Generating…", "Working");
+        const text = await realAIRequest(type, ctx);
+        let label = "AI suggestion";
+        if (type === "full") label = "Full Lesson Draft";
+        else if (type === "objective") label = "Generated Objective";
+        else if (type === "task") label = "Generated Student Task";
+        else if (type === "assessment") label = "Assessment Ideas";
+        else if (type === "udl") label = "UDL & Equity Supports";
+        showAIOutput(text, label);
+        document.getElementById("aiOutput").dataset.kind = type;
+      }
+
+      document.getElementById("aiObjectiveBtn").addEventListener("click", () => runAI("objective"));
+      document.getElementById("aiTaskBtn").addEventListener("click", () => runAI("task"));
+      document.getElementById("aiAssessmentBtn").addEventListener("click", () => runAI("assessment"));
+      document.getElementById("aiUDLBtn").addEventListener("click", () => runAI("udl"));
+      document.getElementById("aiFullLessonBtn").addEventListener("click", () => runAI("full"));
+
+      // apply buttons
+      document.getElementById("applyObjective").addEventListener("click", () => applyAIToField("objective"));
+      document.getElementById("applyTask").addEventListener("click", () => applyAIToField("task"));
+      document.getElementById("applyAssessment").addEventListener("click", () => applyAIToField("assessment"));
+      document.getElementById("applyUDL").addEventListener("click", () => applyAIToField("udl"));
+      document.getElementById("applyFull").addEventListener("click", () => applyAIToField("full"));
+
+      // chat
+      const chatLog = document.getElementById("aiChatLog");
+      const chatInput = document.getElementById("aiChatInput");
+      document.getElementById("aiChatSendBtn").addEventListener("click", async () => {
+        const msg = chatInput.value.trim(); if (!msg) return;
+        const userDiv = document.createElement("div"); userDiv.className = "ai-msg-user"; userDiv.innerHTML = "<span>You:</span> " + msg; chatLog.appendChild(userDiv);
+        const ctx = getPlanningContext();
+        const reply = await realAIRequest("chat", ctx, msg);
+        const asstDiv = document.createElement("div"); asstDiv.className = "ai-msg-assistant"; asstDiv.textContent = "Assistant: " + reply; chatLog.appendChild(asstDiv);
+        chatLog.scrollTop = chatLog.scrollHeight; chatInput.value = "";
+      });
+
+      // initial
+      buildSnapshot(); updateEquityWarning();
+    });
+  </script>
 </body>
 </html>
