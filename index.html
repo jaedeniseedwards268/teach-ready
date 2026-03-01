@@ -413,36 +413,37 @@ Respond with:
     const API_ENDPOINT = "/api/ai"; // update to your serverless endpoint (recommended)
     const USE_CLIENT_KEY = false;    // set true only if you will embed a key (not recommended)
 
-    async function realAIRequest(type, context, userMessage = "") {
-      const prompt = buildPrompt(type, context, userMessage);
+  async function realAIRequest(type, context, userMessage = "") {
+  const prompt = buildPrompt(type, context, userMessage);
 
-      // If no endpoint configured, fallback to local stub
-      if (!API_ENDPOINT || API_ENDPOINT === "/api/ai") {
-        // Attempt network call; if it fails, fallback to stub
-      }
+  try {
+    const res = await fetch(API_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt })
+    });
 
-      try {
-        console.log("FINAL PAYLOAD SENT TO OPENAI:", JSON.stringify(payload, null, 2));
-        const res = await fetch(API_ENDPOINT, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ prompt, type })
-        });
-
-        if (!res.ok) {
-          // fallback to stub if server returns error
-          console.warn("AI endpoint returned error, falling back to local generator.");
-          return fakeAIResponse(type, context, userMessage);
-        }
-
-        const data = await res.json();
-        // Expect server to return { text: "..." }
-        return (data && (data.text || data.result || data.output)) || fakeAIResponse(type, context, userMessage);
-      } catch (err) {
-        console.warn("AI request failed, using local fallback.", err);
-        return fakeAIResponse(type, context, userMessage);
-      }
+    if (!res.ok) {
+      console.warn("AI endpoint returned error, falling back to local generator.");
+      return fakeAIResponse(type, context, userMessage);
     }
+
+    const data = await res.json();
+
+    // Expect backend to return { text: "..." }
+    const text = data?.text;
+
+    // If backend returned empty or undefined, fallback
+    if (!text || text.trim() === "") {
+      return fakeAIResponse(type, context, userMessage);
+    }
+
+    return text;
+  } catch (err) {
+    console.warn("AI request failed, using local fallback.", err);
+    return fakeAIResponse(type, context, userMessage);
+  }
+}
 
     /* ---------------------------
        Local fallback generator (keeps UI usable without a server)
