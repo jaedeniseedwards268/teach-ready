@@ -16,7 +16,7 @@ export default async function handler(req, res) {
 
     const payload = {
     model: "gpt-4o-mini",
-    messages: [
+    input: [
       {
         role: "user",
         content: [
