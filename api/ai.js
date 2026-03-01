@@ -38,7 +38,7 @@ export default async function handler(req, res) {
     }
 
     const data = await r.json();
-    const text = data.output
+    const text = data.text;
     ?.flatMap(o => o.content)
     ?.filter(c => c.type === "output_text")
     ?.map(c => c.text)
