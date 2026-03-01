@@ -20,7 +20,7 @@ export default async function handler(req, res) {
       {
         role: "user",
         content: [
-          { type: "text", text: prompt }
+          { type: "input_text", text: prompt }
         ]
       }
     ],
