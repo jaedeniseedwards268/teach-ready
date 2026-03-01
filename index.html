@@ -422,6 +422,7 @@ Respond with:
       }
 
       try {
+        console.log("FINAL PAYLOAD SENT TO OPENAI:", JSON.stringify(payload, null, 2));
         const res = await fetch(API_ENDPOINT, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
