@@ -1,72 +1,935 @@
-<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8" /> <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <title>Teach Ready Planner</title> <style> body { font-family: system-ui, sans-serif; background-color: #f8f9fa; margin: 0; padding: 0; color: #333; } .page { max-width: 900px; margin: 0 auto; padding: 2rem; } .card { background: white; border-radius: 8px; padding: 1.5rem; margin-top: 1.5rem; box-shadow: 0 2px 6px rgba(0,0,0,0.05); } .card-header h1 { margin: 0; } .small-muted { color: #666; font-size: 0.9rem; } label { font-weight: 600; display: block; margin-top: 1rem; } select, input[type="text"], textarea { width: 100%; padding: 0.5rem; margin-top: 0.25rem; border: 1px solid #ccc; border-radius: 4px; } .ai-chat-log { background: #fff; border: 1px solid #ddd; padding: 1rem; border-radius: 6px; margin-bottom: 1rem; max-height: 300px; overflow-y: auto; } .ai-chat-input { display: flex; gap: 0.5rem; margin-bottom: 1rem; } .ai-chat-input textarea { flex: 1; resize: vertical; } .ai-msg-user { background: #e6f0ff; padding: 0.5rem; border-radius: 4px; margin-bottom: 0.5rem; } .ai-msg-assistant { background: #f1f1f1; padding: 0.5rem; border-radius: 4px; margin-bottom: 0.5rem; } .button-row { display: flex; gap: 0.5rem; margin-top: 1rem; } button { padding: 0.5rem 1rem; border: none; border-radius: 4px; background-color: #007bff; color: white; cursor: pointer; } button:hover { background-color: #0056b3; } </style> </head> <body> <main class="page"> <section id="chatAssistant"> <h2>💭 Chat with the AI Lesson Coach</h2> <div id="aiChatLog" class="ai-chat-log" aria-live="polite"> <div class="ai-msg-assistant">Assistant: Ask for adaptations, simplifications, or extensions.</div> </div> <div class="ai-chat-input"> <textarea id="aiChatInput" placeholder="Ask for an unplugged version, UDL supports, extensions, etc."></textarea> <button id="aiChatSendBtn">Send</button> </div> </section>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teach Ready Planner</title>
+  <style>
+    :root {
+      --bg-page: #f8f9fa;
+      --bg-card: #ffffff;
+      --border-soft: #dde1e7;
+      --accent: #2563eb;
+      --accent-soft: #eef3ff;
+      --text-main: #222;
+      --text-muted: #666;
+    }
 
-<section class="card" aria-label="Lesson plan form">
-  <div class="card-header">
-    <h1>CS Teaching Toolkit – Lesson Plan</h1>
-    <small class="small-muted">UDL, accessibility, and CS standards built in.</small>
-  </div>
+    * {
+      box-sizing: border-box;
+    }
 
-  <section>
-    <label for="exampleLoader">Load Example Lesson</label>
-    <select id="exampleLoader" aria-label="Load example lesson">
-      <option value="">Choose an example…</option>
-      <optgroup label="K–2 Examples">
-        <option value="ex1">Sorting with Socks</option>
-        <option value="ex2">Story Sequencing with Arrows</option>
-        <option value="ex3">Robot Commands with Stuffed Animals</option>
-      </optgroup>
-      <optgroup label="3–5 Examples">
-        <option value="ex4">Emoji Sorting Algorithms</option>
-        <option value="ex5">Paper Programming with Loops</option>
-        <option value="ex6">Debugging a Treasure Map</option>
-      </optgroup>
-      <optgroup label="6–8 Examples">
-        <option value="ex7">Intro to Variables with Scratch</option>
-        <option value="ex8">Data Collection with Surveys</option>
-        <option value="ex9">Conditional Logic with Card Games</option>
-      </optgroup>
-      <optgroup label="9–12 Examples">
-        <option value="ex10">Data Visualizations with Spreadsheets</option>
-        <option value="ex11">Building Chatbots with Python</option>
-        <option value="ex12">Ethics in AI: Case Study Analysis</option>
-      </optgroup>
-    </select>
-  </section>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background-color: var(--bg-page);
+      margin: 0;
+      padding: 0;
+      color: var(--text-main);
+    }
 
-  <section>
-    <label for="activityType">Primary Activity Type</label>
-    <select id="activityType">
-      <option value="">Choose an activity type…</option>
-      <option>Hands-on Project</option>
-      <option>Unplugged Simulation</option>
-      <option>Collaborative Problem Solving</option>
-      <option>Creative Design Challenge</option>
-      <option>Data Collection & Analysis</option>
-      <option>Role Play or Scenario</option>
-      <option>Digital Tool Exploration</option>
-      <option>Mini-Lecture with Guided Practice</option>
-    </select>
-  </section>
+    main.page {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 3rem;
+    }
 
-  <!-- The rest of your form fields and AI buttons go here -->
+    h1, h2, h3 {
+      margin: 0 0 0.5rem;
+      font-weight: 600;
+    }
 
-  <div class="button-row">
-    <button id="aiObjectiveBtn">Generate Objective</button>
-    <button id="aiTaskBtn">Generate Task</button>
-    <button id="aiAssessmentBtn">Generate Assessment</button>
-    <button id="aiUDLBtn">Generate UDL Supports</button>
-    <button id="aiFullLessonBtn">Generate Full Lesson</button>
-    <button id="clearBtn">Reset All</button>
-  </div>
+    h2 {
+      font-size: 1.4rem;
+    }
 
-  <div id="aiOutput"></div>
-  <div id="applyRow" style="display:none">
-    <button id="applyObjective">Insert Objective</button>
-    <button id="applyTask">Insert Task</button>
-    <button id="applyAssessment">Insert Assessment</button>
-    <button id="applyUDL">Insert UDL</button>
-    <button id="applyFull">Insert Full Lesson</button>
-  </div>
-</section>
+    h3 {
+      font-size: 1.1rem;
+      background: var(--accent-soft);
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      margin-top: 2rem;
+      border-left: 4px solid var(--accent);
+    }
 
-</main> </body> </html>
+    .small-muted {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border-radius: 10px;
+      padding: 1.5rem 1.5rem 2rem;
+      margin-top: 1.5rem;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+      border: 1px solid var(--border-soft);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-top: 1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    select,
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 0.5rem 0.6rem;
+      border-radius: 4px;
+      border: 1px solid #cbd5e1;
+      font-size: 0.95rem;
+      font-family: inherit;
+      margin-bottom: 0.25rem;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 3rem;
+    }
+
+    .inline-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem 1.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .inline-group label {
+      font-weight: 400;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .inline-group input[type="checkbox"] {
+      margin: 0;
+    }
+
+    .ai-chat-log {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      padding: 0.75rem 0.9rem;
+      border-radius: 8px;
+      margin-bottom: 0.75rem;
+      max-height: 260px;
+      overflow-y: auto;
+      font-size: 0.95rem;
+    }
+
+    .ai-chat-input {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .ai-chat-input textarea {
+      flex: 1;
+      resize: vertical;
+      min-height: 3rem;
+    }
+
+    .ai-msg-user {
+      background: #e0edff;
+      padding: 0.4rem 0.5rem;
+      border-radius: 4px;
+      margin-bottom: 0.4rem;
+    }
+
+    .ai-msg-assistant {
+      background: #f3f4f6;
+      padding: 0.4rem 0.5rem;
+      border-radius: 4px;
+      margin-bottom: 0.4rem;
+    }
+
+    .ai-msg-user span,
+    .ai-msg-assistant span {
+      font-weight: 600;
+      margin-right: 0.25rem;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+
+    button {
+      padding: 0.45rem 0.9rem;
+      border: none;
+      border-radius: 4px;
+      background-color: var(--accent);
+      color: white;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    button:hover {
+      background-color: #1d4ed8;
+    }
+
+    button.secondary {
+      background-color: #64748b;
+    }
+
+    button.secondary:hover {
+      background-color: #475569;
+    }
+
+    button.outline {
+      background-color: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+
+    button.outline:hover {
+      background-color: var(--accent-soft);
+    }
+
+    #aiOutput {
+      margin-top: 1rem;
+      padding: 0.75rem 0.9rem;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+      background: #f9fafb;
+      font-size: 0.95rem;
+      white-space: normal;
+    }
+
+    .ai-label {
+      font-weight: 600;
+      margin: 0 0 0.25rem;
+      color: var(--text-muted);
+    }
+
+    #applyRow {
+      margin-top: 0.75rem;
+      display: none;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    #snapshot {
+      margin-top: 1.5rem;
+      padding: 0.75rem 0.9rem;
+      border-radius: 6px;
+      border: 1px dashed #cbd5e1;
+      background: #f8fafc;
+      font-size: 0.9rem;
+      color: #475569;
+    }
+
+    @media (max-width: 640px) {
+      main.page {
+        padding: 1.25rem 1rem 2rem;
+      }
+      .card {
+        padding: 1.25rem 1.1rem 1.75rem;
+      }
+      .button-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .ai-chat-input {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <!-- Chat Assistant at the top -->
+    <section id="chatAssistant">
+      <h2>💭 Chat with the AI Lesson Coach</h2>
+      <p class="small-muted">
+        Start with a question about your lesson. Ask for adaptations, UDL supports, unplugged options, or extensions.
+      </p>
+      <div id="aiChatLog" class="ai-chat-log" aria-live="polite">
+        <div class="ai-msg-assistant">
+          <span>Assistant:</span> Ask for adaptations, simplifications, or extensions to your current lesson idea.
+        </div>
+      </div>
+      <div class="ai-chat-input">
+        <textarea id="aiChatInput" placeholder="Ask for an unplugged version, UDL supports, extensions, etc."></textarea>
+        <button id="aiChatSendBtn">Send</button>
+      </div>
+    </section>
+
+    <!-- Main Lesson Planner Card -->
+    <section class="card" aria-label="Lesson plan form">
+      <div class="card-header">
+        <div>
+          <h1>CS Teaching Toolkit – Lesson Plan</h1>
+          <small class="small-muted">UDL, accessibility, and CS standards built in.</small>
+        </div>
+      </div>
+
+      <!-- Example Loader -->
+      <section>
+        <label for="exampleLoader">Load Example Lesson</label>
+        <select id="exampleLoader" aria-label="Load example lesson">
+          <option value="">Choose an example…</option>
+          <optgroup label="K–2 Examples">
+            <option value="ex1">Sorting with Socks (K–2)</option>
+            <option value="ex2">Story Sequencing with Arrows (K–2)</option>
+            <option value="ex3">Robot Commands with Stuffed Animals (K–2)</option>
+          </optgroup>
+          <optgroup label="3–5 Examples">
+            <option value="ex4">Emoji Sorting Algorithms (3–5)</option>
+            <option value="ex5">Paper Programming with Loops (3–5)</option>
+            <option value="ex6">Debugging a Treasure Map (3–5)</option>
+          </optgroup>
+          <optgroup label="6–8 Examples">
+            <option value="ex7">Intro to Variables with Scratch (6–8)</option>
+            <option value="ex8">Data Collection with Surveys (6–8)</option>
+            <option value="ex9">Conditional Logic with Card Games (6–8)</option>
+          </optgroup>
+          <optgroup label="9–12 Examples">
+            <option value="ex10">Data Visualizations with Spreadsheets (9–12)</option>
+            <option value="ex11">Building Chatbots with Python (9–12)</option>
+            <option value="ex12">Ethics in AI: Case Study Analysis (9–12)</option>
+          </optgroup>
+        </select>
+      </section>
+
+      <!-- Lesson Details -->
+      <h3>Lesson Details</h3>
+
+      <label for="lessonTitle">Lesson Title</label>
+      <input type="text" id="lessonTitle" />
+
+      <label for="gradeBand">Grade Band</label>
+      <select id="gradeBand">
+        <option value="">Choose…</option>
+        <option>K–2</option>
+        <option>3–5</option>
+        <option>6–8</option>
+        <option>9–12</option>
+      </select>
+
+      <label for="timeEstimate">Estimated Time</label>
+      <input type="text" id="timeEstimate" placeholder="e.g., 45 minutes" />
+
+      <!-- CS Standards -->
+      <h3>CS Student Standards</h3>
+
+      <div id="csStudentStandards" class="inline-group">
+        <label><input type="checkbox" value="Algorithms"> Algorithms</label>
+        <label><input type="checkbox" value="Programming"> Programming</label>
+        <label><input type="checkbox" value="Data & Analysis"> Data & Analysis</label>
+        <label><input type="checkbox" value="Computing Systems"> Computing Systems</label>
+        <label><input type="checkbox" value="Impacts of Computing"> Impacts of Computing</label>
+      </div>
+
+      <p><strong>Suggested CSTA Codes:</strong></p>
+      <div id="cstaCodes">Select a grade band + standards to generate codes.</div>
+
+      <!-- CT Practice -->
+      <h3>Computational Thinking Practice</h3>
+      <select id="ctPractice">
+        <option value="">Choose…</option>
+        <option>Data Collection & Analysis</option>
+        <option>Decomposition</option>
+        <option>Pattern Recognition</option>
+        <option>Abstraction</option>
+        <option>Algorithmic Thinking</option>
+        <option>Testing & Debugging</option>
+      </select>
+
+      <!-- Activity Type -->
+      <h3>Primary Activity Type</h3>
+      <select id="activityType">
+        <option value="">Choose an activity type…</option>
+        <option>Hands-on Project</option>
+        <option>Unplugged Simulation</option>
+        <option>Collaborative Problem Solving</option>
+        <option>Creative Design Challenge</option>
+        <option>Data Collection & Analysis</option>
+        <option>Role Play or Scenario</option>
+        <option>Digital Tool Exploration</option>
+        <option>Mini-Lecture with Guided Practice</option>
+      </select>
+
+      <!-- Activity Rationale -->
+      <h3>Activity Rationale</h3>
+      <div id="activityRationale" class="inline-group">
+        <label><input type="checkbox" value="Engagement"> Engagement</label>
+        <label><input type="checkbox" value="Hands-on Learning"> Hands-on Learning</label>
+        <label><input type="checkbox" value="Collaboration"> Collaboration</label>
+        <label><input type="checkbox" value="Creativity"> Creativity</label>
+        <label><input type="checkbox" value="Real-world Connection"> Real-world Connection</label>
+      </div>
+
+      <!-- Equity & Tool Checks -->
+      <h3>Equity Check</h3>
+      <div id="equityCheck" class="inline-group">
+        <label><input type="checkbox" value="Multiple entry points"> Multiple entry points</label>
+        <label><input type="checkbox" value="Language supports"> Language supports</label>
+        <label><input type="checkbox" value="Representation matters"> Representation matters</label>
+      </div>
+
+      <h3>Tool Dependence Check</h3>
+      <div id="toolCheck" class="inline-group">
+        <label><input type="checkbox" value="Low-tech option available"> Low-tech option available</label>
+        <label><input type="checkbox" value="Device sharing possible"> Device sharing possible</label>
+      </div>
+
+      <!-- Objective & Task -->
+      <h3>Learning Objective</h3>
+      <textarea id="learningObjective" rows="3"></textarea>
+
+      <h3>Student Task Description</h3>
+      <textarea id="studentTask" rows="4"></textarea>
+
+      <!-- Assessment -->
+      <h3>Assessment / Evidence of Learning</h3>
+      <div id="assessmentTypes" class="inline-group">
+        <label><input type="checkbox" value="Observation"> Observation</label>
+        <label><input type="checkbox" value="Exit Ticket"> Exit Ticket</label>
+        <label><input type="checkbox" value="Student Work Sample"> Student Work Sample</label>
+        <label><input type="checkbox" value="Performance Task"> Performance Task</label>
+      </div>
+
+      <!-- Accessibility & Inclusivity -->
+      <h3>Accessibility & Inclusivity Design</h3>
+      <div id="accessDesign" class="inline-group">
+        <label><input type="checkbox" value="UDL supports"> UDL supports</label>
+        <label><input type="checkbox" value="Visual scaffolds"> Visual scaffolds</label>
+        <label><input type="checkbox" value="Sentence frames"> Sentence frames</label>
+        <label><input type="checkbox" value="Flexible grouping"> Flexible grouping</label>
+      </div>
+
+      <!-- AI & Digital Tool Use -->
+      <h3>AI & Digital Tool Use</h3>
+      <div id="aiUse" class="inline-group">
+        <label><input type="checkbox" value="AI brainstorming"> AI brainstorming</label>
+        <label><input type="checkbox" value="AI feedback"> AI feedback</label>
+        <label><input type="checkbox" value="Digital creation tools"> Digital creation tools</label>
+      </div>
+
+      <!-- Teacher Reflection -->
+      <h3>Teacher Reflection / Iteration Notes</h3>
+      <textarea id="teacherReflection" rows="4"></textarea>
+
+      <!-- AI Buttons -->
+      <div class="button-row">
+        <button id="aiObjectiveBtn">Generate Objective</button>
+        <button id="aiTaskBtn">Generate Task</button>
+        <button id="aiAssessmentBtn">Generate Assessment</button>
+        <button id="aiUDLBtn">Generate UDL Supports</button>
+        <button id="aiFullLessonBtn">Generate Full Lesson</button>
+        <button id="clearBtn" class="secondary">Reset All</button>
+      </div>
+
+      <!-- AI Output + Apply Row -->
+      <div id="aiOutput"></div>
+      <div id="applyRow">
+        <button id="applyObjective" class="outline">Insert Objective</button>
+        <button id="applyTask" class="outline">Insert Task</button>
+        <button id="applyAssessment" class="outline">Insert Assessment</button>
+        <button id="applyUDL" class="outline">Insert UDL</button>
+        <button id="applyFull" class="outline">Insert Full Lesson</button>
+      </div>
+
+      <!-- Snapshot -->
+      <div id="snapshot" aria-label="Lesson snapshot">
+        Snapshot will update as you plan your lesson.
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const API_ENDPOINT = "/api/ai"; // your serverless endpoint
+
+    /* ---------------------------
+       Example lessons
+       --------------------------- */
+    const examples = {
+      ex1: {
+        lessonTitle: "Sorting with Socks",
+        gradeBand: "K–2",
+        timeEstimate: "30 minutes",
+        ctPractice: "Pattern Recognition",
+        activityType: "Hands-on Project",
+        objective: "Students will sort objects (socks) by different attributes and explain their sorting rules.",
+        task: "Students work in pairs to sort a pile of socks by color, size, or pattern, then share their rule.",
+        reflection: "Try adding visuals and sentence frames for describing patterns."
+      },
+      ex2: {
+        lessonTitle: "Story Sequencing with Arrows",
+        gradeBand: "K–2",
+        timeEstimate: "30 minutes",
+        ctPractice: "Algorithmic Thinking",
+        activityType: "Unplugged Simulation",
+        objective: "Students will arrange story steps in order and represent them with directional arrows.",
+        task: "Students sequence picture cards, then draw arrows to show the order of actions.",
+        reflection: "Use large visuals and model one example together."
+      },
+      ex3: {
+        lessonTitle: "Robot Commands with Stuffed Animals",
+        gradeBand: "K–2",
+        timeEstimate: "35 minutes",
+        ctPractice: "Algorithmic Thinking",
+        activityType: "Role Play or Scenario",
+        objective: "Students will give step-by-step commands to move a stuffed animal from start to finish.",
+        task: "In pairs, one student is the 'robot' and the other gives commands like 'step forward' or 'turn left'.",
+        reflection: "Add gestures and movement for kinesthetic learners."
+      },
+      ex4: {
+        lessonTitle: "Emoji Sorting Algorithms",
+        gradeBand: "3–5",
+        timeEstimate: "45 minutes",
+        ctPractice: "Algorithmic Thinking",
+        activityType: "Hands-on Project",
+        objective: "Students will design and explain a step-by-step algorithm for sorting emoji cards.",
+        task: "Students sort emoji cards by emotion or category and write out their sorting steps.",
+        reflection: "Encourage multiple correct algorithms and compare efficiency."
+      },
+      ex5: {
+        lessonTitle: "Paper Programming with Loops",
+        gradeBand: "3–5",
+        timeEstimate: "45 minutes",
+        ctPractice: "Abstraction",
+        activityType: "Unplugged Simulation",
+        objective: "Students will use repeated patterns (loops) to simplify a set of drawing instructions.",
+        task: "Students convert repeated drawing steps into a 'loop' instruction on paper.",
+        reflection: "Highlight how loops save time and reduce errors."
+      },
+      ex6: {
+        lessonTitle: "Debugging a Treasure Map",
+        gradeBand: "3–5",
+        timeEstimate: "45 minutes",
+        ctPractice: "Testing & Debugging",
+        activityType: "Collaborative Problem Solving",
+        objective: "Students will identify and fix errors in a set of directions on a treasure map.",
+        task: "In groups, students follow a flawed set of directions and correct them to reach the treasure.",
+        reflection: "Normalize mistakes as part of the debugging process."
+      },
+      ex7: {
+        lessonTitle: "Intro to Variables with Scratch",
+        gradeBand: "6–8",
+        timeEstimate: "50 minutes",
+        ctPractice: "Abstraction",
+        activityType: "Digital Tool Exploration",
+        objective: "Students will create a Scratch project that uses a variable to track a score.",
+        task: "Students build a simple game where a variable increases when a sprite is clicked.",
+        reflection: "Provide starter projects for students who need more support."
+      },
+      ex8: {
+        lessonTitle: "Data Collection with Surveys",
+        gradeBand: "6–8",
+        timeEstimate: "50 minutes",
+        ctPractice: "Data Collection & Analysis",
+        activityType: "Data Collection & Analysis",
+        objective: "Students will design a short survey, collect data, and represent it in a chart.",
+        task: "Students survey classmates, then create a bar graph or pie chart of the results.",
+        reflection: "Discuss bias and sample size in data collection."
+      },
+      ex9: {
+        lessonTitle: "Conditional Logic with Card Games",
+        gradeBand: "6–8",
+        timeEstimate: "45 minutes",
+        ctPractice: "Algorithmic Thinking",
+        activityType: "Role Play or Scenario",
+        objective: "Students will use if/then rules to create a simple card game.",
+        task: "Students design rules like 'If card is red, then draw again' and test with peers.",
+        reflection: "Connect conditionals to everyday decision-making."
+      },
+      ex10: {
+        lessonTitle: "Data Visualizations with Spreadsheets",
+        gradeBand: "9–12",
+        timeEstimate: "60 minutes",
+        ctPractice: "Data Collection & Analysis",
+        activityType: "Data Collection & Analysis",
+        objective: "Students will create and interpret data visualizations using spreadsheet tools.",
+        task: "Students import or enter data, then create charts and interpret trends.",
+        reflection: "Include examples of misleading graphs to critique."
+      },
+      ex11: {
+        lessonTitle: "Building Chatbots with Python",
+        gradeBand: "9–12",
+        timeEstimate: "70 minutes",
+        ctPractice: "Decomposition",
+        activityType: "Hands-on Project",
+        objective: "Students will build a simple text-based chatbot using conditionals and variables.",
+        task: "Students write a Python script that responds differently based on user input.",
+        reflection: "Offer code templates and pair programming for support."
+      },
+      ex12: {
+        lessonTitle: "Ethics in AI: Case Study Analysis",
+        gradeBand: "9–12",
+        timeEstimate: "60 minutes",
+        ctPractice: "Abstraction",
+        activityType: "Collaborative Problem Solving",
+        objective: "Students will analyze an AI ethics case and propose guidelines for responsible use.",
+        task: "In groups, students read a case, identify harms, and present recommendations.",
+        reflection: "Ensure diverse perspectives are represented in the cases."
+      }
+    };
+
+    /* ---------------------------
+       Helper functions
+       --------------------------- */
+    function getCheckedValues(containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return [];
+      return Array.from(container.querySelectorAll("input[type='checkbox']:checked")).map(el => el.value);
+    }
+
+    function loadExample(ex) {
+      document.getElementById("lessonTitle").value = ex.lessonTitle || "";
+      document.getElementById("gradeBand").value = ex.gradeBand || "";
+      document.getElementById("timeEstimate").value = ex.timeEstimate || "";
+      document.getElementById("ctPractice").value = ex.ctPractice || "";
+      document.getElementById("activityType").value = ex.activityType || "";
+      document.getElementById("learningObjective").value = ex.objective || "";
+      document.getElementById("studentTask").value = ex.task || "";
+      document.getElementById("teacherReflection").value = ex.reflection || "";
+      generateCSTACodes();
+      buildSnapshot();
+    }
+
+    function generateCSTACodes() {
+      const gradeBand = document.getElementById("gradeBand").value;
+      const standards = getCheckedValues("csStudentStandards");
+      const out = document.getElementById("cstaCodes");
+      if (!gradeBand || standards.length === 0) {
+        out.textContent = "Select a grade band + standards to generate codes.";
+        return;
+      }
+      const prefix = gradeBand === "K–2" ? "1A" :
+                     gradeBand === "3–5" ? "1B" :
+                     gradeBand === "6–8" ? "2" : "3";
+      const codes = standards.map((s, i) => `${prefix}-${s[0]}A-0${i + 1}`);
+      out.textContent = codes.join(", ");
+    }
+
+    function buildSnapshot() {
+      const fields = {
+        "Lesson Title": document.getElementById("lessonTitle").value.trim(),
+        "Grade Band": document.getElementById("gradeBand").value,
+        "Estimated Time": document.getElementById("timeEstimate").value.trim(),
+        "Learning Objective": document.getElementById("learningObjective").value.trim(),
+        "CS Student Standards": getCheckedValues("csStudentStandards").join("; "),
+        "Suggested CSTA Codes": document.getElementById("cstaCodes").textContent,
+        "CT Practice": document.getElementById("ctPractice").value,
+        "Primary Activity Type": document.getElementById("activityType").value,
+        "Activity Rationale": getCheckedValues("activityRationale").join("; "),
+        "Equity Check": getCheckedValues("equityCheck").join("; "),
+        "Tool Dependence Check": getCheckedValues("toolCheck").join("; "),
+        "Student Task Description": document.getElementById("studentTask").value.trim(),
+        "Assessment / Evidence of Learning": getCheckedValues("assessmentTypes").join("; "),
+        "Accessibility & Inclusivity Design": getCheckedValues("accessDesign").join("; "),
+        "AI & Digital Tool Use": getCheckedValues("aiUse").join("; "),
+        "Teacher Reflection / Iteration Notes": document.getElementById("teacherReflection").value.trim()
+      };
+      let text = "";
+      for (const [label, value] of Object.entries(fields)) {
+        text += label + ":\n" + (value || "[Not specified]") + "\n\n";
+      }
+      document.getElementById("snapshot").textContent = text.trim();
+    }
+
+    function updateEquityWarning() {
+      // Simple placeholder; you can expand this logic
+      // For now, just rebuild snapshot (already called elsewhere)
+    }
+
+    function getPlanningContext() {
+      return {
+        lessonTitle: document.getElementById("lessonTitle").value.trim(),
+        gradeBand: document.getElementById("gradeBand").value,
+        timeEstimate: document.getElementById("timeEstimate").value.trim(),
+        ctPractice: document.getElementById("ctPractice").value,
+        activityType: document.getElementById("activityType").value,
+        standards: getCheckedValues("csStudentStandards"),
+        cstaCodes: document.getElementById("cstaCodes").textContent,
+        equityCheck: getCheckedValues("equityCheck"),
+        toolCheck: getCheckedValues("toolCheck"),
+        accessDesign: getCheckedValues("accessDesign"),
+        aiUse: getCheckedValues("aiUse"),
+        currentObjective: document.getElementById("learningObjective").value.trim(),
+        currentTask: document.getElementById("studentTask").value.trim(),
+        currentReflection: document.getElementById("teacherReflection").value.trim()
+      };
+    }
+
+    function buildPrompt(type, ctx, userMessage = "") {
+      const baseContext =
+        `You are an instructional coach helping a teacher plan an equitable, accessible CS lesson.\n` +
+        `Lesson Title: ${ctx.lessonTitle || "[Not set]"}\n` +
+        `Grade Band: ${ctx.gradeBand || "[Not set]"}\n` +
+        `Estimated Time: ${ctx.timeEstimate || "[Not set]"}\n` +
+        `CT Practice: ${ctx.ctPractice || "[Not set]"}\n` +
+        `Primary Activity Type: ${ctx.activityType || "[Not set]"}\n` +
+        `CS Student Standards: ${(ctx.standards || []).join(", ") || "[Not set]"}\n` +
+        `Suggested CSTA Codes: ${ctx.cstaCodes || "[Not set]"}\n` +
+        `Equity Check: ${(ctx.equityCheck || []).join(", ") || "[Not set]"}\n` +
+        `Tool Dependence Check: ${(ctx.toolCheck || []).join(", ") || "[Not set]"}\n` +
+        `Accessibility & Inclusivity Design: ${(ctx.accessDesign || []).join(", ") || "[Not set]"}\n` +
+        `AI & Digital Tool Use: ${(ctx.aiUse || []).join(", ") || "[Not set]"}\n\n`;
+
+      if (type === "objective") {
+        return baseContext +
+          "Write a single clear, student-facing learning objective for this lesson.\n" +
+          "Respond in the format:\nObjective: <one sentence>";
+      } else if (type === "task") {
+        return baseContext +
+          "Describe a concrete, student-facing task for this lesson.\n" +
+          "Respond in the format:\nStudent Task: <2–4 sentences>";
+      } else if (type === "assessment") {
+        return baseContext +
+          "Suggest assessment ideas or evidence of learning for this lesson.\n" +
+          "Respond in the format:\nAssessment: <2–4 sentences>";
+      } else if (type === "udl") {
+        return baseContext +
+          "Suggest UDL & equity supports for this lesson.\n" +
+          "Respond in the format:\nUDL & Equity Supports: <3–5 bullet-style lines>";
+      } else if (type === "full") {
+        return baseContext +
+          "Generate a concise lesson draft with sections for Objective, Student Task, Assessment, and UDL & Equity Supports.\n" +
+          "Use this format:\n" +
+          "Objective: ...\n\nStudent Task: ...\n\nAssessment: ...\n\nUDL & Equity Supports: ...";
+      } else if (type === "chat") {
+        return baseContext +
+          "The teacher asks:\n" + userMessage + "\n\n" +
+          "Answer as a supportive instructional coach with concrete, classroom-ready suggestions.";
+      }
+      return baseContext + "Provide helpful planning suggestions.";
+    }
+
+    function fakeAIResponse(type, ctx, userMessage = "") {
+      if (type === "objective") {
+        return "Objective: Students will be able to explain what they are doing and why in this CS activity.";
+      } else if (type === "task") {
+        return "Student Task: Students will work in pairs to complete the activity, then share their process with the class.";
+      } else if (type === "assessment") {
+        return "Assessment: Observe students during the activity and collect a quick exit ticket about what they learned.";
+      } else if (type === "udl") {
+        return "UDL & Equity Supports: Offer visual examples, sentence frames, and multiple ways to show understanding.";
+      } else if (type === "full") {
+        return (
+          "Objective: Students will be able to describe the steps of their process and connect them to CS ideas.\n\n" +
+          "Student Task: Students work in small groups to complete the activity, document their steps, and share with peers.\n\n" +
+          "Assessment: Use observation notes and a short written or verbal reflection to check understanding.\n\n" +
+          "UDL & Equity Supports: Provide visuals, sentence frames, flexible grouping, and options for low-tech participation."
+        );
+      } else if (type === "chat") {
+        return "Here’s a quick suggestion: try adding visuals, sentence frames, and a low-tech option so all students can participate.";
+      }
+      return "Here are some planning ideas to consider.";
+    }
+
+    async function realAIRequest(type, context, userMessage = "") {
+      const prompt = buildPrompt(type, context, userMessage);
+
+      try {
+        const res = await fetch(API_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt })
+        });
+
+        if (!res.ok) {
+          console.warn("AI endpoint returned error, falling back to local generator.");
+          return fakeAIResponse(type, context, userMessage);
+        }
+
+        const data = await res.json();
+        console.log("AI response:", data);
+        const text = data?.text;
+
+        if (!text || text.trim() === "") {
+          return fakeAIResponse(type, context, userMessage);
+        }
+
+        return text;
+      } catch (err) {
+        console.warn("AI request failed, using local fallback.", err);
+        return fakeAIResponse(type, context, userMessage);
+      }
+    }
+
+    /* ---------------------------
+       AI output parsing and apply helpers
+       --------------------------- */
+    function showAIOutput(text, label) {
+      const out = document.getElementById("aiOutput");
+      out.innerHTML = "";
+      const pLabel = document.createElement("p");
+      pLabel.className = "ai-label";
+      pLabel.textContent = label || "AI suggestion";
+      out.appendChild(pLabel);
+      const p = document.createElement("pre");
+      p.style.whiteSpace = "pre-wrap";
+      p.style.margin = "0.25rem 0";
+      p.textContent = text;
+      out.appendChild(p);
+      document.getElementById("applyRow").style.display = "flex";
+      out.dataset.last = text;
+      out.dataset.label = label || "";
+    }
+
+    function applyAIToField(kind) {
+      const out = document.getElementById("aiOutput");
+      const text = out.dataset.last || "";
+      if (!text) return;
+
+      if (kind === "objective") {
+        const m = text.match(/Objective[:\-]\s*([\s\S]*?)(?:\n\n|$)/i);
+        document.getElementById("learningObjective").value = m ? m[1].trim() : text.trim();
+      } else if (kind === "task") {
+        const m = text.match(/Student Task[:\-]\s*([\s\S]*?)(?:\n\n|$)/i);
+        document.getElementById("studentTask").value = m ? m[1].trim() : text.trim();
+      } else if (kind === "assessment") {
+        const m = text.match(/Assessment[:\-]\s*([\s\S]*?)(?:\n\n|$)/i);
+        const val = m ? m[1].trim() : text.trim();
+        document.getElementById("teacherReflection").value = val;
+      } else if (kind === "udl") {
+        const m = text.match(/UDL|UDL & Equity|UDL & Equity Supports[:\-]\s*([\s\S]*?)(?:\n\n|$)/i);
+        const val = m ? m[1].trim() : text.trim();
+        document.getElementById("teacherReflection").value = val;
+      } else if (kind === "full") {
+        const obj = (text.match(/Objective[:\-]\s*([\s\S]*?)(?:\n\n|$)/i) || [])[1];
+        const task = (text.match(/Student Task[:\-]\s*([\s\S]*?)(?:\n\n|$)/i) || [])[1];
+        const assess = (text.match(/Assessment[:\-]\s*([\s\S]*?)(?:\n\n|$)/i) || [])[1];
+        const udl = (text.match(/UDL|UDL & Equity|UDL & Equity Supports[:\-]\s*([\s\S]*?)(?:\n\n|$)/i) || [])[1];
+        if (obj) document.getElementById("learningObjective").value = obj.trim();
+        if (task) document.getElementById("studentTask").value = task.trim();
+        if (assess) document.getElementById("teacherReflection").value = assess.trim();
+        if (udl) {
+          const ref = document.getElementById("teacherReflection");
+          ref.value += (ref.value ? "\n\n" : "") + udl.trim();
+        }
+      }
+      buildSnapshot();
+    }
+
+    /* ---------------------------
+       Wiring: events and AI calls
+       --------------------------- */
+    document.addEventListener("DOMContentLoaded", () => {
+      // live updates
+      const inputs = document.querySelectorAll("input[type='text'], textarea, select, input[type='checkbox']");
+      inputs.forEach(el => {
+        el.addEventListener("input", () => {
+          if (el.id === "gradeBand" || el.closest("#csStudentStandards")) generateCSTACodes();
+          buildSnapshot();
+          updateEquityWarning();
+        });
+        el.addEventListener("change", () => {
+          if (el.id === "gradeBand" || el.closest("#csStudentStandards")) generateCSTACodes();
+          buildSnapshot();
+          updateEquityWarning();
+        });
+      });
+
+      // example loader
+      document.getElementById("exampleLoader").addEventListener("change", (e) => {
+        const key = e.target.value;
+        if (examples[key]) loadExample(examples[key]);
+      });
+
+      // Reset All button
+      document.getElementById("clearBtn").addEventListener("click", () => {
+        if (!confirm("Clear all fields in this lesson plan and reset AI assistant?")) return;
+
+        // Clear form fields
+        document.querySelectorAll("input[type='text'], textarea").forEach(el => el.value = "");
+        document.querySelectorAll("select").forEach(el => el.value = "");
+        document.querySelectorAll("input[type='checkbox']").forEach(el => el.checked = false);
+        document.getElementById("cstaCodes").innerHTML = "Select a grade band + standards to generate codes.";
+
+        // Clear AI output
+        const out = document.getElementById("aiOutput");
+        out.innerHTML = "";
+        out.dataset.last = "";
+        out.dataset.label = "";
+        document.getElementById("applyRow").style.display = "none";
+
+        // Clear chat log
+        const chatLog = document.getElementById("aiChatLog");
+        if (chatLog) chatLog.innerHTML = '<div class="ai-msg-assistant"><span>Assistant:</span> Ask for adaptations, simplifications, or extensions to your current lesson idea.</div>';
+        const chatInput = document.getElementById("aiChatInput");
+        if (chatInput) chatInput.value = "";
+
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: "smooth" });
+
+        buildSnapshot();
+        updateEquityWarning();
+      });
+
+      // AI quick actions
+      async function runAI(type) {
+        const ctx = getPlanningContext();
+        showAIOutput("Generating…", "Working");
+        const text = await realAIRequest(type, ctx);
+        const label =
+          type === "full" ? "Full Lesson Draft" :
+          type === "objective" ? "Generated Objective" :
+          type === "task" ? "Generated Student Task" :
+          type === "assessment" ? "Assessment Ideas" :
+          type === "udl" ? "UDL & Equity Supports" :
+          "AI suggestion";
+        showAIOutput(text, label);
+        document.getElementById("aiOutput").dataset.kind = type;
+      }
+
+      document.getElementById("aiObjectiveBtn").addEventListener("click", () => runAI("objective"));
+      document.getElementById("aiTaskBtn").addEventListener("click", () => runAI("task"));
+      document.getElementById("aiAssessmentBtn").addEventListener("click", () => runAI("assessment"));
+      document.getElementById("aiUDLBtn").addEventListener("click", () => runAI("udl"));
+      document.getElementById("aiFullLessonBtn").addEventListener("click", () => runAI("full"));
+
+      // apply buttons
+      document.getElementById("applyObjective").addEventListener("click", () => applyAIToField("objective"));
+      document.getElementById("applyTask").addEventListener("click", () => applyAIToField("task"));
+      document.getElementById("applyAssessment").addEventListener("click", () => applyAIToField("assessment"));
+      document.getElementById("applyUDL").addEventListener("click", () => applyAIToField("udl"));
+      document.getElementById("applyFull").addEventListener("click", () => applyAIToField("full"));
+
+      // chat
+      const chatLog = document.getElementById("aiChatLog");
+      const chatInput = document.getElementById("aiChatInput");
+      document.getElementById("aiChatSendBtn").addEventListener("click", async () => {
+        const msg = chatInput.value.trim();
+        if (!msg) return;
+        const userDiv = document.createElement("div");
+        userDiv.className = "ai-msg-user";
+        userDiv.innerHTML = "<span>You:</span> " + msg;
+        chatLog.appendChild(userDiv);
+        const ctx = getPlanningContext();
+        const reply = await realAIRequest("chat", ctx, msg);
+        const asstDiv = document.createElement("div");
+        asstDiv.className = "ai-msg-assistant";
+        asstDiv.innerHTML = "<span>Assistant:</span> " + reply;
+        chatLog.appendChild(asstDiv);
+        chatLog.scrollTop = chatLog.scrollHeight;
+        chatInput.value = "";
+      });
+
+      // initial
+      buildSnapshot();
+      updateEquityWarning();
+    });
+  </script>
+</body>
+</html>
