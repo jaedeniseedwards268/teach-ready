@@ -513,11 +513,17 @@ fetch("lessons.json")
   .then(response => response.json())
   .then(data => {
     lessonLibrary = data;
+    console.log(`Processing grade band: ${band}`, lessons);
     populateDropdown(); // your dropdown generator
+        
+    console.group("Dropdown Population Debug");
+    console.log("Lesson library loaded:", lessonLibrary);
+    console.log("Grade bands found:", Object.keys(lessonLibrary));
+    console.groupEnd();
   })
   .catch(err => console.error("Error loading lessons.json:", err));
 
-
+  .catch(err => console.error("Error loading lessons.json:", err));
 
  /* -----------------------------------------
    DATA‑DRIVEN LESSON LOADER
