@@ -250,6 +250,15 @@
         <h2>AI Lesson Assistant</h2>
         <small class="small-muted">Structured prompts + chat, aligned to your current plan.</small>
       </div>
+      <div id="libraryHealth" style="
+margin-top:10px;
+padding:8px 12px;
+background:#f8f8f8;
+border:1px solid #ddd;
+border-radius:6px;
+font-size:13px;">
+Library Status: Loading lesson library…
+</div>
 
       <div class="section-title">Quick AI Prompts</div>
       <div class="hint">Uses your current grade band, CT practice, and CS standards.</div>
@@ -417,7 +426,128 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      let lessonLibrary = {};
+let lessonIndex = {};  
+
+/* -------------------------------
+   LESSON LIBRARY VALIDATOR
+--------------------------------*/
+
+function validateLessonLibrary(data) {
+
+  console.group("Lesson Library Validation");
+
+  const idSet = new Set();
+  const duplicates = [];
+  const missingFields = [];
+
+  const requiredFields = [
+    "id",
+    "title",
+    "topic",
+    "gradeBand",
+    "objective",
+    "task",
+    "materials",
+    "procedures"
+  ];
+
+  let totalLessons = 0;
+
+  Object.keys(data).forEach(band => {
+
+    const lessons = data[band];
+
+    if (!Array.isArray(lessons)) {
+      console.error(`❌ Grade band "${band}" is not an array`);
+      return;
+    }
+
+    lessons.forEach(lesson => {
+
+      totalLessons++;
+
+      /* Duplicate ID detection */
+
+      if (idSet.has(lesson.id)) {
+        duplicates.push(lesson.id);
+      } else {
+        idSet.add(lesson.id);
+      }
+
+      /* Missing fields */
+
+      requiredFields.forEach(field => {
+        if (!lesson[field]) {
+          missingFields.push(`${lesson.id} → ${field}`);
+        }
+      });
+
+    });
+
+  });
+/* -------------------------------
+   BUILD LESSON INDEX
+--------------------------------*/
+
+function buildLessonIndex(data) {
+  lessonIndex = {};
+
+  Object.keys(data).forEach((band) => {
+    const lessons = data[band];
+
+    if (!Array.isArray(lessons)) return;
+
+    lessons.forEach((lesson) => {
+      if (lesson.id) {
+        lessonIndex[lesson.id] = lesson;
+      }
+    });
+  });
+
+  console.log("Lesson index built:", Object.keys(lessonIndex).length, "lessons");
+}
+  console.log("Total lessons:", totalLessons);
+
+  if (duplicates.length > 0) {
+    console.error("Duplicate IDs:", duplicates);
+  } else {
+    console.log("✅ No duplicate IDs");
+  }
+
+  if (missingFields.length > 0) {
+    console.warn("Missing fields:", missingFields);
+  }
+
+  console.groupEnd();
+
+  updateLibraryHealthPanel(totalLessons, duplicates, missingFields);
+}
+      /* -------------------------------
+   UPDATE HEALTH PANEL
+--------------------------------*/
+
+function updateLibraryHealthPanel(total, duplicates, missing) {
+
+  const panel = document.getElementById("libraryHealth");
+
+  if (!panel) return;
+
+  let color = "#2e7d32";
+  let status = "Healthy";
+
+  if (duplicates.length > 0 || missing.length > 0) {
+    color = "#b71c1c";
+    status = "Issues Detected";
+  }
+
+  panel.innerHTML = `
+  <strong>Lesson Library Status</strong><br>
+  Total Lessons: ${total}<br>
+  Duplicate IDs: ${duplicates.length}<br>
+  Missing Fields: ${missing.length}<br>
+  Status: <span style="color:${color};font-weight:600">${status}</span>
+  `;
+}
 
       const $ = (id) => document.getElementById(id);
 
@@ -912,30 +1042,20 @@
         });
       }
 
-      fetch("lessons.json")
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`Unable to load lessons.json (${response.status})`);
-          }
-          return response.json();
-        })
-        .then((data) => {
-          lessonLibrary = data || {};
-          populateDropdown();
-        })
-        .catch((err) => {
-          console.error("Error loading lessons.json:", err);
-        });
+  fetch("lessons.json")
+  .then((response) => response.json())
+  .then((data) => {
+    lessonLibrary = data;
 
-      function findLessonById(id) {
-        for (const band of Object.keys(lessonLibrary)) {
-          const lessons = Array.isArray(lessonLibrary[band]) ? lessonLibrary[band] : [];
-          const lesson = lessons.find((l) => l.id === id);
-          if (lesson) return lesson;
-        }
-        return null;
-      }
+    validateLessonLibrary(lessonLibrary);
+    buildLessonIndex(lessonLibrary);
+    populateDropdown();
+  })
+  .catch((err) => console.error("Error loading lessons.json:", err));        
 
+     function findLessonById(id) {
+  return lessonIndex[id] || null;
+}
       function setChecks(groupName, values) {
         if (!Array.isArray(values)) return;
 
