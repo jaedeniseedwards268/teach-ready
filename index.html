@@ -111,7 +111,7 @@
       border: 1px solid #ddd;
       padding: 1rem;
       border-radius: 6px;
-      min-height: 80px;
+      min-height: 120px;
     }
 
     .ai-output pre {
@@ -132,7 +132,7 @@
       display: none;
       margin-top: 0.75rem;
       gap: 12px;
-      flex-wrap: nowrap;
+      flex-wrap: wrap;
       align-items: center;
     }
 
@@ -185,6 +185,32 @@
       white-space: nowrap;
     }
 
+    .ai-tab-bar {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .ai-tab {
+      padding: 4px 10px;
+      border: 1px solid #ccc;
+      background: #f3f3f3;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    .ai-tab.active {
+      background: white;
+      border-bottom: 1px solid white;
+      font-weight: 600;
+    }
+
+    .ai-tab-panel {
+      min-height: 120px;
+    }
+
     hr {
       border: none;
       border-top: 1px solid #e2e2e2;
@@ -229,7 +255,9 @@
       .apply-row,
       .export-row,
       .ai-chat-input,
-      .ai-quick-actions {
+      .ai-quick-actions,
+      .ai-tab-bar,
+      #libraryHealth {
         display: none !important;
       }
 
@@ -249,31 +277,66 @@
       <div class="card-header">
         <h2>AI Lesson Assistant</h2>
         <small class="small-muted">Structured prompts + chat, aligned to your current plan.</small>
+
+        <div id="libraryHealth" style="
+          margin-top:10px;
+          padding:8px 12px;
+          background:#f8f8f8;
+          border:1px solid #ddd;
+          border-radius:6px;
+          font-size:13px;">
+          Library Status: Loading lesson library…
+        </div>
       </div>
-      <div id="libraryHealth" style="
-margin-top:10px;
-padding:8px 12px;
-background:#f8f8f8;
-border:1px solid #ddd;
-border-radius:6px;
-font-size:13px;">
-Library Status: Loading lesson library…
-</div>
 
       <div class="section-title">Quick AI Prompts</div>
       <div class="hint">Uses your current grade band, CT practice, and CS standards.</div>
+
       <div class="ai-quick-actions" role="toolbar" aria-label="AI quick actions">
         <button id="aiObjectiveBtn">Generate Objective</button>
         <button id="aiTaskBtn">Generate Student Task</button>
         <button id="aiAssessmentBtn">Assessment Ideas</button>
         <button id="aiUDLBtn">UDL & Equity Supports</button>
         <button id="aiFullLessonBtn">Full Lesson Draft</button>
+        <button id="aiMultidayBtn">3-Day Lesson</button>
+        <button id="aiMaterialsBtn">Materials List</button>
+        <button id="aiRubricBtn">Rubric</button>
+        <button id="aiWorksheetBtn">Worksheet</button>
+        <button id="clearAiMemoryBtn">Clear AI Memory</button>
       </div>
 
       <div class="section-title">AI Output</div>
-      <div id="aiOutput" class="ai-output" aria-live="polite">
-        <p class="ai-label">AI suggestions will appear here.</p>
-        <p class="small-muted">Use quick buttons or ask a question below. Responses can be applied to fields.</p>
+
+      <div class="ai-tabs">
+        <div class="ai-tab-bar">
+          <button class="ai-tab active" data-tab="lesson">Lesson</button>
+          <button class="ai-tab" data-tab="multiday">Multi-Day</button>
+          <button class="ai-tab" data-tab="materials">Materials</button>
+          <button class="ai-tab" data-tab="rubric">Rubric</button>
+          <button class="ai-tab" data-tab="worksheet">Worksheet</button>
+        </div>
+
+        <div class="ai-tab-content">
+          <div id="tab-lesson" class="ai-output ai-tab-panel">
+            <p class="small-muted">AI suggestions will appear here.</p>
+          </div>
+
+          <div id="tab-multiday" class="ai-output ai-tab-panel" style="display:none">
+            <p class="small-muted">No AI output yet.</p>
+          </div>
+
+          <div id="tab-materials" class="ai-output ai-tab-panel" style="display:none">
+            <p class="small-muted">No AI output yet.</p>
+          </div>
+
+          <div id="tab-rubric" class="ai-output ai-tab-panel" style="display:none">
+            <p class="small-muted">No AI output yet.</p>
+          </div>
+
+          <div id="tab-worksheet" class="ai-output ai-tab-panel" style="display:none">
+            <p class="small-muted">No AI output yet.</p>
+          </div>
+        </div>
       </div>
 
       <div class="apply-row" id="applyRow">
@@ -292,11 +355,11 @@ Library Status: Loading lesson library…
 
       <div class="section-title" style="margin-top:.75rem">Chat with the Assistant</div>
       <div id="aiChatLog" class="ai-chat-log" aria-live="polite">
-        <div class="ai-msg-assistant">Assistant: Ask for adaptations, simplifications, or extensions.</div>
+        <div class="ai-msg-assistant">Assistant: Ask for adaptations, simplifications, extensions, rubrics, worksheets, or multi-day plans.</div>
       </div>
 
       <div class="ai-chat-input">
-        <textarea id="aiChatInput" placeholder="Ask for an unplugged version, UDL supports, extensions, etc."></textarea>
+        <textarea id="aiChatInput" placeholder="Ask for an unplugged version, UDL supports, extensions, rubric, worksheet, etc."></textarea>
         <button id="aiChatSendBtn">Send</button>
       </div>
     </section>
@@ -413,7 +476,6 @@ Library Status: Loading lesson library…
         Print Lesson Plan
       </button>
     </section>
-
   </div>
 
   <div id="exportLesson">
@@ -426,128 +488,16 @@ Library Status: Loading lesson library…
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-let lessonIndex = {};  
+      let lessonLibrary = {};
+      let lessonIndex = {};
 
-/* -------------------------------
-   LESSON LIBRARY VALIDATOR
---------------------------------*/
-
-function validateLessonLibrary(data) {
-
-  console.group("Lesson Library Validation");
-
-  const idSet = new Set();
-  const duplicates = [];
-  const missingFields = [];
-
-  const requiredFields = [
-    "id",
-    "title",
-    "topic",
-    "gradeBand",
-    "objective",
-    "task",
-    "materials",
-    "procedures"
-  ];
-
-  let totalLessons = 0;
-
-  Object.keys(data).forEach(band => {
-
-    const lessons = data[band];
-
-    if (!Array.isArray(lessons)) {
-      console.error(`❌ Grade band "${band}" is not an array`);
-      return;
-    }
-
-    lessons.forEach(lesson => {
-
-      totalLessons++;
-
-      /* Duplicate ID detection */
-
-      if (idSet.has(lesson.id)) {
-        duplicates.push(lesson.id);
-      } else {
-        idSet.add(lesson.id);
-      }
-
-      /* Missing fields */
-
-      requiredFields.forEach(field => {
-        if (!lesson[field]) {
-          missingFields.push(`${lesson.id} → ${field}`);
-        }
-      });
-
-    });
-
-  });
-/* -------------------------------
-   BUILD LESSON INDEX
---------------------------------*/
-
-function buildLessonIndex(data) {
-  lessonIndex = {};
-
-  Object.keys(data).forEach((band) => {
-    const lessons = data[band];
-
-    if (!Array.isArray(lessons)) return;
-
-    lessons.forEach((lesson) => {
-      if (lesson.id) {
-        lessonIndex[lesson.id] = lesson;
-      }
-    });
-  });
-
-  console.log("Lesson index built:", Object.keys(lessonIndex).length, "lessons");
-}
-  console.log("Total lessons:", totalLessons);
-
-  if (duplicates.length > 0) {
-    console.error("Duplicate IDs:", duplicates);
-  } else {
-    console.log("✅ No duplicate IDs");
-  }
-
-  if (missingFields.length > 0) {
-    console.warn("Missing fields:", missingFields);
-  }
-
-  console.groupEnd();
-
-  updateLibraryHealthPanel(totalLessons, duplicates, missingFields);
-}
-      /* -------------------------------
-   UPDATE HEALTH PANEL
---------------------------------*/
-
-function updateLibraryHealthPanel(total, duplicates, missing) {
-
-  const panel = document.getElementById("libraryHealth");
-
-  if (!panel) return;
-
-  let color = "#2e7d32";
-  let status = "Healthy";
-
-  if (duplicates.length > 0 || missing.length > 0) {
-    color = "#b71c1c";
-    status = "Issues Detected";
-  }
-
-  panel.innerHTML = `
-  <strong>Lesson Library Status</strong><br>
-  Total Lessons: ${total}<br>
-  Duplicate IDs: ${duplicates.length}<br>
-  Missing Fields: ${missing.length}<br>
-  Status: <span style="color:${color};font-weight:600">${status}</span>
-  `;
-}
+      let aiMemory = {
+        lesson: "",
+        multiday: "",
+        materials: "",
+        rubric: "",
+        worksheet: ""
+      };
 
       const $ = (id) => document.getElementById(id);
 
@@ -581,20 +531,21 @@ function updateLibraryHealthPanel(total, duplicates, missing) {
 
         const div = document.createElement("div");
         div.className = sender === "user" ? "ai-msg-user" : "ai-msg-assistant";
-        div.textContent = `${sender === "user" ? "You" : "Assistant"}: ${text}`;
+        div.textContent = \`\${sender === "user" ? "You" : "Assistant"}: \${text}\`;
         log.appendChild(div);
         log.scrollTop = log.scrollHeight;
       }
 
-      function showAIOutput(text) {
-        const out = $("aiOutput");
-        if (!out) return;
+      function showAIOutput(text, type = "lesson") {
+        const panel = $("tab-" + type);
+        if (!panel) return;
 
         const pre = document.createElement("pre");
         pre.textContent = text;
-        out.innerHTML = "";
-        out.appendChild(pre);
-        out.dataset.last = text;
+        panel.innerHTML = "";
+        panel.appendChild(pre);
+
+        aiMemory[type] = text;
 
         const applyRow = $("applyRow");
         const exportRow = $("exportRow");
@@ -603,150 +554,18 @@ function updateLibraryHealthPanel(total, duplicates, missing) {
         if (exportRow) exportRow.style.display = "flex";
       }
 
-      async function sendChatMessage() {
-        const input = $("aiChatInput");
-        if (!input) return;
-
-        const text = input.value.trim();
-        if (!text) return;
-
-        appendChatMessage("user", text);
-        input.value = "";
-
-        try {
-          const response = await fetch("/api/chat", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: text })
-          });
-
-          if (!response.ok) {
-            throw new Error(`Request failed with status ${response.status}`);
-          }
-
-          const data = await response.json();
-          const aiText = data.reply || "[No response]";
-          appendChatMessage("assistant", aiText);
-          showAIOutput(aiText);
-        } catch (error) {
-          console.error("Chat request failed:", error);
-          const fallback = "Sorry, the assistant could not be reached.";
-          appendChatMessage("assistant", fallback);
-          showAIOutput(fallback);
-        }
-      }
-
-      function buildQuickPrompt(type) {
-        const gradeBand = $("gradeBand")?.value || "the selected grade band";
-        const ctPractice = $("ctPractice")?.value || "the selected CT practice";
-        const csStandard = $("csStandard")?.value || "the selected CS standard";
-
-        const prompts = {
-          objective: `Generate a clear student-friendly learning objective for ${gradeBand}, aligned to ${ctPractice} and CS standard ${csStandard}. Label it as Objective:`,
-          task: `Generate a student task for ${gradeBand}, aligned to ${ctPractice} and CS standard ${csStandard}. Label it as Student Task:`,
-          assessment: `Generate assessment ideas for ${gradeBand}, aligned to ${ctPractice} and CS standard ${csStandard}. Label it as Assessment:`,
-          udl: `Generate UDL and equity supports for ${gradeBand}, aligned to ${ctPractice} and CS standard ${csStandard}. Label it as UDL:`,
-          full: `Generate a full lesson draft for ${gradeBand}, aligned to ${ctPractice} and CS standard ${csStandard}. Use these labels exactly: Objective:, Student Task:, Assessment:, UDL:`
-        };
-
-        return prompts[type];
-      }
-
-      async function sendQuickPrompt(type) {
-        const prompt = buildQuickPrompt(type);
-        if (!prompt) return;
-
-        appendChatMessage("user", prompt);
-
-        try {
-          const response = await fetch("/api/chat", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: prompt })
-          });
-
-          if (!response.ok) {
-            throw new Error(`Request failed with status ${response.status}`);
-          }
-
-          const data = await response.json();
-          const aiText = data.reply || "[No response]";
-          appendChatMessage("assistant", aiText);
-          showAIOutput(aiText);
-        } catch (error) {
-          console.error("Quick prompt request failed:", error);
-          const fallback = "Sorry, the assistant could not be reached.";
-          appendChatMessage("assistant", fallback);
-          showAIOutput(fallback);
-        }
-      }
-
       function parseAISections(text) {
         return {
           objective:
-            (text.match(/Objective[:\-]\s*([\s\S]*?)(?=\n\n|$)/i) || [])[1]?.trim() || "",
+            (text.match(/Objective[:\\-]\\s*([\\s\\S]*?)(?=\\n\\n|$)/i) || [])[1]?.trim() || "",
           task:
-            (text.match(/Student Task[:\-]\s*([\s\S]*?)(?=\n\n|$)/i) || [])[1]?.trim() || "",
+            (text.match(/Student Task[:\\-]\\s*([\\s\\S]*?)(?=\\n\\n|$)/i) || [])[1]?.trim() || "",
           assessment:
-            (text.match(/Assessment[:\-]\s*([\s\S]*?)(?=\n\n|$)/i) || [])[1]?.trim() || "",
+            (text.match(/Assessment[:\\-]\\s*([\\s\\S]*?)(?=\\n\\n|$)/i) || [])[1]?.trim() || "",
           udl:
-            (text.match(/UDL(?:\s*&\s*Equity Supports)?[:\-]\s*([\s\S]*?)(?=\n\n|$)/i) || [])[1]?.trim() || ""
+            (text.match(/UDL(?:\\s*&\\s*Equity Supports)?[:\\-]\\s*([\\s\\S]*?)(?=\\n\\n|$)/i) || [])[1]?.trim() || ""
         };
       }
-
-      safeAddListener("aiChatSendBtn", "click", sendChatMessage);
-
-      safeAddListener("aiChatInput", "keydown", (e) => {
-        if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
-          sendChatMessage();
-        }
-      });
-
-      safeAddListener("aiObjectiveBtn", "click", () => sendQuickPrompt("objective"));
-      safeAddListener("aiTaskBtn", "click", () => sendQuickPrompt("task"));
-      safeAddListener("aiAssessmentBtn", "click", () => sendQuickPrompt("assessment"));
-      safeAddListener("aiUDLBtn", "click", () => sendQuickPrompt("udl"));
-      safeAddListener("aiFullLessonBtn", "click", () => sendQuickPrompt("full"));
-
-      safeAddListener("applyObjective", "click", () => {
-        const ai = $("aiOutput")?.dataset.last || "";
-        const match = ai.match(/Objective[:\-]\s*([\s\S]*?)(?=\n\n|$)/i);
-        safeSetValue("objective", match ? match[1].trim() : ai);
-        updateSnapshot();
-      });
-
-      safeAddListener("applyTask", "click", () => {
-        const ai = $("aiOutput")?.dataset.last || "";
-        const match = ai.match(/Student Task[:\-]\s*([\s\S]*?)(?=\n\n|$)/i);
-        safeSetValue("task", match ? match[1].trim() : ai);
-        updateSnapshot();
-      });
-
-      safeAddListener("applyAssessment", "click", () => {
-        const ai = $("aiOutput")?.dataset.last || "";
-        const match = ai.match(/Assessment[:\-]\s*([\s\S]*?)(?=\n\n|$)/i);
-        safeSetValue("assessment", match ? match[1].trim() : ai);
-        updateSnapshot();
-      });
-
-      safeAddListener("applyUDL", "click", () => {
-        const ai = $("aiOutput")?.dataset.last || "";
-        const match = ai.match(/UDL(?:\s*&\s*Equity Supports)?[:\-]\s*([\s\S]*?)(?=\n\n|$)/i);
-        safeSetValue("udl", match ? match[1].trim() : ai);
-        updateSnapshot();
-      });
-
-      safeAddListener("applyFull", "click", () => {
-        const ai = $("aiOutput")?.dataset.last || "";
-        const sections = parseAISections(ai);
-
-        safeSetValue("objective", sections.objective);
-        safeSetValue("task", sections.task);
-        safeSetValue("assessment", sections.assessment);
-        safeSetValue("udl", sections.udl);
-
-        updateSnapshot();
-      });
 
       function collectLessonFields() {
         return {
@@ -765,55 +584,15 @@ function updateLibraryHealthPanel(total, duplicates, missing) {
         };
       }
 
-      function buildLessonText() {
-        const fields = collectLessonFields();
-        const aiText = $("aiOutput")?.dataset.last || "";
-        const aiSections = aiText ? parseAISections(aiText) : {};
-
-        const finalObjective =
-          fields["Learning Objective"] || aiSections.objective || "[Not specified]";
-        const finalTask =
-          fields["Student Task Description"] || aiSections.task || "[Not specified]";
-        const finalAssessment =
-          fields["Assessment / Evidence of Learning"] || aiSections.assessment || "[Not specified]";
-        const finalUDL =
-          fields["Accessibility & Inclusivity Design"] || aiSections.udl || "[Not specified]";
-
-        let text = "CS Teaching Toolkit – Lesson Plan\n\n";
-        text += `Learning Objective:\n${finalObjective}\n\n`;
-        text += `Student Task:\n${finalTask}\n\n`;
-        text += `Assessment:\n${finalAssessment}\n\n`;
-        text += `UDL & Equity Supports:\n${finalUDL}\n\n`;
-
-        for (const [label, value] of Object.entries(fields)) {
-          if (
-            [
-              "Learning Objective",
-              "Student Task Description",
-              "Assessment / Evidence of Learning",
-              "Accessibility & Inclusivity Design"
-            ].includes(label)
-          ) {
-            continue;
-          }
-          text += `${label}:\n${value || "[Not specified]"}\n\n`;
-        }
-
-        const chatText = $("aiChatLog")?.innerText.trim() || "";
-        text += `AI Lesson Assistant Log:\n${chatText || "[No chat messages]"}\n`;
-
-        return text;
-      }
-
       function escapeHtml(text) {
         const div = document.createElement("div");
         div.textContent = text;
         return div.innerHTML;
       }
 
-      function buildLessonHTML() {
+      function buildLessonText() {
         const fields = collectLessonFields();
-        const aiText = $("aiOutput")?.dataset.last || "";
+        const aiText = aiMemory.lesson || "";
         const aiSections = aiText ? parseAISections(aiText) : {};
 
         const finalObjective =
@@ -825,19 +604,59 @@ function updateLibraryHealthPanel(total, duplicates, missing) {
         const finalUDL =
           fields["Accessibility & Inclusivity Design"] || aiSections.udl || "[Not specified]";
 
-        let html = `
+        let text = "CS Teaching Toolkit – Lesson Plan\\n\\n";
+        text += \`Learning Objective:\\n\${finalObjective}\\n\\n\`;
+        text += \`Student Task:\\n\${finalTask}\\n\\n\`;
+        text += \`Assessment:\\n\${finalAssessment}\\n\\n\`;
+        text += \`UDL & Equity Supports:\\n\${finalUDL}\\n\\n\`;
+
+        for (const [label, value] of Object.entries(fields)) {
+          if (
+            [
+              "Learning Objective",
+              "Student Task Description",
+              "Assessment / Evidence of Learning",
+              "Accessibility & Inclusivity Design"
+            ].includes(label)
+          ) {
+            continue;
+          }
+          text += \`\${label}:\\n\${value || "[Not specified]"}\\n\\n\`;
+        }
+
+        const chatText = $("aiChatLog")?.innerText.trim() || "";
+        text += \`AI Lesson Assistant Log:\\n\${chatText || "[No chat messages]"}\\n\`;
+
+        return text;
+      }
+
+      function buildLessonHTML() {
+        const fields = collectLessonFields();
+        const aiText = aiMemory.lesson || "";
+        const aiSections = aiText ? parseAISections(aiText) : {};
+
+        const finalObjective =
+          fields["Learning Objective"] || aiSections.objective || "[Not specified]";
+        const finalTask =
+          fields["Student Task Description"] || aiSections.task || "[Not specified]";
+        const finalAssessment =
+          fields["Assessment / Evidence of Learning"] || aiSections.assessment || "[Not specified]";
+        const finalUDL =
+          fields["Accessibility & Inclusivity Design"] || aiSections.udl || "[Not specified]";
+
+        let html = \`
           <h2>Learning Objective</h2>
-          <p>${escapeHtml(finalObjective).replace(/\n/g, "<br>")}</p>
+          <p>\${escapeHtml(finalObjective).replace(/\\n/g, "<br>")}</p>
 
           <h2>Student Task</h2>
-          <p>${escapeHtml(finalTask).replace(/\n/g, "<br>")}</p>
+          <p>\${escapeHtml(finalTask).replace(/\\n/g, "<br>")}</p>
 
           <h2>Assessment</h2>
-          <p>${escapeHtml(finalAssessment).replace(/\n/g, "<br>")}</p>
+          <p>\${escapeHtml(finalAssessment).replace(/\\n/g, "<br>")}</p>
 
           <h2>UDL & Equity Supports</h2>
-          <p>${escapeHtml(finalUDL).replace(/\n/g, "<br>")}</p>
-        `;
+          <p>\${escapeHtml(finalUDL).replace(/\\n/g, "<br>")}</p>
+        \`;
 
         for (const [label, value] of Object.entries(fields)) {
           if (
@@ -851,20 +670,475 @@ function updateLibraryHealthPanel(total, duplicates, missing) {
             continue;
           }
 
-          html += `
-            <h2>${escapeHtml(label)}</h2>
-            <p>${escapeHtml(value || "[Not specified]").replace(/\n/g, "<br>")}</p>
-          `;
+          html += \`
+            <h2>\${escapeHtml(label)}</h2>
+            <p>\${escapeHtml(value || "[Not specified]").replace(/\\n/g, "<br>")}</p>
+          \`;
         }
 
         const chatText = $("aiChatLog")?.innerText.trim() || "[No chat messages]";
-        html += `
+        html += \`
           <h2>AI Lesson Assistant Log</h2>
-          <p>${escapeHtml(chatText).replace(/\n/g, "<br>")}</p>
-        `;
+          <p>\${escapeHtml(chatText).replace(/\\n/g, "<br>")}</p>
+        \`;
 
         return html;
       }
+
+      function updateSnapshot() {
+        const snap = $("snapshotContent");
+        if (!snap) return;
+
+        const fields = collectLessonFields();
+
+        snap.innerHTML = \`
+          <strong>Objective:</strong> \${fields["Learning Objective"] || "<em>Not set</em>"}<br><br>
+          <strong>Task:</strong> \${fields["Student Task Description"] || "<em>Not set</em>"}<br><br>
+          <strong>Assessment:</strong> \${fields["Assessment / Evidence of Learning"] || "<em>Not set</em>"}<br><br>
+          <strong>UDL:</strong> \${fields["Accessibility & Inclusivity Design"] || "<em>Not set</em>"}<br><br>
+          <strong>Grade Band:</strong> \${fields["Grade Band"] || "<em>Not set</em>"}<br>
+          <strong>CT Practice:</strong> \${fields["CT Practice"] || "<em>Not set</em>"}<br>
+          <strong>CS Standard:</strong> \${fields["CS Standard"] || "<em>Not set</em>"}<br>
+        \`;
+      }
+
+      function buildQuickPrompt(type) {
+        const gradeBand = $("gradeBand")?.value || "the selected grade band";
+        const ctPractice = $("ctPractice")?.value || "the selected CT practice";
+        const csStandard = $("csStandard")?.value || "the selected CS standard";
+        const objective = $("objective")?.value || "";
+        const task = $("task")?.value || "";
+
+        const context = \`
+Grade Band: \${gradeBand}
+CT Practice: \${ctPractice}
+CS Standard: \${csStandard}
+Current Objective: \${objective}
+Current Task: \${task}
+\`.trim();
+
+        const prompts = {
+          objective: \`\${context}\\n\\nGenerate a clear student-friendly learning objective.\`,
+          task: \`\${context}\\n\\nGenerate a strong student task.\`,
+          assessment: \`\${context}\\n\\nGenerate assessment ideas for this lesson.\`,
+          udl: \`\${context}\\n\\nGenerate UDL and equity supports for this lesson.\`,
+          full: \`\${context}\\n\\nGenerate a full lesson draft.\`,
+          multiday: \`\${context}\\n\\nGenerate a 3-day lesson sequence.\`,
+          materials: \`\${context}\\n\\nGenerate a materials list, preparation steps, and teacher notes.\`,
+          rubric: \`\${context}\\n\\nGenerate a simple classroom rubric for this lesson.\`,
+          worksheet: \`\${context}\\n\\nGenerate a student worksheet for this lesson.\`
+        };
+
+        return prompts[type];
+      }
+
+      function buildAIContext() {
+        const parts = [];
+
+        if (aiMemory.lesson) parts.push("Current Lesson Draft:\\n" + aiMemory.lesson);
+        if (aiMemory.multiday) parts.push("Current Multi-Day Plan:\\n" + aiMemory.multiday);
+        if (aiMemory.materials) parts.push("Current Materials List:\\n" + aiMemory.materials);
+        if (aiMemory.rubric) parts.push("Current Rubric:\\n" + aiMemory.rubric);
+        if (aiMemory.worksheet) parts.push("Current Worksheet:\\n" + aiMemory.worksheet);
+
+        return parts.join("\\n\\n");
+      }
+
+      async function sendChatMessage() {
+        const input = $("aiChatInput");
+        if (!input) return;
+
+        const text = input.value.trim();
+        if (!text) return;
+
+        appendChatMessage("user", text);
+        input.value = "";
+
+        const pageContext = \`
+Grade Band: \${$("gradeBand")?.value || ""}
+CT Practice: \${$("ctPractice")?.value || ""}
+CS Standard: \${$("csStandard")?.value || ""}
+Objective: \${$("objective")?.value || ""}
+Task: \${$("task")?.value || ""}
+Assessment: \${$("assessment")?.value || ""}
+UDL: \${$("udl")?.value || ""}
+\`.trim();
+
+        const aiContext = buildAIContext();
+
+        const fullMessage = \`
+Use the lesson-planning context below when relevant.
+
+PAGE CONTEXT:
+\${pageContext}
+
+EXISTING AI OUTPUT:
+\${aiContext || "None yet."}
+
+USER REQUEST:
+\${text}
+\`.trim();
+
+        try {
+          const response = await fetch("/api/ai", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              message: fullMessage,
+              mode: "lesson"
+            })
+          });
+
+          if (!response.ok) {
+            throw new Error(\`Request failed with status \${response.status}\`);
+          }
+
+          const data = await response.json();
+          const aiText = data.reply || data.text || "[No response]";
+
+          appendChatMessage("assistant", aiText);
+          showAIOutput(aiText, "lesson");
+        } catch (error) {
+          console.error("Chat request failed:", error);
+          const fallback = "Sorry, the assistant could not be reached.";
+          appendChatMessage("assistant", fallback);
+          showAIOutput(fallback, "lesson");
+        }
+      }
+
+      async function sendQuickPrompt(type) {
+        const prompt = buildQuickPrompt(type);
+        if (!prompt) return;
+
+        appendChatMessage("user", prompt);
+
+        const modeMap = {
+          objective: "lesson",
+          task: "lesson",
+          assessment: "lesson",
+          udl: "lesson",
+          full: "lesson",
+          multiday: "multiday",
+          materials: "materials",
+          rubric: "rubric",
+          worksheet: "worksheet"
+        };
+
+        const pageContext = \`
+Grade Band: \${$("gradeBand")?.value || ""}
+CT Practice: \${$("ctPractice")?.value || ""}
+CS Standard: \${$("csStandard")?.value || ""}
+Objective: \${$("objective")?.value || ""}
+Task: \${$("task")?.value || ""}
+Assessment: \${$("assessment")?.value || ""}
+UDL: \${$("udl")?.value || ""}
+\`.trim();
+
+        const aiContext = buildAIContext();
+
+        const fullMessage = \`
+Use the lesson-planning context below when relevant.
+
+PAGE CONTEXT:
+\${pageContext}
+
+EXISTING AI OUTPUT:
+\${aiContext || "None yet."}
+
+USER REQUEST:
+\${prompt}
+\`.trim();
+
+        try {
+          const response = await fetch("/api/ai", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              message: fullMessage,
+              mode: modeMap[type] || "lesson"
+            })
+          });
+
+          if (!response.ok) {
+            throw new Error(\`Request failed with status \${response.status}\`);
+          }
+
+          const data = await response.json();
+          const aiText = data.reply || data.text || "[No response]";
+
+          appendChatMessage("assistant", aiText);
+
+          const outputType =
+            type === "multiday" ||
+            type === "materials" ||
+            type === "rubric" ||
+            type === "worksheet"
+              ? type
+              : "lesson";
+
+          showAIOutput(aiText, outputType);
+        } catch (error) {
+          console.error("Quick prompt request failed:", error);
+          const fallback = "Sorry, the assistant could not be reached.";
+          appendChatMessage("assistant", fallback);
+          showAIOutput(fallback, "lesson");
+        }
+      }
+
+      function clearAIMemory() {
+        aiMemory = {
+          lesson: "",
+          multiday: "",
+          materials: "",
+          rubric: "",
+          worksheet: ""
+        };
+
+        ["lesson", "multiday", "materials", "rubric", "worksheet"].forEach((type) => {
+          const panel = $("tab-" + type);
+          if (panel) panel.innerHTML = "<p class='small-muted'>No AI output yet.</p>";
+        });
+
+        const chatLog = $("aiChatLog");
+        if (chatLog) {
+          chatLog.innerHTML =
+            "<div class='ai-msg-assistant'>Assistant: Memory cleared. Start a new lesson or ask a new question.</div>";
+        }
+
+        const applyRow = $("applyRow");
+        const exportRow = $("exportRow");
+
+        if (applyRow) applyRow.style.display = "none";
+        if (exportRow) exportRow.style.display = "none";
+      }
+
+      function validateLessonLibrary(data) {
+        console.group("Lesson Library Validation");
+
+        const idSet = new Set();
+        const duplicates = [];
+        const missingFields = [];
+
+        const requiredFields = [
+          "id",
+          "title",
+          "topic",
+          "gradeBand",
+          "objective",
+          "task",
+          "materials",
+          "procedures"
+        ];
+
+        let totalLessons = 0;
+
+        Object.keys(data).forEach((band) => {
+          const lessons = data[band];
+
+          if (!Array.isArray(lessons)) {
+            console.error(\`Grade band "\${band}" is not an array\`);
+            return;
+          }
+
+          lessons.forEach((lesson) => {
+            totalLessons++;
+
+            if (idSet.has(lesson.id)) {
+              duplicates.push(lesson.id);
+            } else {
+              idSet.add(lesson.id);
+            }
+
+            requiredFields.forEach((field) => {
+              if (!lesson[field]) {
+                missingFields.push(\`\${lesson.id || "(no id)"} → \${field}\`);
+              }
+            });
+          });
+        });
+
+        console.log("Total lessons:", totalLessons);
+        if (duplicates.length > 0) console.error("Duplicate IDs:", duplicates);
+        else console.log("No duplicate IDs");
+
+        if (missingFields.length > 0) console.warn("Missing fields:", missingFields);
+
+        console.groupEnd();
+        updateLibraryHealthPanel(totalLessons, duplicates, missingFields);
+      }
+
+      function updateLibraryHealthPanel(total, duplicates, missing) {
+        const panel = $("libraryHealth");
+        if (!panel) return;
+
+        let color = "#2e7d32";
+        let status = "Healthy";
+
+        if (duplicates.length > 0 || missing.length > 0) {
+          color = "#b71c1c";
+          status = "Issues Detected";
+        }
+
+        panel.innerHTML = \`
+          <strong>Lesson Library Status</strong><br>
+          Total Lessons: \${total}<br>
+          Duplicate IDs: \${duplicates.length}<br>
+          Missing Fields: \${missing.length}<br>
+          Status: <span style="color:\${color};font-weight:600">\${status}</span>
+        \`;
+      }
+
+      function buildLessonIndex(data) {
+        lessonIndex = {};
+
+        Object.keys(data).forEach((band) => {
+          const lessons = data[band];
+          if (!Array.isArray(lessons)) return;
+
+          lessons.forEach((lesson) => {
+            if (lesson.id) {
+              lessonIndex[lesson.id] = lesson;
+            }
+          });
+        });
+
+        console.log("Lesson index built:", Object.keys(lessonIndex).length, "lessons");
+      }
+
+      function populateDropdown() {
+        const exampleLoader = $("exampleLoader");
+        if (!exampleLoader) return;
+
+        exampleLoader.innerHTML = "";
+
+        const defaultOpt = document.createElement("option");
+        defaultOpt.value = "";
+        defaultOpt.textContent = "— Select an Example Lesson —";
+        exampleLoader.appendChild(defaultOpt);
+
+        const gradeOrder = ["K–2", "3–5", "6–8", "9–12"];
+
+        gradeOrder.forEach((band) => {
+          const lessons = Array.isArray(lessonLibrary[band]) ? lessonLibrary[band] : [];
+          if (lessons.length === 0) return;
+
+          const separator = document.createElement("option");
+          separator.disabled = true;
+          separator.textContent = \`────────── \${band} Lessons ──────────\`;
+          exampleLoader.appendChild(separator);
+
+          const topics = {};
+          lessons.forEach((lesson) => {
+            const topic = lesson.topic || "General";
+            if (!topics[topic]) topics[topic] = [];
+            topics[topic].push(lesson);
+          });
+
+          Object.keys(topics).forEach((topic) => {
+            const topicHeader = document.createElement("option");
+            topicHeader.disabled = true;
+            topicHeader.textContent = \`• \${topic}\`;
+            exampleLoader.appendChild(topicHeader);
+
+            topics[topic].forEach((lesson) => {
+              const opt = document.createElement("option");
+              opt.value = lesson.id || "";
+              opt.textContent = lesson.title || "Untitled Lesson";
+              exampleLoader.appendChild(opt);
+            });
+          });
+        });
+      }
+
+      function findLessonById(id) {
+        return lessonIndex[id] || null;
+      }
+
+      function setChecks(groupName, values) {
+        if (!Array.isArray(values)) return;
+
+        const checkboxes = document.querySelectorAll(\`input[data-group="\${groupName}"]\`);
+        checkboxes.forEach((box) => {
+          box.checked = values.includes(box.value);
+        });
+      }
+
+      document.querySelectorAll(".ai-tab").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".ai-tab").forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          const tab = btn.dataset.tab;
+          document.querySelectorAll(".ai-tab-panel").forEach((panel) => {
+            panel.style.display = "none";
+          });
+
+          const target = $("tab-" + tab);
+          if (target) target.style.display = "block";
+        });
+      });
+
+      safeAddListener("aiChatSendBtn", "click", sendChatMessage);
+      safeAddListener("aiChatInput", "keydown", (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+          sendChatMessage();
+        }
+      });
+
+      safeAddListener("aiObjectiveBtn", "click", () => sendQuickPrompt("objective"));
+      safeAddListener("aiTaskBtn", "click", () => sendQuickPrompt("task"));
+      safeAddListener("aiAssessmentBtn", "click", () => sendQuickPrompt("assessment"));
+      safeAddListener("aiUDLBtn", "click", () => sendQuickPrompt("udl"));
+      safeAddListener("aiFullLessonBtn", "click", () => sendQuickPrompt("full"));
+      safeAddListener("aiMultidayBtn", "click", () => sendQuickPrompt("multiday"));
+      safeAddListener("aiMaterialsBtn", "click", () => sendQuickPrompt("materials"));
+      safeAddListener("aiRubricBtn", "click", () => sendQuickPrompt("rubric"));
+      safeAddListener("aiWorksheetBtn", "click", () => sendQuickPrompt("worksheet"));
+
+      safeAddListener("clearAiMemoryBtn", "click", () => {
+        const confirmed = window.confirm("Clear all AI-generated lesson memory and outputs?");
+        if (confirmed) clearAIMemory();
+      });
+
+      safeAddListener("applyObjective", "click", () => {
+        const ai = aiMemory.lesson || "";
+        const match = ai.match(/Objective[:\\-]\\s*([\\s\\S]*?)(?=\\n\\n|$)/i);
+        safeSetValue("objective", match ? match[1].trim() : ai);
+        updateSnapshot();
+      });
+
+      safeAddListener("applyTask", "click", () => {
+        const ai = aiMemory.lesson || "";
+        const match = ai.match(/Student Task[:\\-]\\s*([\\s\\S]*?)(?=\\n\\n|$)/i);
+        safeSetValue("task", match ? match[1].trim() : ai);
+        updateSnapshot();
+      });
+
+      safeAddListener("applyAssessment", "click", () => {
+        const ai = aiMemory.lesson || "";
+        const match = ai.match(/Assessment[:\\-]\\s*([\\s\\S]*?)(?=\\n\\n|$)/i);
+        safeSetValue("assessment", match ? match[1].trim() : ai);
+        updateSnapshot();
+      });
+
+      safeAddListener("applyUDL", "click", () => {
+        const ai = aiMemory.lesson || "";
+        const match = ai.match(/UDL(?:\\s*&\\s*Equity Supports)?[:\\-]\\s*([\\s\\S]*?)(?=\\n\\n|$)/i);
+        safeSetValue("udl", match ? match[1].trim() : ai);
+        updateSnapshot();
+      });
+
+      safeAddListener("applyFull", "click", () => {
+        const ai = aiMemory.lesson || "";
+        const sections = parseAISections(ai);
+
+        safeSetValue("objective", sections.objective);
+        safeSetValue("task", sections.task);
+        safeSetValue("assessment", sections.assessment);
+        safeSetValue("udl", sections.udl);
+
+        updateSnapshot();
+      });
 
       safeAddListener("exportTxtBtn", "click", () => {
         downloadFile("lesson-plan.txt", buildLessonText(), "text/plain");
@@ -873,7 +1147,7 @@ function updateLibraryHealthPanel(total, duplicates, missing) {
       safeAddListener("exportDocxBtn", "click", async () => {
         try {
           const fields = collectLessonFields();
-          const aiText = $("aiOutput")?.dataset.last || "";
+          const aiText = aiMemory.lesson || "";
           const aiSections = aiText ? parseAISections(aiText) : {};
 
           const finalObjective =
@@ -996,75 +1270,6 @@ function updateLibraryHealthPanel(total, duplicates, missing) {
         window.print();
       });
 
-      function populateDropdown() {
-        const exampleLoader = $("exampleLoader");
-        if (!exampleLoader) return;
-
-        exampleLoader.innerHTML = "";
-
-        const defaultOpt = document.createElement("option");
-        defaultOpt.value = "";
-        defaultOpt.textContent = "— Select an Example Lesson —";
-        exampleLoader.appendChild(defaultOpt);
-
-        const gradeOrder = ["K–2", "3–5", "6–8", "9–12"];
-
-        gradeOrder.forEach((band) => {
-          const lessons = Array.isArray(lessonLibrary[band]) ? lessonLibrary[band] : [];
-
-          if (lessons.length === 0) return;
-
-          const separator = document.createElement("option");
-          separator.disabled = true;
-          separator.textContent = `────────── ${band} Lessons ──────────`;
-          exampleLoader.appendChild(separator);
-
-          const topics = {};
-          lessons.forEach((lesson) => {
-            const topic = lesson.topic || "General";
-            if (!topics[topic]) topics[topic] = [];
-            topics[topic].push(lesson);
-          });
-
-          Object.keys(topics).forEach((topic) => {
-            const topicHeader = document.createElement("option");
-            topicHeader.disabled = true;
-            topicHeader.textContent = `• ${topic}`;
-            exampleLoader.appendChild(topicHeader);
-
-            topics[topic].forEach((lesson) => {
-              const opt = document.createElement("option");
-              opt.value = lesson.id || "";
-              opt.textContent = lesson.title || "Untitled Lesson";
-              exampleLoader.appendChild(opt);
-            });
-          });
-        });
-      }
-
-  fetch("lessons.json")
-  .then((response) => response.json())
-  .then((data) => {
-    lessonLibrary = data;
-
-    validateLessonLibrary(lessonLibrary);
-    buildLessonIndex(lessonLibrary);
-    populateDropdown();
-  })
-  .catch((err) => console.error("Error loading lessons.json:", err));        
-
-     function findLessonById(id) {
-  return lessonIndex[id] || null;
-}
-      function setChecks(groupName, values) {
-        if (!Array.isArray(values)) return;
-
-        const checkboxes = document.querySelectorAll(`input[data-group="${groupName}"]`);
-        checkboxes.forEach((box) => {
-          box.checked = values.includes(box.value);
-        });
-      }
-
       safeAddListener("exampleLoader", "change", (e) => {
         const id = e.target.value;
         if (!id) return;
@@ -1101,23 +1306,6 @@ function updateLibraryHealthPanel(total, duplicates, missing) {
         updateSnapshot();
       });
 
-      function updateSnapshot() {
-        const snap = $("snapshotContent");
-        if (!snap) return;
-
-        const fields = collectLessonFields();
-
-        snap.innerHTML = `
-          <strong>Objective:</strong> ${fields["Learning Objective"] || "<em>Not set</em>"}<br><br>
-          <strong>Task:</strong> ${fields["Student Task Description"] || "<em>Not set</em>"}<br><br>
-          <strong>Assessment:</strong> ${fields["Assessment / Evidence of Learning"] || "<em>Not set</em>"}<br><br>
-          <strong>UDL:</strong> ${fields["Accessibility & Inclusivity Design"] || "<em>Not set</em>"}<br><br>
-          <strong>Grade Band:</strong> ${fields["Grade Band"] || "<em>Not set</em>"}<br>
-          <strong>CT Practice:</strong> ${fields["CT Practice"] || "<em>Not set</em>"}<br>
-          <strong>CS Standard:</strong> ${fields["CS Standard"] || "<em>Not set</em>"}<br>
-        `;
-      }
-
       [
         "objective",
         "task",
@@ -1136,6 +1324,27 @@ function updateLibraryHealthPanel(total, duplicates, missing) {
         if (el) el.addEventListener("input", updateSnapshot);
         if (el && el.tagName === "SELECT") el.addEventListener("change", updateSnapshot);
       });
+
+      fetch("lessons.json")
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(\`Unable to load lessons.json (\${response.status})\`);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          lessonLibrary = data || {};
+          validateLessonLibrary(lessonLibrary);
+          buildLessonIndex(lessonLibrary);
+          populateDropdown();
+        })
+        .catch((err) => {
+          console.error("Error loading lessons.json:", err);
+          const panel = $("libraryHealth");
+          if (panel) {
+            panel.innerHTML = '<strong>Lesson Library Status</strong><br><span style="color:#b71c1c;font-weight:600">Could not load lessons.json</span>';
+          }
+        });
 
       updateSnapshot();
     });
