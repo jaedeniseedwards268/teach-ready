@@ -508,18 +508,76 @@ document.getElementById("printBtn").addEventListener("click", () => {
    LESSON LIBRARY (MOVED)
 ------------------------------------------*/
  let lessonLibrary = {};
+    
+    function populateDropdown(){ // your dropdown generator
+      function populateDropdown() {
+  console.group("Dropdown Population Debug");
+  console.log("Lesson library loaded:", lessonLibrary);
+  console.log("Grade bands found:", Object.keys(lessonLibrary));
 
-fetch("lessons.json")
+  const exampleLoader = document.getElementById("exampleLoader");
+
+  // Clear loading placeholder
+  exampleLoader.innerHTML = "";
+
+  // Add default placeholder
+  const defaultOpt = document.createElement("option");
+  defaultOpt.value = "";
+  defaultOpt.textContent = "— Select an Example Lesson —";
+  exampleLoader.appendChild(defaultOpt);
+
+  const gradeOrder = ["K–2", "3–5", "6–8", "9–12"];
+
+  gradeOrder.forEach((band) => {
+    const lessons = lessonLibrary[band];
+    console.log(`Processing grade band: ${band}`, lessons);
+
+    if (!lessons || lessons.length === 0) {
+      console.warn(`⚠️ No lessons found for grade band: ${band}`);
+
+      const warningOpt = document.createElement("option");
+      warningOpt.disabled = true;
+      warningOpt.textContent = `⚠️ No lessons available for ${band}`;
+      exampleLoader.appendChild(warningOpt);
+
+      return;
+    }
+
+    const separator = document.createElement("option");
+    separator.disabled = true;
+    separator.textContent = `────────── ${band} Lessons ──────────`;
+    exampleLoader.appendChild(separator);
+
+    const topics = {};
+    lessons.forEach((lesson) => {
+      if (!topics[lesson.topic]) topics[lesson.topic] = [];
+      topics[lesson.topic].push(lesson);
+    });
+
+    Object.keys(topics).forEach((topic) => {
+      console.log(`  Topic: ${topic}`, topics[topic]);
+
+      const topicHeader = document.createElement("option");
+      topicHeader.disabled = true;
+      topicHeader.textContent = `• ${topic}`;
+      exampleLoader.appendChild(topicHeader);
+
+      topics[topic].forEach((lesson) => {
+        const opt = document.createElement("option");
+        opt.value = lesson.id;
+        opt.textContent = `   ${lesson.title}`;
+        exampleLoader.appendChild(opt);
+      });
+    });
+  });
+
+  console.groupEnd();
+}   
+  fetch("lessons.json")
   .then(response => response.json())
   .then(data => {
     lessonLibrary = data;
-    console.log(`Processing grade band: ${band}`, lessons);
-    populateDropdown(); // your dropdown generator
-        
-    console.group("Dropdown Population Debug");
-    console.log("Lesson library loaded:", lessonLibrary);
-    console.log("Grade bands found:", Object.keys(lessonLibrary));
-    console.groupEnd();
+    populateDropdown();   // now this works
   })
   .catch(err => console.error("Error loading lessons.json:", err));
 
