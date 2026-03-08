@@ -2,7 +2,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CS Teaching Toolkit – Lesson Planner</title>
+    </section>
+  </div> <!-- end .container -->
 
+  <div id="exportLesson" style="display:none; padding: 40px; background: white; color: black;">
+    <h1>CS Teaching Toolkit – Lesson Plan</h1>
+    <div id="exportLessonContent"></div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://unpkg.com/docx@8.5.0/build/index.umd.js"></script>
+
+  <script>
   <style>
     body {
       font-family: system-ui, sans-serif;
@@ -510,7 +521,6 @@ document.getElementById("printBtn").addEventListener("click", () => {
  let lessonLibrary = {};
     
     function populateDropdown(){ // your dropdown generator
-      function populateDropdown() {
   console.group("Dropdown Population Debug");
   console.log("Lesson library loaded:", lessonLibrary);
   console.log("Grade bands found:", Object.keys(lessonLibrary));
