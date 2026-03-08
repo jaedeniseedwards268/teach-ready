@@ -513,63 +513,10 @@ fetch("lessons.json")
   .then(response => response.json())
   .then(data => {
     lessonLibrary = data;
-    populateDropdown();   // your dropdown generator
+    populateDropdown(); // your dropdown generator
   })
   .catch(err => console.error("Error loading lessons.json:", err));
 
-/* -----------------------------------------
-   DROPDOWN GENERATOR (AUTO‑POPULATES LIST)
-------------------------------------------*/
-
-const exampleLoader = document.getElementById("exampleLoader");
-
-// Clear any existing options
-exampleLoader.innerHTML = "";
-
-// Add a default placeholder option
-const defaultOpt = document.createElement("option");
-defaultOpt.value = "";
-defaultOpt.textContent = "— Select an Example Lesson —";
-exampleLoader.appendChild(defaultOpt);
-
-// Loop through grade bands in order
-const gradeOrder = ["K–2", "3–5", "6–8", "9–12"];
-
-gradeOrder.forEach((band) => {
-  const lessons = lessonLibrary[band];
-  if (!lessons) return;
-
-  // Create a visual separator group
-  const separator = document.createElement("option");
-  separator.disabled = true;
-  separator.textContent = `────────── ${band} Lessons ──────────`;
-  exampleLoader.appendChild(separator);
-
-  // Group lessons by topic within each grade band
-  const topics = {};
-
-  lessons.forEach((lesson) => {
-    if (!topics[lesson.topic]) topics[lesson.topic] = [];
-    topics[lesson.topic].push(lesson);
-  });
-
-  // Add lessons grouped by topic
-  Object.keys(topics).forEach((topic) => {
-    // Topic header (disabled)
-    const topicHeader = document.createElement("option");
-    topicHeader.disabled = true;
-    topicHeader.textContent = `• ${topic}`;
-    exampleLoader.appendChild(topicHeader);
-
-    // Lessons under this topic
-    topics[topic].forEach((lesson) => {
-      const opt = document.createElement("option");
-      opt.value = lesson.id;
-      opt.textContent = `   ${lesson.title}`;
-      exampleLoader.appendChild(opt);
-    });
-  });
-});
 
 
  /* -----------------------------------------
@@ -636,8 +583,6 @@ document.getElementById("exampleLoader").addEventListener("change", (e) => {
   // Update snapshot
   updateSnapshot();
 });
-
-
 
 /* -------------------------------
    SNAPSHOT AUTO‑UPDATE
