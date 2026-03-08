@@ -1,5 +1,4 @@
-const lessonLibrary = {
-  {
+{
   "K–2": [
     {
       "id": "k2_seq_picture_algorithms",
@@ -279,29 +278,6 @@ const lessonLibrary = {
   "equitySupports": ["Multiple Means of Representation", "Peer Support"],
   "accessibilitySupports": ["Sticker-based recording", "Large-print graphs"],
   "assessmentTypes": ["Product Creation", "Written Explanation"],
-  "tools": []
-},
-{
-  "id": "k2_decompose_morning_routine",
-  "title": "Break It Down: Morning Routine Decomposition",
-  "topic": "Decomposition",
-  "gradeBand": "K–2",
-  "objective": "Students will break a familiar task into smaller steps to understand decomposition.",
-  "task": "Students brainstorm all the steps in a morning routine (e.g., wake up, brush teeth, get dressed) and organize them into a step-by-step chart.",
-  "formativeAssessment": "Teacher asks students to explain why a big task needs to be broken into smaller steps.",
-  "summativeAssessment": "Students create a final illustrated step chart showing at least four decomposed steps.",
-  "udl": "Provide picture icons, sentence frames, and optional verbal explanations. Offer simplified routines for emerging learners.",
-  "materials": "Picture icons, chart paper, markers.",
-  "vocabulary": "decompose, step, task, break down",
-  "procedures": "1. Mini-lesson on decomposition.\n2. Model breaking down a task.\n3. Students brainstorm steps.\n4. Students create step charts.\n5. Reflection.",
-  "differentiation": "Provide pre-made step cards for support. Challenge advanced learners to add conditional steps.",
-  "reflection": "Which step was most important? What would happen if you skipped it?",
-  "ctPractice": "Decomposition",
-  "csStandard": "1A-AP-08",
-  "activityType": ["Unplugged", "Independent Practice", "Hands-On"],
-  "equitySupports": ["Visual Supports", "Think-Pair-Share"],
-  "accessibilitySupports": ["Picture symbols", "Large-print charts"],
-  "assessmentTypes": ["Product Creation", "Formative Check-in"],
   "tools": []
 },
 {
@@ -717,8 +693,8 @@ const lessonLibrary = {
   "accessibilitySupports": ["Picture symbols", "Large-print cards"],
   "assessmentTypes": ["Product Creation", "Formative Check-in"],
   "tools": []
-},
-  ]
+}
+  ],
 
   "3–5": [{
   "id": "35_alg_multi_step_recipes",
@@ -1294,8 +1270,8 @@ const lessonLibrary = {
   "accessibilitySupports": ["Audio narration options", "High-contrast interface settings"],
   "assessmentTypes": ["Performance Task", "Presentation"],
   "tools": ["Scratch", "MakeCode", "Tynker"]
-},
-]
+}
+],
   "6–8": [{
   "id": "68_alg_precision_efficiency",
   "title": "Efficient Algorithms: Writing and Optimizing Steps",
@@ -1870,8 +1846,8 @@ const lessonLibrary = {
   "accessibilitySupports": ["High-contrast interface settings", "Audio narration options"],
   "assessmentTypes": ["Performance Task", "Presentation"],
   "tools": ["Scratch", "MakeCode", "NetLogo (simplified)"]
-},
-]
+}
+],
   "9–12": [{
   "id": "912_alg_efficiency_bigo_intro",
   "title": "Algorithmic Efficiency: Understanding Big-O Behavior",
@@ -2448,8 +2424,7 @@ const lessonLibrary = {
   "assessmentTypes": ["Final Project", "Presentation", "Documentation"],
   "tools": ["Python", "JavaScript", "Scratch", "MakeCode"]
 }
-]
-  }
+  ]
 }
 
 
