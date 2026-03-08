@@ -504,118 +504,19 @@ document.getElementById("exportPdfBtn").addEventListener("click", () => {
 document.getElementById("printBtn").addEventListener("click", () => {
   window.print();
 });
+/* -----------------------------------------
+   LESSON LIBRARY (MOVED)
+------------------------------------------*/
+ let lessonLibrary = {};
 
-  "3–5": [
-    {
-      id: "35_emoji_classification",
-      title: "Emoji Classification Challenge",
-      topic: "Data & Classification",
-      gradeBand: "3–5",
+fetch("lessons.json")
+  .then(response => response.json())
+  .then(data => {
+    lessonLibrary = data;
+    populateDropdown();   // your dropdown generator
+  })
+  .catch(err => console.error("Error loading lessons.json:", err));
 
-      objective:
-        "Students will classify emojis based on shared attributes and justify their categorization decisions, building foundational data science reasoning.",
-      task:
-        "Students sort printed or digital emojis into categories they define. They refine categories after peer feedback and create a final labeled set.",
-      formativeAssessment:
-        "Teacher circulates and asks students to explain why two emojis belong in the same group, checking for attribute-based reasoning.",
-      summativeAssessment:
-        "Students present their final categories and submit a written explanation of the attributes used and why they matter.",
-      udl:
-        "Offer printed cards, digital drag-and-drop, sentence starters, and optional audio explanations.",
-
-      materials: "Emoji cards, chart paper, markers, digital sorting tool.",
-      vocabulary: "attribute, category, classify, data, pattern",
-      procedures:
-        "1. Mini-lesson on attributes.\n2. Model sorting.\n3. Students create initial categories.\n4. Peer feedback.\n5. Final classification.",
-      differentiation:
-        "Provide pre-made categories for students who need support. Challenge advanced students to create multi-level categories.",
-      reflection:
-        "How did your categories change after feedback? What patterns did you notice?",
-
-      ctPractice: "Data Analysis",
-      csStandard: "1B-DA-06",
-      activityType: ["Unplugged", "Group / Collaborative", "Independent Practice"],
-      equitySupports: ["Sentence Starters", "Peer Feedback Protocol"],
-      accessibilitySupports: ["Printed visuals", "Digital drag-and-drop"],
-      assessmentTypes: ["Formative Check-in", "Presentation", "Written Explanation"],
-      tools: []
-    }
-  ],
-
-  "6–8": [
-    {
-      id: "68_scratch_variables",
-      title: "Interactive Scratch Variables",
-      topic: "Programming",
-      gradeBand: "6–8",
-
-      objective:
-        "Students will create and manipulate variables in Scratch to track changing values in an interactive project.",
-      task:
-        "Students build a simple game that uses a variable to track score, time, or health. They test and refine how the variable updates.",
-      formativeAssessment:
-        "Teacher checks variable behavior during guided practice, asking students to explain how and when the value changes.",
-      summativeAssessment:
-        "Students submit a working Scratch project and a written explanation of how their variable updates and why it matters.",
-      udl:
-        "Provide starter code, guided notes, color-coded blocks, and optional peer programming.",
-
-      materials: "Scratch, laptops, starter project files.",
-      vocabulary: "variable, update, value, event, condition",
-      procedures:
-        "1. Mini-lesson on variables.\n2. Model variable creation.\n3. Guided practice.\n4. Independent project.\n5. Reflection.",
-      differentiation:
-        "Offer scaffolded starter projects. Challenge advanced students to use multiple variables.",
-      reflection:
-        "What part of your variable logic was most challenging? How did you debug it?",
-
-      ctPractice: "Algorithms & Programming",
-      csStandard: "2-AP-11",
-      activityType: ["Plugged", "Guided Practice", "Independent Practice"],
-      equitySupports: ["Starter Code", "Peer Programming"],
-      accessibilitySupports: ["Readable fonts", "Color-coded blocks"],
-      assessmentTypes: ["Performance Task", "Code Review"],
-      tools: ["Scratch"]
-    }
-  ],
-
-  "9–12": [
-    {
-      id: "912_python_assert_debugging",
-      title: "Python Error Handling with assert",
-      topic: "Debugging",
-      gradeBand: "9–12",
-
-      objective:
-        "Students will use Python’s assert statement to detect logic errors, validate assumptions, and strengthen debugging practices.",
-      task:
-        "Students analyze a flawed Python program and insert assert statements to validate preconditions and postconditions.",
-      formativeAssessment:
-        "During guided practice, students annotate code to explain what each assert checks. Teacher probes for clarity of assumptions.",
-      summativeAssessment:
-        "Students complete a debugging challenge, submit corrected code with assert statements, and write a short explanation of how their asserts prevent failures.",
-      udl:
-        "Provide annotated examples, color-coded error traces, and optional unplugged logic puzzles.",
-
-      materials: "Python IDE, laptops, printed debugging cards.",
-      vocabulary: "assert, AssertionError, precondition, postcondition, logic error",
-      procedures:
-        "1. Mini-lesson on assert.\n2. Model debugging.\n3. Guided practice.\n4. Independent debugging challenge.\n5. Reflection.",
-      differentiation:
-        "Offer starter code and sentence frames. Challenge advanced students to write custom error messages.",
-      reflection:
-        "Which assert checks were most helpful and why? How did they change your debugging process?",
-
-      ctPractice: "Testing & Debugging",
-      csStandard: "3B-AP-17",
-      activityType: ["Plugged", "Guided Practice", "Independent Practice"],
-      equitySupports: ["Annotated Examples", "Think-Aloud Modeling"],
-      accessibilitySupports: ["Readable fonts", "Color-blind-safe highlighting"],
-      assessmentTypes: ["Performance Task", "Code Review", "Written Explanation"],
-      tools: ["Python", "VS Code"]
-    }
-  ]
-};
 /* -----------------------------------------
    DROPDOWN GENERATOR (AUTO‑POPULATES LIST)
 ------------------------------------------*/
