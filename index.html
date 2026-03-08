@@ -1,19 +1,10 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CS Teaching Toolkit – Lesson Planner</title>
-    </section>
-  </div> <!-- end .container -->
 
-  <div id="exportLesson" style="display:none; padding: 40px; background: white; color: black;">
-    <h1>CS Teaching Toolkit – Lesson Plan</h1>
-    <div id="exportLessonContent"></div>
-  </div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <script src="https://unpkg.com/docx@8.5.0/build/index.umd.js"></script>
-
-  <script>
   <style>
     body {
       font-family: system-ui, sans-serif;
@@ -54,7 +45,67 @@
       font-weight: 600;
     }
 
-    /* AI Output */
+    .hint {
+      color: #666;
+      font-size: 0.9rem;
+      margin-top: 0.25rem;
+      margin-bottom: 0.75rem;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    input,
+    select,
+    textarea,
+    button {
+      font: inherit;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.6rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+      margin-bottom: 1rem;
+      background: #fff;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    button {
+      padding: 0.6rem 1rem;
+      border: 1px solid #999;
+      background: #f7f7f7;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #ececec;
+    }
+
+    .secondary {
+      background: #fafafa;
+    }
+
+    .ai-quick-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
     .ai-output {
       background: #fafafa;
       border: 1px solid #ddd;
@@ -63,20 +114,23 @@
       min-height: 80px;
     }
 
-    /* Apply buttons */
+    .ai-output pre {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      margin: 0;
+      font-family: inherit;
+    }
+
     .apply-row {
       display: none;
       margin-top: 0.75rem;
-      display: flex;
       flex-wrap: wrap;
       gap: 10px;
     }
 
-    /* Export row — Style B1 + S2 + R1 */
     .export-row {
       display: none;
       margin-top: 0.75rem;
-      display: flex;
       gap: 12px;
       flex-wrap: nowrap;
       align-items: center;
@@ -95,7 +149,6 @@
       background: #eaeaea;
     }
 
-    /* Chat */
     .ai-chat-log {
       background: #fafafa;
       border: 1px solid #ddd;
@@ -119,22 +172,79 @@
       margin-top: 0.75rem;
       display: flex;
       gap: 0.5rem;
+      align-items: stretch;
     }
 
     .ai-chat-input textarea {
       flex: 1;
       height: 60px;
+      margin-bottom: 0;
     }
 
     .ai-chat-input button {
-      padding: 0.5rem 1rem;
+      white-space: nowrap;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #e2e2e2;
+      margin: 1rem 0;
+    }
+
+    #exportLesson {
+      display: none;
+      padding: 40px;
+      background: white;
+      color: black;
+    }
+
+    #exportLesson h1,
+    #exportLesson h2 {
+      margin-top: 0;
+    }
+
+    #exportLesson h2 {
+      margin-top: 1.2rem;
+      margin-bottom: 0.4rem;
+    }
+
+    #exportLesson p {
+      margin-top: 0;
+      line-height: 1.5;
+    }
+
+    @media print {
+      body {
+        background: white;
+      }
+
+      .container {
+        display: block;
+        max-width: none;
+        padding: 0;
+      }
+
+      .ai-top,
+      #printBtn,
+      .apply-row,
+      .export-row,
+      .ai-chat-input,
+      .ai-quick-actions {
+        display: none !important;
+      }
+
+      .card {
+        box-shadow: none;
+        border: none;
+        padding: 0;
+        margin-bottom: 1rem;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
 
-    <!-- AI LESSON ASSISTANT — FULL WIDTH, TOP, SPANNING BOTH COLUMNS -->
     <section class="card ai-top" aria-label="AI assistant" style="grid-column:1 / -1;">
       <div class="card-header">
         <h2>AI Lesson Assistant</h2>
@@ -157,8 +267,7 @@
         <p class="small-muted">Use quick buttons or ask a question below. Responses can be applied to fields.</p>
       </div>
 
-      <!-- APPLY ROW -->
-      <div class="apply-row" id="applyRow" style="display:none">
+      <div class="apply-row" id="applyRow">
         <button id="applyObjective" class="secondary">Insert Objective</button>
         <button id="applyTask" class="secondary">Insert Student Task</button>
         <button id="applyAssessment" class="secondary">Insert Assessment</button>
@@ -166,8 +275,7 @@
         <button id="applyFull" class="secondary">Apply Full Lesson</button>
       </div>
 
-      <!-- NEW EXPORT ROW (P1 placement, Style B1, S2 spacing, R1 no-wrap) -->
-      <div id="exportRow" class="export-row" style="display:none;">
+      <div id="exportRow" class="export-row">
         <button id="exportTxtBtn" class="export-btn">TXT</button>
         <button id="exportDocxBtn" class="export-btn">DOCX</button>
         <button id="exportPdfBtn" class="export-btn">PDF</button>
@@ -183,7 +291,7 @@
         <button id="aiChatSendBtn">Send</button>
       </div>
     </section>
-    <!-- LEFT COLUMN: LESSON PLAN FORM -->
+
     <section class="card" aria-label="Lesson plan form">
       <div class="card-header">
         <div>
@@ -196,10 +304,6 @@
         <label for="exampleLoader">Load Example Lesson</label>
         <select id="exampleLoader" aria-label="Load example lesson">
           <option value="">Choose an example…</option>
-          <option value="ex1">Debugging with Story Sequences (K–2)</option>
-          <option value="ex2">Pattern Recognition with Emoji Sorting (3–5)</option>
-          <option value="ex3">Intro to Variables with Scratch (6–8)</option>
-          <option value="ex4">Data Visualizations with Spreadsheets (9–12)</option>
         </select>
       </section>
 
@@ -283,7 +387,7 @@
         <textarea id="reflection"></textarea>
       </section>
     </section>
-        <!-- RIGHT COLUMN: SNAPSHOT / PREVIEW / SUMMARY (if present in your layout) -->
+
     <section class="card" aria-label="Lesson snapshot" style="height: fit-content;">
       <div class="card-header">
         <h2>Lesson Snapshot</h2>
@@ -301,416 +405,620 @@
       </button>
     </section>
 
-  </div> <!-- end .container -->
-<script>
-  
-/* -------------------------------
-   AI CHAT + OUTPUT HANDLING
---------------------------------*/
+  </div>
 
-function appendChatMessage(sender, text) {
-  const log = document.getElementById("aiChatLog");
-  const div = document.createElement("div");
-  div.className = sender === "user" ? "ai-msg-user" : "ai-msg-assistant";
-  div.textContent = (sender === "user" ? "You: " : "Assistant: ") + text;
-  log.appendChild(div);
-  log.scrollTop = log.scrollHeight;
-}
+  <div id="exportLesson">
+    <h1>CS Teaching Toolkit – Lesson Plan</h1>
+    <div id="exportLessonContent"></div>
+  </div>
 
-async function sendChatMessage() {
-  const input = document.getElementById("aiChatInput");
-  const text = input.value.trim();
-  if (!text) return;
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://unpkg.com/docx@8.5.0/build/index.umd.js"></script>
 
-  appendChatMessage("user", text);
-  input.value = "";
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      let lessonLibrary = {};
 
-  const response = await fetch("/api/chat", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message: text })
-  });
+      const $ = (id) => document.getElementById(id);
 
-  const data = await response.json();
-  const aiText = data.reply || "[No response]";
+      function safeSetValue(id, value) {
+        const el = $(id);
+        if (el) el.value = value || "";
+      }
 
-  appendChatMessage("assistant", aiText);
-  showAIOutput(aiText);
-}
+      function safeAddListener(id, eventName, handler) {
+        const el = $(id);
+        if (el) el.addEventListener(eventName, handler);
+      }
 
-document.getElementById("aiChatSendBtn").addEventListener("click", sendChatMessage);
+      function downloadFile(filename, content, mimeType) {
+        const blob =
+          content instanceof Blob ? content : new Blob([content], { type: mimeType });
 
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      }
 
-/* -------------------------------
-   SHOW AI OUTPUT + REVEAL BUTTONS
---------------------------------*/
+      function appendChatMessage(sender, text) {
+        const log = $("aiChatLog");
+        if (!log) return;
 
-function showAIOutput(text) {
-  const out = document.getElementById("aiOutput");
-  out.innerHTML = "<pre>" + text + "</pre>";
-  out.dataset.last = text;
+        const div = document.createElement("div");
+        div.className = sender === "user" ? "ai-msg-user" : "ai-msg-assistant";
+        div.textContent = `${sender === "user" ? "You" : "Assistant"}: ${text}`;
+        log.appendChild(div);
+        log.scrollTop = log.scrollHeight;
+      }
 
-  // Reveal Apply buttons
-  document.getElementById("applyRow").style.display = "flex";
+      function showAIOutput(text) {
+        const out = $("aiOutput");
+        if (!out) return;
 
-  // Reveal Export buttons
-  document.getElementById("exportRow").style.display = "flex";
-}
+        const pre = document.createElement("pre");
+        pre.textContent = text;
+        out.innerHTML = "";
+        out.appendChild(pre);
+        out.dataset.last = text;
 
+        const applyRow = $("applyRow");
+        const exportRow = $("exportRow");
 
-/* -------------------------------
-   APPLY BUTTONS
---------------------------------*/
+        if (applyRow) applyRow.style.display = "flex";
+        if (exportRow) exportRow.style.display = "flex";
+      }
 
-document.getElementById("applyObjective").addEventListener("click", () => {
-  const ai = document.getElementById("aiOutput").dataset.last || "";
-  const match = ai.match(/Objective[:\-]\s*([\s\S]*?)(?=\n\n|$)/i);
-  document.getElementById("objective").value = match ? match[1].trim() : ai;
-});
+      async function sendChatMessage() {
+        const input = $("aiChatInput");
+        if (!input) return;
 
-document.getElementById("applyTask").addEventListener("click", () => {
-  const ai = document.getElementById("aiOutput").dataset.last || "";
-  const match = ai.match(/Student Task[:\-]\s*([\s\S]*?)(?=\n\n|$)/i);
-  document.getElementById("task").value = match ? match[1].trim() : ai;
-});
+        const text = input.value.trim();
+        if (!text) return;
 
-document.getElementById("applyAssessment").addEventListener("click", () => {
-  const ai = document.getElementById("aiOutput").dataset.last || "";
-  const match = ai.match(/Assessment[:\-]\s*([\s\S]*?)(?=\n\n|$)/i);
-  document.getElementById("assessment").value = match ? match[1].trim() : ai;
-});
+        appendChatMessage("user", text);
+        input.value = "";
 
-document.getElementById("applyUDL").addEventListener("click", () => {
-  const ai = document.getElementById("aiOutput").dataset.last || "";
-  const match = ai.match(/UDL(?: & Equity Supports)?[:\-]\s*([\s\S]*?)(?=\n\n|$)/i);
-  document.getElementById("udl").value = match ? match[1].trim() : ai;
-});
+        try {
+          const response = await fetch("/api/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: text })
+          });
 
-document.getElementById("applyFull").addEventListener("click", () => {
-  const ai = document.getElementById("aiOutput").dataset.last || "";
-  const sections = parseAISections(ai);
+          if (!response.ok) {
+            throw new Error(`Request failed with status ${response.status}`);
+          }
 
-  document.getElementById("objective").value = sections.objective || "";
-  document.getElementById("task").value = sections.task || "";
-  document.getElementById("assessment").value = sections.assessment || "";
-  document.getElementById("udl").value = sections.udl || "";
-});
+          const data = await response.json();
+          const aiText = data.reply || "[No response]";
+          appendChatMessage("assistant", aiText);
+          showAIOutput(aiText);
+        } catch (error) {
+          console.error("Chat request failed:", error);
+          const fallback = "Sorry, the assistant could not be reached.";
+          appendChatMessage("assistant", fallback);
+          showAIOutput(fallback);
+        }
+      }
 
+      function buildQuickPrompt(type) {
+        const gradeBand = $("gradeBand")?.value || "the selected grade band";
+        const ctPractice = $("ctPractice")?.value || "the selected CT practice";
+        const csStandard = $("csStandard")?.value || "the selected CS standard";
 
-/* -------------------------------
-   PARSE AI SECTIONS (Full Lesson Draft)
---------------------------------*/
+        const prompts = {
+          objective: `Generate a clear student-friendly learning objective for ${gradeBand}, aligned to ${ctPractice} and CS standard ${csStandard}. Label it as Objective:`,
+          task: `Generate a student task for ${gradeBand}, aligned to ${ctPractice} and CS standard ${csStandard}. Label it as Student Task:`,
+          assessment: `Generate assessment ideas for ${gradeBand}, aligned to ${ctPractice} and CS standard ${csStandard}. Label it as Assessment:`,
+          udl: `Generate UDL and equity supports for ${gradeBand}, aligned to ${ctPractice} and CS standard ${csStandard}. Label it as UDL:`,
+          full: `Generate a full lesson draft for ${gradeBand}, aligned to ${ctPractice} and CS standard ${csStandard}. Use these labels exactly: Objective:, Student Task:, Assessment:, UDL:`
+        };
 
-function parseAISections(text) {
-  return {
-    objective: (text.match(/Objective[:\-]\s*([\s\S]*?)(?=\n\n|$)/i) || [])[1]?.trim() || "",
-    task: (text.match(/Student Task[:\-]\s*([\s\S]*?)(?=\n\n|$)/i) || [])[1]?.trim() || "",
-    assessment: (text.match(/Assessment[:\-]\s*([\s\S]*?)(?=\n\n|$)/i) || [])[1]?.trim() || "",
-    udl: (text.match(/UDL(?: & Equity Supports)?[:\-]\s*([\s\S]*?)(?=\n\n|$)/i) || [])[1]?.trim() || ""
-  };
-}
+        return prompts[type];
+      }
 
+      async function sendQuickPrompt(type) {
+        const prompt = buildQuickPrompt(type);
+        if (!prompt) return;
 
-/* -------------------------------
-   COLLECT ALL FIELDS
---------------------------------*/
+        appendChatMessage("user", prompt);
 
-function collectLessonFields() {
-  return {
-    "Learning Objective": document.getElementById("objective").value.trim(),
-    "Student Task Description": document.getElementById("task").value.trim(),
-    "Assessment / Evidence of Learning": document.getElementById("assessment").value.trim(),
-    "Accessibility & Inclusivity Design": document.getElementById("udl").value.trim(),
-    "Materials": document.getElementById("materials").value.trim(),
-    "Vocabulary": document.getElementById("vocabulary").value.trim(),
-    "Lesson Procedures": document.getElementById("procedures").value.trim(),
-    "Differentiation": document.getElementById("differentiation").value.trim(),
-    "Teacher Reflection": document.getElementById("reflection").value.trim(),
-    "Grade Band": document.getElementById("gradeBand").value.trim(),
-    "CT Practice": document.getElementById("ctPractice").value.trim(),
-    "CS Standard": document.getElementById("csStandard").value.trim()
-  };
-}
+        try {
+          const response = await fetch("/api/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: prompt })
+          });
 
+          if (!response.ok) {
+            throw new Error(`Request failed with status ${response.status}`);
+          }
 
-/* -------------------------------
-   HYBRID EXPORT LOGIC
---------------------------------*/
+          const data = await response.json();
+          const aiText = data.reply || "[No response]";
+          appendChatMessage("assistant", aiText);
+          showAIOutput(aiText);
+        } catch (error) {
+          console.error("Quick prompt request failed:", error);
+          const fallback = "Sorry, the assistant could not be reached.";
+          appendChatMessage("assistant", fallback);
+          showAIOutput(fallback);
+        }
+      }
 
-function buildLessonText() {
-  const fields = collectLessonFields();
+      function parseAISections(text) {
+        return {
+          objective:
+            (text.match(/Objective[:\-]\s*([\s\S]*?)(?=\n\n|$)/i) || [])[1]?.trim() || "",
+          task:
+            (text.match(/Student Task[:\-]\s*([\s\S]*?)(?=\n\n|$)/i) || [])[1]?.trim() || "",
+          assessment:
+            (text.match(/Assessment[:\-]\s*([\s\S]*?)(?=\n\n|$)/i) || [])[1]?.trim() || "",
+          udl:
+            (text.match(/UDL(?:\s*&\s*Equity Supports)?[:\-]\s*([\s\S]*?)(?=\n\n|$)/i) || [])[1]?.trim() || ""
+        };
+      }
 
-  const aiText = document.getElementById("aiOutput").dataset.last || "";
-  const aiSections = aiText ? parseAISections(aiText) : {};
+      safeAddListener("aiChatSendBtn", "click", sendChatMessage);
 
-  const finalObjective = fields["Learning Objective"] || aiSections.objective || "[Not specified]";
-  const finalTask = fields["Student Task Description"] || aiSections.task || "[Not specified]";
-  const finalAssessment = fields["Assessment / Evidence of Learning"] || aiSections.assessment || "[Not specified]";
-  const finalUDL = fields["Accessibility & Inclusivity Design"] || aiSections.udl || "[Not specified]";
-
-  let text = "CS Teaching Toolkit – Lesson Plan\n\n";
-  text += "Learning Objective:\n" + finalObjective + "\n\n";
-  text += "Student Task:\n" + finalTask + "\n\n";
-  text += "Assessment:\n" + finalAssessment + "\n\n";
-  text += "UDL & Equity Supports:\n" + finalUDL + "\n\n";
-
-  for (const [label, value] of Object.entries(fields)) {
-    if (["Learning Objective", "Student Task Description", "Assessment / Evidence of Learning", "Accessibility & Inclusivity Design"].includes(label)) continue;
-    text += label + ":\n" + (value || "[Not specified]") + "\n\n";
-  }
-
-  const chatLog = document.getElementById("aiChatLog");
-  const chatText = chatLog ? chatLog.innerText.trim() : "";
-  text += "AI Lesson Assistant Log:\n" + (chatText || "[No chat messages]") + "\n";
-
-  return text;
-}
-
-
-/* -------------------------------
-   EXPORT BUTTONS
---------------------------------*/
-
-document.getElementById("exportTxtBtn").addEventListener("click", () => {
-  const text = buildLessonText();
-  const blob = new Blob([text], { type: "text/plain" });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "lesson-plan.txt";
-  a.click();
-  URL.revokeObjectURL(url);
-});
-
-document.getElementById("exportDocxBtn").addEventListener("click", () => {
-  const text = buildLessonText();
-  const blob = new Blob([text], { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "lesson-plan.docx";
-  a.click();
-  URL.revokeObjectURL(url);
-});
-
-document.getElementById("exportPdfBtn").addEventListener("click", () => {
-  const text = buildLessonText();
-  const blob = new Blob([text], { type: "application/pdf" });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "lesson-plan.pdf";
-  a.click();
-  URL.revokeObjectURL(url);
-});
-
-
-/* -------------------------------
-   PRINT BUTTON
---------------------------------*/
-
-document.getElementById("printBtn").addEventListener("click", () => {
-  window.print();
-});
-/* -----------------------------------------
-   LESSON LIBRARY (MOVED)
-------------------------------------------*/
- let lessonLibrary = {};
-    
-    function populateDropdown(){ // your dropdown generator
-  console.group("Dropdown Population Debug");
-  console.log("Lesson library loaded:", lessonLibrary);
-  console.log("Grade bands found:", Object.keys(lessonLibrary));
-
-  const exampleLoader = document.getElementById("exampleLoader");
-
-  // Clear loading placeholder
-  exampleLoader.innerHTML = "";
-
-  // Add default placeholder
-  const defaultOpt = document.createElement("option");
-  defaultOpt.value = "";
-  defaultOpt.textContent = "— Select an Example Lesson —";
-  exampleLoader.appendChild(defaultOpt);
-
-  const gradeOrder = ["K–2", "3–5", "6–8", "9–12"];
-
-  gradeOrder.forEach((band) => {
-    const lessons = lessonLibrary[band];
-    console.log(`Processing grade band: ${band}`, lessons);
-
-    if (!lessons || lessons.length === 0) {
-      console.warn(`⚠️ No lessons found for grade band: ${band}`);
-
-      const warningOpt = document.createElement("option");
-      warningOpt.disabled = true;
-      warningOpt.textContent = `⚠️ No lessons available for ${band}`;
-      exampleLoader.appendChild(warningOpt);
-
-      return;
-    }
-
-    const separator = document.createElement("option");
-    separator.disabled = true;
-    separator.textContent = `────────── ${band} Lessons ──────────`;
-    exampleLoader.appendChild(separator);
-
-    const topics = {};
-    lessons.forEach((lesson) => {
-      if (!topics[lesson.topic]) topics[lesson.topic] = [];
-      topics[lesson.topic].push(lesson);
-    });
-
-    Object.keys(topics).forEach((topic) => {
-      console.log(`  Topic: ${topic}`, topics[topic]);
-
-      const topicHeader = document.createElement("option");
-      topicHeader.disabled = true;
-      topicHeader.textContent = `• ${topic}`;
-      exampleLoader.appendChild(topicHeader);
-
-      topics[topic].forEach((lesson) => {
-        const opt = document.createElement("option");
-        opt.value = lesson.id;
-        opt.textContent = `   ${lesson.title}`;
-        exampleLoader.appendChild(opt);
+      safeAddListener("aiChatInput", "keydown", (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+          sendChatMessage();
+        }
       });
+
+      safeAddListener("aiObjectiveBtn", "click", () => sendQuickPrompt("objective"));
+      safeAddListener("aiTaskBtn", "click", () => sendQuickPrompt("task"));
+      safeAddListener("aiAssessmentBtn", "click", () => sendQuickPrompt("assessment"));
+      safeAddListener("aiUDLBtn", "click", () => sendQuickPrompt("udl"));
+      safeAddListener("aiFullLessonBtn", "click", () => sendQuickPrompt("full"));
+
+      safeAddListener("applyObjective", "click", () => {
+        const ai = $("aiOutput")?.dataset.last || "";
+        const match = ai.match(/Objective[:\-]\s*([\s\S]*?)(?=\n\n|$)/i);
+        safeSetValue("objective", match ? match[1].trim() : ai);
+        updateSnapshot();
+      });
+
+      safeAddListener("applyTask", "click", () => {
+        const ai = $("aiOutput")?.dataset.last || "";
+        const match = ai.match(/Student Task[:\-]\s*([\s\S]*?)(?=\n\n|$)/i);
+        safeSetValue("task", match ? match[1].trim() : ai);
+        updateSnapshot();
+      });
+
+      safeAddListener("applyAssessment", "click", () => {
+        const ai = $("aiOutput")?.dataset.last || "";
+        const match = ai.match(/Assessment[:\-]\s*([\s\S]*?)(?=\n\n|$)/i);
+        safeSetValue("assessment", match ? match[1].trim() : ai);
+        updateSnapshot();
+      });
+
+      safeAddListener("applyUDL", "click", () => {
+        const ai = $("aiOutput")?.dataset.last || "";
+        const match = ai.match(/UDL(?:\s*&\s*Equity Supports)?[:\-]\s*([\s\S]*?)(?=\n\n|$)/i);
+        safeSetValue("udl", match ? match[1].trim() : ai);
+        updateSnapshot();
+      });
+
+      safeAddListener("applyFull", "click", () => {
+        const ai = $("aiOutput")?.dataset.last || "";
+        const sections = parseAISections(ai);
+
+        safeSetValue("objective", sections.objective);
+        safeSetValue("task", sections.task);
+        safeSetValue("assessment", sections.assessment);
+        safeSetValue("udl", sections.udl);
+
+        updateSnapshot();
+      });
+
+      function collectLessonFields() {
+        return {
+          "Learning Objective": $("objective")?.value.trim() || "",
+          "Student Task Description": $("task")?.value.trim() || "",
+          "Assessment / Evidence of Learning": $("assessment")?.value.trim() || "",
+          "Accessibility & Inclusivity Design": $("udl")?.value.trim() || "",
+          "Materials": $("materials")?.value.trim() || "",
+          "Vocabulary": $("vocabulary")?.value.trim() || "",
+          "Lesson Procedures": $("procedures")?.value.trim() || "",
+          "Differentiation": $("differentiation")?.value.trim() || "",
+          "Teacher Reflection": $("reflection")?.value.trim() || "",
+          "Grade Band": $("gradeBand")?.value.trim() || "",
+          "CT Practice": $("ctPractice")?.value.trim() || "",
+          "CS Standard": $("csStandard")?.value.trim() || ""
+        };
+      }
+
+      function buildLessonText() {
+        const fields = collectLessonFields();
+        const aiText = $("aiOutput")?.dataset.last || "";
+        const aiSections = aiText ? parseAISections(aiText) : {};
+
+        const finalObjective =
+          fields["Learning Objective"] || aiSections.objective || "[Not specified]";
+        const finalTask =
+          fields["Student Task Description"] || aiSections.task || "[Not specified]";
+        const finalAssessment =
+          fields["Assessment / Evidence of Learning"] || aiSections.assessment || "[Not specified]";
+        const finalUDL =
+          fields["Accessibility & Inclusivity Design"] || aiSections.udl || "[Not specified]";
+
+        let text = "CS Teaching Toolkit – Lesson Plan\n\n";
+        text += `Learning Objective:\n${finalObjective}\n\n`;
+        text += `Student Task:\n${finalTask}\n\n`;
+        text += `Assessment:\n${finalAssessment}\n\n`;
+        text += `UDL & Equity Supports:\n${finalUDL}\n\n`;
+
+        for (const [label, value] of Object.entries(fields)) {
+          if (
+            [
+              "Learning Objective",
+              "Student Task Description",
+              "Assessment / Evidence of Learning",
+              "Accessibility & Inclusivity Design"
+            ].includes(label)
+          ) {
+            continue;
+          }
+          text += `${label}:\n${value || "[Not specified]"}\n\n`;
+        }
+
+        const chatText = $("aiChatLog")?.innerText.trim() || "";
+        text += `AI Lesson Assistant Log:\n${chatText || "[No chat messages]"}\n`;
+
+        return text;
+      }
+
+      function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      function buildLessonHTML() {
+        const fields = collectLessonFields();
+        const aiText = $("aiOutput")?.dataset.last || "";
+        const aiSections = aiText ? parseAISections(aiText) : {};
+
+        const finalObjective =
+          fields["Learning Objective"] || aiSections.objective || "[Not specified]";
+        const finalTask =
+          fields["Student Task Description"] || aiSections.task || "[Not specified]";
+        const finalAssessment =
+          fields["Assessment / Evidence of Learning"] || aiSections.assessment || "[Not specified]";
+        const finalUDL =
+          fields["Accessibility & Inclusivity Design"] || aiSections.udl || "[Not specified]";
+
+        let html = `
+          <h2>Learning Objective</h2>
+          <p>${escapeHtml(finalObjective).replace(/\n/g, "<br>")}</p>
+
+          <h2>Student Task</h2>
+          <p>${escapeHtml(finalTask).replace(/\n/g, "<br>")}</p>
+
+          <h2>Assessment</h2>
+          <p>${escapeHtml(finalAssessment).replace(/\n/g, "<br>")}</p>
+
+          <h2>UDL & Equity Supports</h2>
+          <p>${escapeHtml(finalUDL).replace(/\n/g, "<br>")}</p>
+        `;
+
+        for (const [label, value] of Object.entries(fields)) {
+          if (
+            [
+              "Learning Objective",
+              "Student Task Description",
+              "Assessment / Evidence of Learning",
+              "Accessibility & Inclusivity Design"
+            ].includes(label)
+          ) {
+            continue;
+          }
+
+          html += `
+            <h2>${escapeHtml(label)}</h2>
+            <p>${escapeHtml(value || "[Not specified]").replace(/\n/g, "<br>")}</p>
+          `;
+        }
+
+        const chatText = $("aiChatLog")?.innerText.trim() || "[No chat messages]";
+        html += `
+          <h2>AI Lesson Assistant Log</h2>
+          <p>${escapeHtml(chatText).replace(/\n/g, "<br>")}</p>
+        `;
+
+        return html;
+      }
+
+      safeAddListener("exportTxtBtn", "click", () => {
+        downloadFile("lesson-plan.txt", buildLessonText(), "text/plain");
+      });
+
+      safeAddListener("exportDocxBtn", "click", async () => {
+        try {
+          const fields = collectLessonFields();
+          const aiText = $("aiOutput")?.dataset.last || "";
+          const aiSections = aiText ? parseAISections(aiText) : {};
+
+          const finalObjective =
+            fields["Learning Objective"] || aiSections.objective || "[Not specified]";
+          const finalTask =
+            fields["Student Task Description"] || aiSections.task || "[Not specified]";
+          const finalAssessment =
+            fields["Assessment / Evidence of Learning"] || aiSections.assessment || "[Not specified]";
+          const finalUDL =
+            fields["Accessibility & Inclusivity Design"] || aiSections.udl || "[Not specified]";
+
+          const { Document, Packer, Paragraph, TextRun } = window.docx;
+          const children = [];
+
+          children.push(
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "CS Teaching Toolkit – Lesson Plan",
+                  bold: true,
+                  size: 32
+                })
+              ]
+            })
+          );
+
+          children.push(new Paragraph({ text: "" }));
+
+          const addSection = (label, value) => {
+            children.push(
+              new Paragraph({
+                children: [new TextRun({ text: label, bold: true })]
+              })
+            );
+            children.push(
+              new Paragraph({
+                children: [new TextRun(value || "[Not specified]")]
+              })
+            );
+            children.push(new Paragraph({ text: "" }));
+          };
+
+          addSection("Learning Objective", finalObjective);
+          addSection("Student Task", finalTask);
+          addSection("Assessment", finalAssessment);
+          addSection("UDL & Equity Supports", finalUDL);
+
+          for (const [label, value] of Object.entries(fields)) {
+            if (
+              [
+                "Learning Objective",
+                "Student Task Description",
+                "Assessment / Evidence of Learning",
+                "Accessibility & Inclusivity Design"
+              ].includes(label)
+            ) {
+              continue;
+            }
+            addSection(label, value || "[Not specified]");
+          }
+
+          const chatText = $("aiChatLog")?.innerText.trim() || "[No chat messages]";
+          addSection("AI Lesson Assistant Log", chatText);
+
+          const doc = new Document({
+            sections: [
+              {
+                properties: {},
+                children
+              }
+            ]
+          });
+
+          const blob = await Packer.toBlob(doc);
+          downloadFile(
+            "lesson-plan.docx",
+            blob,
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          );
+        } catch (error) {
+          console.error("DOCX export failed:", error);
+          alert("DOCX export failed. Check the console for details.");
+        }
+      });
+
+      safeAddListener("exportPdfBtn", "click", async () => {
+        try {
+          const exportWrap = $("exportLesson");
+          const exportContent = $("exportLessonContent");
+
+          if (!exportWrap || !exportContent) {
+            alert("Export area not found.");
+            return;
+          }
+
+          exportContent.innerHTML = buildLessonHTML();
+          exportWrap.style.display = "block";
+
+          await html2pdf()
+            .set({
+              margin: 0.5,
+              filename: "lesson-plan.pdf",
+              image: { type: "jpeg", quality: 0.98 },
+              html2canvas: { scale: 2 },
+              jsPDF: { unit: "in", format: "letter", orientation: "portrait" }
+            })
+            .from(exportWrap)
+            .save();
+
+          exportWrap.style.display = "none";
+        } catch (error) {
+          console.error("PDF export failed:", error);
+          alert("PDF export failed. Check the console for details.");
+          const exportWrap = $("exportLesson");
+          if (exportWrap) exportWrap.style.display = "none";
+        }
+      });
+
+      safeAddListener("printBtn", "click", () => {
+        window.print();
+      });
+
+      function populateDropdown() {
+        const exampleLoader = $("exampleLoader");
+        if (!exampleLoader) return;
+
+        exampleLoader.innerHTML = "";
+
+        const defaultOpt = document.createElement("option");
+        defaultOpt.value = "";
+        defaultOpt.textContent = "— Select an Example Lesson —";
+        exampleLoader.appendChild(defaultOpt);
+
+        const gradeOrder = ["K–2", "3–5", "6–8", "9–12"];
+
+        gradeOrder.forEach((band) => {
+          const lessons = Array.isArray(lessonLibrary[band]) ? lessonLibrary[band] : [];
+
+          if (lessons.length === 0) return;
+
+          const separator = document.createElement("option");
+          separator.disabled = true;
+          separator.textContent = `────────── ${band} Lessons ──────────`;
+          exampleLoader.appendChild(separator);
+
+          const topics = {};
+          lessons.forEach((lesson) => {
+            const topic = lesson.topic || "General";
+            if (!topics[topic]) topics[topic] = [];
+            topics[topic].push(lesson);
+          });
+
+          Object.keys(topics).forEach((topic) => {
+            const topicHeader = document.createElement("option");
+            topicHeader.disabled = true;
+            topicHeader.textContent = `• ${topic}`;
+            exampleLoader.appendChild(topicHeader);
+
+            topics[topic].forEach((lesson) => {
+              const opt = document.createElement("option");
+              opt.value = lesson.id || "";
+              opt.textContent = lesson.title || "Untitled Lesson";
+              exampleLoader.appendChild(opt);
+            });
+          });
+        });
+      }
+
+      fetch("lessons.json")
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`Unable to load lessons.json (${response.status})`);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          lessonLibrary = data || {};
+          populateDropdown();
+        })
+        .catch((err) => {
+          console.error("Error loading lessons.json:", err);
+        });
+
+      function findLessonById(id) {
+        for (const band of Object.keys(lessonLibrary)) {
+          const lessons = Array.isArray(lessonLibrary[band]) ? lessonLibrary[band] : [];
+          const lesson = lessons.find((l) => l.id === id);
+          if (lesson) return lesson;
+        }
+        return null;
+      }
+
+      function setChecks(groupName, values) {
+        if (!Array.isArray(values)) return;
+
+        const checkboxes = document.querySelectorAll(`input[data-group="${groupName}"]`);
+        checkboxes.forEach((box) => {
+          box.checked = values.includes(box.value);
+        });
+      }
+
+      safeAddListener("exampleLoader", "change", (e) => {
+        const id = e.target.value;
+        if (!id) return;
+
+        const lesson = findLessonById(id);
+        if (!lesson) return;
+
+        safeSetValue("objective", lesson.objective);
+        safeSetValue("task", lesson.task);
+        safeSetValue(
+          "assessment",
+          lesson.assessment ||
+          lesson.formativeAssessment ||
+          lesson.summativeAssessment ||
+          ""
+        );
+        safeSetValue("udl", lesson.udl);
+        safeSetValue("materials", lesson.materials);
+        safeSetValue("vocabulary", lesson.vocabulary);
+        safeSetValue("procedures", lesson.procedures);
+        safeSetValue("differentiation", lesson.differentiation);
+        safeSetValue("reflection", lesson.reflection);
+
+        safeSetValue("gradeBand", lesson.gradeBand);
+        safeSetValue("ctPractice", lesson.ctPractice);
+        safeSetValue("csStandard", lesson.csStandard);
+
+        setChecks("activityType", lesson.activityType);
+        setChecks("equitySupports", lesson.equitySupports);
+        setChecks("accessibilitySupports", lesson.accessibilitySupports);
+        setChecks("assessmentTypes", lesson.assessmentTypes);
+        setChecks("tools", lesson.tools);
+
+        updateSnapshot();
+      });
+
+      function updateSnapshot() {
+        const snap = $("snapshotContent");
+        if (!snap) return;
+
+        const fields = collectLessonFields();
+
+        snap.innerHTML = `
+          <strong>Objective:</strong> ${fields["Learning Objective"] || "<em>Not set</em>"}<br><br>
+          <strong>Task:</strong> ${fields["Student Task Description"] || "<em>Not set</em>"}<br><br>
+          <strong>Assessment:</strong> ${fields["Assessment / Evidence of Learning"] || "<em>Not set</em>"}<br><br>
+          <strong>UDL:</strong> ${fields["Accessibility & Inclusivity Design"] || "<em>Not set</em>"}<br><br>
+          <strong>Grade Band:</strong> ${fields["Grade Band"] || "<em>Not set</em>"}<br>
+          <strong>CT Practice:</strong> ${fields["CT Practice"] || "<em>Not set</em>"}<br>
+          <strong>CS Standard:</strong> ${fields["CS Standard"] || "<em>Not set</em>"}<br>
+        `;
+      }
+
+      [
+        "objective",
+        "task",
+        "assessment",
+        "udl",
+        "materials",
+        "vocabulary",
+        "procedures",
+        "differentiation",
+        "reflection",
+        "gradeBand",
+        "ctPractice",
+        "csStandard"
+      ].forEach((id) => {
+        const el = $(id);
+        if (el) el.addEventListener("input", updateSnapshot);
+        if (el && el.tagName === "SELECT") el.addEventListener("change", updateSnapshot);
+      });
+
+      updateSnapshot();
     });
-  });
-
-  console.groupEnd();
-}   
-  fetch("lessons.json")
-  .then(response => response.json())
-  .then(data => {
-    lessonLibrary = data;
-    populateDropdown();   // now this works
-  })
-  .catch(err => console.error("Error loading lessons.json:", err));
-
-  .catch(err => console.error("Error loading lessons.json:", err));
-
- /* -----------------------------------------
-   DATA‑DRIVEN LESSON LOADER
-------------------------------------------*/
-
-// Helper: find a lesson by its ID anywhere in the library
-function findLessonById(id) {
-  for (const band of Object.keys(lessonLibrary)) {
-    const lesson = lessonLibrary[band].find((l) => l.id === id);
-    if (lesson) return lesson;
-  }
-  return null;
-}
-
-// Helper: set checkbox groups (activityType, equitySupports, etc.)
-function setChecks(groupName, values) {
-  if (!Array.isArray(values)) return;
-
-  const checkboxes = document.querySelectorAll(
-    `input[data-group='${groupName}']`
-  );
-
-  checkboxes.forEach((box) => {
-    box.checked = values.includes(box.value);
-  });
-}
-
-// Main loader
-document.getElementById("exampleLoader").addEventListener("change", (e) => {
-  const id = e.target.value;
-  if (!id) return;
-
-  const lesson = findLessonById(id);
-  if (!lesson) return;
-
-  // Fill text fields
-  document.getElementById("objective").value = lesson.objective || "";
-  document.getElementById("task").value = lesson.task || "";
-  document.getElementById("formativeAssessment").value =
-    lesson.formativeAssessment || "";
-  document.getElementById("summativeAssessment").value =
-    lesson.summativeAssessment || "";
-  document.getElementById("udl").value = lesson.udl || "";
-  document.getElementById("materials").value = lesson.materials || "";
-  document.getElementById("vocabulary").value = lesson.vocabulary || "";
-  document.getElementById("procedures").value = lesson.procedures || "";
-  document.getElementById("differentiation").value =
-    lesson.differentiation || "";
-  document.getElementById("reflection").value = lesson.reflection || "";
-
-  // Fill structured single‑value fields
-  document.getElementById("gradeBand").value = lesson.gradeBand || "";
-  document.getElementById("ctPractice").value = lesson.ctPractice || "";
-  document.getElementById("csStandard").value = lesson.csStandard || "";
-
-  // Fill checkbox groups
-  setChecks("activityType", lesson.activityType);
-  setChecks("equitySupports", lesson.equitySupports);
-  setChecks("accessibilitySupports", lesson.accessibilitySupports);
-  setChecks("assessmentTypes", lesson.assessmentTypes);
-  setChecks("tools", lesson.tools);
-
-  // Update snapshot
-  updateSnapshot();
-});
-
-/* -------------------------------
-   SNAPSHOT AUTO‑UPDATE
---------------------------------*/
-
-function updateSnapshot() {
-  const snap = document.getElementById("snapshotContent");
-  const fields = collectLessonFields();
-
-  snap.innerHTML = `
-    <strong>Objective:</strong> ${fields["Learning Objective"] || "<em>Not set</em>"}<br><br>
-    <strong>Task:</strong> ${fields["Student Task Description"] || "<em>Not set</em>"}<br><br>
-    <strong>Assessment:</strong> ${fields["Assessment / Evidence of Learning"] || "<em>Not set</em>"}<br><br>
-    <strong>UDL:</strong> ${fields["Accessibility & Inclusivity Design"] || "<em>Not set</em>"}<br><br>
-    <strong>Grade Band:</strong> ${fields["Grade Band"] || "<em>Not set</em>"}<br>
-    <strong>CT Practice:</strong> ${fields["CT Practice"] || "<em>Not set</em>"}<br>
-    <strong>CS Standard:</strong> ${fields["CS Standard"] || "<em>Not set</em>"}<br>
-  `;
-}
-
-
-/* -------------------------------
-   FIELD CHANGE LISTENERS
---------------------------------*/
-
-[
-  "objective",
-  "task",
-  "assessment",
-  "udl",
-  "materials",
-  "vocabulary",
-  "procedures",
-  "differentiation",
-  "reflection",
-  "gradeBand",
-  "ctPractice",
-  "csStandard"
-].forEach((id) => {
-  const el = document.getElementById(id);
-  if (el) {
-    el.addEventListener("input", updateSnapshot);
-  }
-});
-
-
-/* -------------------------------
-   INITIAL SNAPSHOT
---------------------------------*/
-
-updateSnapshot();
-</script>
+  </script>
 </body>
 </html>
-
-
-  
