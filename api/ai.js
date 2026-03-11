@@ -19,16 +19,10 @@ export default async function handler(req, res) {
 
     const modeInstructions = {
       lesson:
-        "Return exactly these labeled sections: Objective:, Student Task:, Assessment:, UDL:.",
-      multiday:
-        "Return exactly these labeled sections: Overview:, Day 1:, Day 2:, Day 3:, Assessment:, UDL:.",
-      materials:
-        "Return exactly these labeled sections: Materials List:, Preparation Steps:, Teacher Notes:.",
-      rubric:
-        "Return exactly these labeled sections: Criteria:, Proficient:, Developing:, Beginning:.",
-      worksheet:
-        "Return exactly these labeled sections: Title:, Directions:, Questions:, Extension:."
-    };
+  "Return exactly these labeled sections when a full lesson is requested: Objective:, 
+      Student Task:, Assessment:, UDL:, Differentiation:, Materials:, 
+      Vocabulary:, Procedures:, Reflection:. For partial requests, 
+      return only what the user asked for in a clean teacher-friendly format.",
 
     const systemInstruction = `
 You are an expert K-12 computer science curriculum designer.
