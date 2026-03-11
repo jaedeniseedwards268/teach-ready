@@ -12,24 +12,32 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Missing prompt" });
     }
 
-    const OPENAI_KEY = process.env.OPENAI_API_KEY;
-    if (!OPENAI_KEY) {
-      return res.status(500).json({ error: "Missing OPENAI_API_KEY" });
+    const _KEY = process.env._API_KEY;
+    if (!_KEY) {
+      return res.status(500).json({ error: "Missing _API_KEY" });
     }
 
     const modeInstructions = {
       lesson:
-  "Return exactly these labeled sections when a full lesson is requested: Objective:, 
-      Student Task:, Assessment:, UDL:, Differentiation:, Materials:, 
-      Vocabulary:, Procedures:, Reflection:. For partial requests, 
-      return only what the user asked for in a clean teacher-friendly format.",
+        "Return exactly these labeled sections when a full lesson is requested: Objective:, Student Task:, Assessment:, UDL:, Differentiation:, Materials:, Vocabulary:, Procedures:, Reflection:. For partial requests, return only what the user asked for in a clean teacher-friendly format.",
+      multiday:
+        "Return exactly these labeled sections: Overview:, Day 1:, Day 2:, Day 3:, Assessment:, UDL:.",
+      materials:
+        "Return exactly these labeled sections: Materials List:, Preparation Steps:, Teacher Notes:.",
+      rubric:
+        "Return exactly these labeled sections: Criteria:, Proficient:, Developing:, Beginning:.",
+      worksheet:
+        "Return exactly these labeled sections: Title:, Directions:, Questions:, Extension:."
+    };
 
     const systemInstruction = `
 You are an expert K-12 computer science curriculum designer.
 Write practical, classroom-ready content aligned to the user's request.
 ${modeInstructions[mode] || modeInstructions.lesson}
-Keep the tone teacher-friendly, specific, and ready for classroom use.
-Do not add extra section labels beyond the required ones unless the user explicitly asks for them.
+Prioritize strong UDL, accessibility, and inclusive design.
+Keep the language teacher-friendly, specific, and easy to scan.
+Do not add extra labels beyond the requested structure unless the user explicitly asks.
+If the request asks for multiple variations, clearly divide them with headings and separator lines.
 `.trim();
 
     const payload = {
@@ -54,28 +62,28 @@ Do not add extra section labels beyond the required ones unless the user explici
           ]
         }
       ],
-      max_output_tokens: 1000
+      max_output_tokens: 1400
     };
 
-    const r = await fetch("https://api.openai.com/v1/responses", {
+    const response = await fetch("https://api..com/v1/responses", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${OPENAI_KEY}`
+        Authorization: `Bearer ${_KEY}`
       },
       body: JSON.stringify(payload)
     });
 
-    if (!r.ok) {
-      const errText = await r.text();
-      console.error("OpenAI error:", r.status, errText);
+    if (!response.ok) {
+      const errText = await response.text();
+      console.error(" error:", response.status, errText);
       return res.status(502).json({
         error: "AI provider error",
         details: errText
       });
     }
 
-    const data = await r.json();
+    const data = await response.json();
 
     const text =
       data.output
@@ -86,8 +94,8 @@ Do not add extra section labels beyond the required ones unless the user explici
         ?.trim() || "";
 
     return res.status(200).json({ reply: text || "[No response]" });
-  } catch (err) {
-    console.error("Handler error:", err);
+  } catch (error) {
+    console.error("Handler error:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
 }
