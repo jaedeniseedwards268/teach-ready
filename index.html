@@ -3,1351 +3,1053 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CS Teaching Toolkit – Lesson Planner</title>
-
+  <title>CS Teaching Toolkit – Lesson Design Platform</title>
   <style>
+    :root {
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --line: #dde3ee;
+      --text: #1f2937;
+      --muted: #667085;
+      --accent: #2563eb;
+      --accent-soft: #eaf2ff;
+      --good: #0f766e;
+      --good-soft: #e8fbf8;
+      --warning: #9a3412;
+      --warning-soft: #fff3eb;
+      --shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+
     body {
-      font-family: system-ui, sans-serif;
       margin: 0;
-      padding: 0;
-      background: #f5f5f5;
-      color: #222;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.45;
     }
 
-    .container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-      padding: 1.5rem;
-      max-width: 1400px;
-      margin: auto;
-    }
+    h1, h2, h3, h4, p { margin: 0; }
 
-    .card {
-      background: white;
-      border-radius: 8px;
-      padding: 1.25rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-
-    .card-header h1,
-    .card-header h2 {
-      margin: 0;
-    }
-
-    .small-muted {
-      color: #666;
-      font-size: 0.85rem;
-    }
-
-    .section-title {
-      margin-top: 1rem;
-      font-weight: 600;
-    }
-
-    .hint {
-      color: #666;
-      font-size: 0.9rem;
-      margin-top: 0.25rem;
-      margin-bottom: 0.75rem;
-    }
-
-    label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 0.35rem;
-    }
-
-    input,
-    select,
-    textarea,
-    button {
+    button, input, select, textarea {
       font: inherit;
     }
 
-    input,
-    select,
-    textarea {
-      width: 100%;
-      padding: 0.6rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      box-sizing: border-box;
-      margin-bottom: 1rem;
-      background: #fff;
-    }
-
-    textarea {
-      min-height: 90px;
-      resize: vertical;
-    }
-
     button {
-      padding: 0.6rem 1rem;
-      border: 1px solid #999;
-      background: #f7f7f7;
-      border-radius: 6px;
       cursor: pointer;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 10px;
+      padding: 0.7rem 1rem;
+      transition: 0.2s ease;
     }
 
     button:hover {
-      background: #ececec;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
     }
 
-    .secondary {
-      background: #fafafa;
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 0.75rem 0.9rem;
+      background: #fff;
+      color: var(--text);
     }
 
-    .ai-quick-actions {
+    textarea {
+      min-height: 96px;
+      resize: vertical;
+    }
+
+    .page {
+      max-width: 1460px;
+      margin: 0 auto;
+      padding: 1.25rem;
+      display: grid;
+      gap: 1.25rem;
+    }
+
+    .hero,
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      padding: 1.5rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .eyebrow {
+      font-size: 0.85rem;
+      color: var(--accent);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.35rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.8rem, 2.6vw, 2.7rem);
+      line-height: 1.1;
+    }
+
+    .hero-subtitle {
+      color: var(--muted);
+      max-width: 880px;
+      margin-top: 0.5rem;
+    }
+
+    .badge-row,
+    .pill-row,
+    .action-row {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .badge,
+    .pill {
+      border-radius: 999px;
+      padding: 0.45rem 0.8rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--text);
+    }
+
+    .badge.primary,
+    .pill.primary {
+      background: var(--accent-soft);
+      border-color: #cfe0ff;
+      color: var(--accent);
+    }
+
+    .badge.good {
+      background: var(--good-soft);
+      border-color: #c7eee8;
+      color: var(--good);
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.9rem;
+    }
+
+    .overview-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 1rem;
+      background: linear-gradient(180deg, #fff, #fafcff);
+    }
+
+    .overview-card h3 {
+      font-size: 1rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .overview-card p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 1.25rem;
+      align-items: start;
+    }
+
+    .panel {
+      padding: 1.1rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .panel-title-wrap p,
+    .section-help,
+    .small-muted {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .filter-grid,
+    .template-grid,
+    .mini-grid {
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .filter-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .mini-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .field {
+      display: grid;
+      gap: 0.35rem;
+    }
+
+    .field label {
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .lesson-count {
+      font-size: 0.9rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .lesson-library-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 0.9rem;
+    }
+
+    .lesson-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 1rem;
+      display: grid;
+      gap: 0.75rem;
+      background: #fff;
+    }
+
+    .lesson-meta {
       display: flex;
       flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .lesson-card h3 {
+      font-size: 1rem;
+      line-height: 1.25;
+    }
+
+    .lesson-card p {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    .lesson-card-actions {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .btn-soft {
+      background: var(--accent-soft);
+      border-color: #cfe0ff;
+      color: var(--accent);
+    }
+
+    .template-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .template-grid .field.full {
+      grid-column: 1 / -1;
+    }
+
+    .section-box {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 0.95rem;
+      background: #fcfdff;
+      display: grid;
+      gap: 0.7rem;
+    }
+
+    .prompt-box {
+      border-left: 4px solid var(--accent);
+      background: #f7faff;
+      padding: 0.75rem 0.85rem;
+      border-radius: 10px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .ai-controls {
+      display: flex;
       gap: 0.5rem;
-      margin-top: 0.75rem;
-      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .ai-controls button:nth-child(n + 7) {
+      display: none;
     }
 
     .ai-output {
-      background: #fafafa;
-      border: 1px solid #ddd;
-      padding: 1rem;
-      border-radius: 6px;
-      min-height: 120px;
-    }
-
-    .ai-output pre {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fbfcfe;
+      padding: 0.95rem;
+      min-height: 130px;
       white-space: pre-wrap;
-      word-wrap: break-word;
-      margin: 0;
-      font-family: inherit;
     }
 
-    .apply-row {
-      display: none;
-      margin-top: 0.75rem;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .export-row {
-      display: none;
-      margin-top: 0.75rem;
-      gap: 12px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .export-btn {
-      font-size: 12px;
-      padding: 4px 10px;
-      border: 1px solid #999;
-      background: #f7f7f7;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    .export-btn:hover {
-      background: #eaeaea;
-    }
-
-    .ai-chat-log {
-      background: #fafafa;
-      border: 1px solid #ddd;
+    .snapshot {
+      border: 1px solid var(--line);
+      border-radius: 14px;
       padding: 1rem;
-      border-radius: 6px;
-      height: 180px;
-      overflow-y: auto;
-      margin-top: 0.75rem;
+      background: #fcfdff;
+      display: grid;
+      gap: 0.6rem;
     }
 
-    .ai-msg-user {
-      margin-bottom: 0.5rem;
-      font-weight: 600;
+    .snapshot-item strong {
+      display: inline-block;
+      min-width: 112px;
     }
 
-    .ai-msg-assistant {
-      margin-bottom: 0.5rem;
+    .empty-state {
+      text-align: center;
+      padding: 1.5rem 1rem;
+      color: var(--muted);
+      border: 1px dashed var(--line);
+      border-radius: 14px;
+      background: #fcfdff;
     }
 
-    .ai-chat-input {
-      margin-top: 0.75rem;
+    .layer-toggle {
       display: flex;
       gap: 0.5rem;
-      align-items: stretch;
-    }
-
-    .ai-chat-input textarea {
-      flex: 1;
-      height: 60px;
-      margin-bottom: 0;
-    }
-
-    .ai-chat-input button {
-      white-space: nowrap;
-    }
-
-    .ai-tab-bar {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 8px;
       flex-wrap: wrap;
     }
 
-    .ai-tab {
-      padding: 4px 10px;
-      border: 1px solid #ccc;
-      background: #f3f3f3;
-      cursor: pointer;
-      border-radius: 4px;
-      font-size: 12px;
+    .layer-toggle button.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
     }
 
-    .ai-tab.active {
-      background: white;
-      border-bottom: 1px solid white;
-      font-weight: 600;
-    }
-
-    .ai-tab-panel {
-      min-height: 120px;
-    }
-
-    hr {
-      border: none;
-      border-top: 1px solid #e2e2e2;
-      margin: 1rem 0;
-    }
-
-    #exportLesson {
-      display: none;
-      padding: 40px;
-      background: white;
-      color: black;
-    }
-
-    #exportLesson h1,
-    #exportLesson h2 {
-      margin-top: 0;
-    }
-
-    #exportLesson h2 {
-      margin-top: 1.2rem;
-      margin-bottom: 0.4rem;
-    }
-
-    #exportLesson p {
-      margin-top: 0;
-      line-height: 1.5;
-    }
-
-    @media print {
-      body {
-        background: white;
+    @media (max-width: 1180px) {
+      .workspace {
+        grid-template-columns: 1fr;
       }
+    }
 
-      .container {
-        display: block;
-        max-width: none;
-        padding: 0;
-      }
-
-      .ai-top,
-      #printBtn,
-      .apply-row,
-      .export-row,
-      .ai-chat-input,
-      .ai-quick-actions,
-      .ai-tab-bar,
-      #libraryHealth {
-        display: none !important;
-      }
-
-      .card {
-        box-shadow: none;
-        border: none;
-        padding: 0;
-        margin-bottom: 1rem;
+    @media (max-width: 900px) {
+      .overview-grid,
+      .filter-grid,
+      .template-grid,
+      .mini-grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-
-    <section class="card ai-top" aria-label="AI assistant" style="grid-column:1 / -1;">
-      <div class="card-header">
-        <h2>AI Lesson Assistant</h2>
-        <small class="small-muted">Structured prompts + chat, aligned to your current plan.</small>
-
-        <div id="libraryHealth" style="
-          margin-top:10px;
-          padding:8px 12px;
-          background:#f8f8f8;
-          border:1px solid #ddd;
-          border-radius:6px;
-          font-size:13px;">
-          Library Status: Loading lesson library…
-        </div>
-      </div>
-
-      <div class="section-title">Quick AI Prompts</div>
-      <div class="hint">Uses your current grade band, CT practice, and CS standards.</div>
-
-      <div class="ai-quick-actions" role="toolbar" aria-label="AI quick actions">
-        <button id="aiObjectiveBtn">Generate Objective</button>
-        <button id="aiTaskBtn">Generate Student Task</button>
-        <button id="aiAssessmentBtn">Assessment Ideas</button>
-        <button id="aiUDLBtn">UDL & Equity Supports</button>
-        <button id="aiFullLessonBtn">Full Lesson Draft</button>
-        <button id="aiMultidayBtn">3-Day Lesson</button>
-        <button id="aiMaterialsBtn">Materials List</button>
-        <button id="aiRubricBtn">Rubric</button>
-        <button id="aiWorksheetBtn">Worksheet</button>
-        <button id="clearAiMemoryBtn">Clear AI Memory</button>
-      </div>
-
-      <div class="section-title">AI Output</div>
-
-      <div class="ai-tabs">
-        <div class="ai-tab-bar">
-          <button class="ai-tab active" data-tab="lesson">Lesson</button>
-          <button class="ai-tab" data-tab="multiday">Multi-Day</button>
-          <button class="ai-tab" data-tab="materials">Materials</button>
-          <button class="ai-tab" data-tab="rubric">Rubric</button>
-          <button class="ai-tab" data-tab="worksheet">Worksheet</button>
-        </div>
-
-        <div class="ai-tab-content">
-          <div id="tab-lesson" class="ai-output ai-tab-panel">
-            <p class="small-muted">AI suggestions will appear here.</p>
-          </div>
-
-          <div id="tab-multiday" class="ai-output ai-tab-panel" style="display:none">
-            <p class="small-muted">No AI output yet.</p>
-          </div>
-
-          <div id="tab-materials" class="ai-output ai-tab-panel" style="display:none">
-            <p class="small-muted">No AI output yet.</p>
-          </div>
-
-          <div id="tab-rubric" class="ai-output ai-tab-panel" style="display:none">
-            <p class="small-muted">No AI output yet.</p>
-          </div>
-
-          <div id="tab-worksheet" class="ai-output ai-tab-panel" style="display:none">
-            <p class="small-muted">No AI output yet.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="apply-row" id="applyRow">
-        <button id="applyObjective" class="secondary">Insert Objective</button>
-        <button id="applyTask" class="secondary">Insert Student Task</button>
-        <button id="applyAssessment" class="secondary">Insert Assessment</button>
-        <button id="applyUDL" class="secondary">Insert UDL Supports</button>
-        <button id="applyFull" class="secondary">Apply Full Lesson</button>
-      </div>
-
-      <div id="exportRow" class="export-row">
-        <button id="exportTxtBtn" class="export-btn">TXT</button>
-        <button id="exportDocxBtn" class="export-btn">DOCX</button>
-        <button id="exportPdfBtn" class="export-btn">PDF</button>
-      </div>
-
-      <div class="section-title" style="margin-top:.75rem">Chat with the Assistant</div>
-      <div id="aiChatLog" class="ai-chat-log" aria-live="polite">
-        <div class="ai-msg-assistant">Assistant: Ask for adaptations, simplifications, extensions, rubrics, worksheets, or multi-day plans.</div>
-      </div>
-
-      <div class="ai-chat-input">
-        <textarea id="aiChatInput" placeholder="Ask for an unplugged version, UDL supports, extensions, rubric, worksheet, etc."></textarea>
-        <button id="aiChatSendBtn">Send</button>
-      </div>
-    </section>
-
-    <section class="card" aria-label="Lesson plan form">
-      <div class="card-header">
+  <main class="page">
+    <section class="hero" aria-label="Platform overview">
+      <div class="hero-top">
         <div>
-          <h1>CS Teaching Toolkit – Lesson Plan</h1>
-          <small class="small-muted">UDL, accessibility, and CS standards built in.</small>
+          <div class="eyebrow">CS Teaching Toolkit</div>
+          <h1>CS Lesson Design Platform</h1>
+          <p class="hero-subtitle">
+            A guided lesson design framework for computer science teachers that embeds standards, accessibility, and UDL into the planning process.
+          </p>
+        </div>
+        <div class="badge-row" aria-label="Value badges">
+          <span class="badge primary">100 Example Lessons Built In</span>
+          <span class="badge good">Layer 1: 40 Core Curriculum Lessons</span>
+          <span class="badge">Layer 2: 100 Expanded Library Lessons</span>
         </div>
       </div>
 
-      <section>
-        <label for="exampleLoader">Load Example Lesson</label>
-        <select id="exampleLoader" aria-label="Load example lesson">
-          <option value="">Choose an example…</option>
-        </select>
-      </section>
-
-      <hr />
-
-      <section>
-        <label for="gradeBand">Grade Band</label>
-        <select id="gradeBand">
-          <option value="">Choose…</option>
-          <option value="K–2">K–2</option>
-          <option value="3–5">3–5</option>
-          <option value="6–8">6–8</option>
-          <option value="9–12">9–12</option>
-        </select>
-      </section>
-
-      <section>
-        <label for="ctPractice">Computational Thinking Practice</label>
-        <select id="ctPractice">
-          <option value="">Choose…</option>
-          <option value="Decomposition">Decomposition</option>
-          <option value="Pattern Recognition">Pattern Recognition</option>
-          <option value="Abstraction">Abstraction</option>
-          <option value="Algorithms">Algorithms</option>
-          <option value="Data">Data</option>
-          <option value="Testing & Debugging">Testing & Debugging</option>
-        </select>
-      </section>
-
-      <section>
-        <label for="csStandard">CS Standard</label>
-        <input id="csStandard" placeholder="e.g., 1A-AP-08" />
-      </section>
-
-      <hr />
-
-      <section>
-        <label for="objective">Learning Objective</label>
-        <textarea id="objective"></textarea>
-      </section>
-
-      <section>
-        <label for="task">Student Task Description</label>
-        <textarea id="task"></textarea>
-      </section>
-
-      <section>
-        <label for="assessment">Assessment / Evidence of Learning</label>
-        <textarea id="assessment"></textarea>
-      </section>
-
-      <section>
-        <label for="udl">Accessibility & Inclusivity Design</label>
-        <textarea id="udl"></textarea>
-      </section>
-
-      <hr />
-
-      <section>
-        <label for="materials">Materials</label>
-        <textarea id="materials"></textarea>
-      </section>
-
-      <section>
-        <label for="vocabulary">Vocabulary</label>
-        <textarea id="vocabulary"></textarea>
-      </section>
-
-      <section>
-        <label for="procedures">Lesson Procedures</label>
-        <textarea id="procedures"></textarea>
-      </section>
-
-      <section>
-        <label for="differentiation">Differentiation</label>
-        <textarea id="differentiation"></textarea>
-      </section>
-
-      <section>
-        <label for="reflection">Teacher Reflection</label>
-        <textarea id="reflection"></textarea>
-      </section>
+      <div class="overview-grid">
+        <article class="overview-card">
+          <h3>🧩 Lesson Framework</h3>
+          <p>Design complete, standards-aligned CS lessons with built-in UDL, accessibility, differentiation, and assessment guidance.</p>
+        </article>
+        <article class="overview-card">
+          <h3>📚 Example Lesson Library</h3>
+          <p>Browse filterable lesson cards by grade band, standard, topic, programming language, and curriculum layer.</p>
+        </article>
+        <article class="overview-card">
+          <h3>🤖 AI Lesson Assistant</h3>
+          <p>Generate objectives, student tasks, UDL supports, multi-day lessons, rubrics, and remix ideas without overwhelming teachers.</p>
+        </article>
+      </div>
     </section>
 
-    <section class="card" aria-label="Lesson snapshot" style="height: fit-content;">
-      <div class="card-header">
-        <h2>Lesson Snapshot</h2>
-        <small class="small-muted">Auto-updates as you edit fields.</small>
-      </div>
+    <section class="workspace">
+      <section class="panel" aria-label="Lesson library and filters">
+        <div class="panel-header">
+          <div class="panel-title-wrap">
+            <h2 class="section-title">Filterable Lesson Library</h2>
+            <p>Scan model anchor lessons and remix them into your editable template.</p>
+          </div>
+          <div class="lesson-count" id="lessonCount">Loading lessons…</div>
+        </div>
 
-      <div id="snapshotContent">
-        <p class="small-muted">Your lesson summary will appear here.</p>
-      </div>
+        <div class="layer-toggle" role="tablist" aria-label="Curriculum layer toggle">
+          <button id="layerAllBtn" class="active" type="button">All Lessons</button>
+          <button id="layerCoreBtn" type="button">Layer 1 Core Curriculum</button>
+          <button id="layerExpandedBtn" type="button">Layer 2 Expanded Library</button>
+        </div>
 
-      <hr />
+        <div class="filter-grid">
+          <div class="field">
+            <label for="filterGradeBand">Grade Band</label>
+            <select id="filterGradeBand">
+              <option value="">All Grade Bands</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="filterStandard">CS Standard</label>
+            <input id="filterStandard" type="text" placeholder="Search standard…" />
+          </div>
+          <div class="field">
+            <label for="filterTopic">Topic</label>
+            <select id="filterTopic">
+              <option value="">All Topics</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="filterLanguage">Programming Language</label>
+            <select id="filterLanguage">
+              <option value="">All Languages</option>
+            </select>
+          </div>
+        </div>
 
-      <button id="printBtn" class="secondary" style="margin-top: 0.5rem;">
-        Print Lesson Plan
-      </button>
+        <div id="lessonLibraryGrid" class="lesson-library-grid"></div>
+      </section>
+
+      <section class="panel" aria-label="Lesson editor and AI assistant">
+        <div class="panel-header">
+          <div class="panel-title-wrap">
+            <h2 class="section-title">Lesson Design Workspace</h2>
+            <p>Remix a model lesson or start from scratch.</p>
+          </div>
+          <div class="pill-row">
+            <span class="pill primary" id="currentModeBadge">Editing Template</span>
+            <span class="pill" id="currentLessonBadge">No lesson loaded</span>
+          </div>
+        </div>
+
+        <div class="section-box">
+          <div class="panel-header">
+            <div>
+              <h3 class="section-title">AI Lesson Assistant</h3>
+              <p class="section-help">Keep the prompts simple and teacher-focused.</p>
+            </div>
+          </div>
+          <div class="ai-controls">
+            <button type="button" data-ai="objective">Generate Objective</button>
+            <button type="button" data-ai="task">Generate Student Task</button>
+            <button type="button" data-ai="assessment">Assessment Ideas</button>
+            <button type="button" data-ai="udl">UDL Supports</button>
+            <button type="button" data-ai="multiday">Multi-Day Lesson</button>
+            <button type="button" data-ai="rubric">Rubric</button>
+            <button type="button" id="toggleMoreAiBtn">More Tools</button>
+            <button type="button" class="btn-soft" data-ai="materials">Materials</button>
+            <button type="button" class="btn-soft" data-ai="worksheet">Worksheet</button>
+            <button type="button" class="btn-soft" data-ai="remix">AI Lesson Remix</button>
+          </div>
+          <div id="aiOutput" class="ai-output">AI suggestions will appear here.</div>
+        </div>
+
+        <div class="section-box">
+          <div class="panel-header">
+            <div>
+              <h3 class="section-title">Lesson Template</h3>
+              <p class="section-help">Suggested sequence keeps the planning flow clear for teachers.</p>
+            </div>
+            <div class="action-row">
+              <button type="button" id="newLessonBtn">New Lesson</button>
+              <button type="button" id="clearTemplateBtn">Clear Template</button>
+            </div>
+          </div>
+
+          <div class="template-grid">
+            <div class="field">
+              <label for="gradeBand">Grade Band</label>
+              <select id="gradeBand">
+                <option value="">Choose…</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="ctPractice">CT Practice</label>
+              <select id="ctPractice">
+                <option value="">Choose…</option>
+                <option value="Decomposition">Decomposition</option>
+                <option value="Pattern Recognition">Pattern Recognition</option>
+                <option value="Abstraction">Abstraction</option>
+                <option value="Algorithms">Algorithms</option>
+                <option value="Data">Data</option>
+                <option value="Testing & Debugging">Testing & Debugging</option>
+                <option value="Responsible Computing">Responsible Computing</option>
+              </select>
+            </div>
+
+            <div class="field full">
+              <label for="csStandard">CS Standard</label>
+              <input id="csStandard" placeholder="e.g., 2-AP-11" />
+            </div>
+
+            <div class="field full">
+              <label for="objective">Learning Objective</label>
+              <textarea id="objective"></textarea>
+            </div>
+
+            <div class="field full">
+              <label for="task">Student Task</label>
+              <textarea id="task"></textarea>
+            </div>
+
+            <div class="field full">
+              <label for="assessment">Assessment / Evidence of Learning</label>
+              <textarea id="assessment"></textarea>
+            </div>
+
+            <div class="field full">
+              <label for="udl">Accessibility & UDL Supports</label>
+              <div class="prompt-box">How will students access the content in multiple ways? Consider visual supports, alternative instructions, flexible participation options, and accessible materials.</div>
+              <textarea id="udl"></textarea>
+            </div>
+
+            <div class="field full">
+              <label for="differentiation">Differentiation / Extensions</label>
+              <div class="prompt-box">How will students who need additional challenge or support engage with the task? Consider scaffolds, enrichment activities, and alternative approaches.</div>
+              <textarea id="differentiation"></textarea>
+            </div>
+
+            <div class="field full">
+              <label for="materials">Materials</label>
+              <textarea id="materials"></textarea>
+            </div>
+
+            <div class="field full">
+              <label for="vocabulary">Vocabulary</label>
+              <textarea id="vocabulary"></textarea>
+            </div>
+
+            <div class="field full">
+              <label for="procedures">Lesson Procedures</label>
+              <textarea id="procedures"></textarea>
+            </div>
+
+            <div class="field full">
+              <label for="reflection">Teacher Reflection</label>
+              <textarea id="reflection"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-box">
+          <h3 class="section-title">Lesson Snapshot</h3>
+          <div id="snapshot" class="snapshot"></div>
+        </div>
+      </section>
     </section>
-  </div>
-
-  <div id="exportLesson">
-    <h1>CS Teaching Toolkit – Lesson Plan</h1>
-    <div id="exportLessonContent"></div>
-  </div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <script src="https://unpkg.com/docx@8.5.0/build/index.umd.js"></script>
+  </main>
 
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      let lessonLibrary = {};
-      let lessonIndex = {};
-
-      let aiMemory = {
-        lesson: "",
-        multiday: "",
-        materials: "",
-        rubric: "",
-        worksheet: ""
-      };
-
-      const $ = (id) => document.getElementById(id);
-
-      function safeSetValue(id, value) {
-        const el = $(id);
-        if (el) el.value = value || "";
+    const demoLessons = [
+      {
+        id: "core_k2_story_sequence",
+        title: "Debugging with Story Sequences",
+        gradeBand: "K–2",
+        topic: "Debugging",
+        csStandard: "1A-AP-14",
+        programmingLanguage: "Unplugged",
+        layer: "core",
+        ctPractice: "Testing & Debugging",
+        objective: "Students will identify and correct errors in a simple visual story sequence.",
+        task: "Students reorder mixed-up story cards and explain how they fixed the mistake.",
+        assessment: "Students create and explain a corrected sequence.",
+        udl: "Use visual cards, verbal retell, and tactile supports.",
+        differentiation: "Offer 3-card sets for support and distractor cards for challenge.",
+        materials: "Picture cards, sequencing mat, crayons.",
+        vocabulary: "debug, order, first, next, last",
+        procedures: "1. Model a sequence error. 2. Fix together. 3. Students remix a story set. 4. Share and reflect.",
+        reflection: "What clue helped students notice the error?"
+      },
+      {
+        id: "core_35_emoji_patterns",
+        title: "Pattern Recognition with Emoji Sorting",
+        gradeBand: "3–5",
+        topic: "Pattern Recognition",
+        csStandard: "2-AP-10",
+        programmingLanguage: "Unplugged",
+        layer: "core",
+        ctPractice: "Pattern Recognition",
+        objective: "Students will identify patterns and sorting rules using emoji cards.",
+        task: "Students sort emoji cards by shared attributes and explain the rule they used.",
+        assessment: "Students create a sorting chart and justify one category.",
+        udl: "Provide printed icons, color coding, and optional oral explanation.",
+        differentiation: "Use fewer categories for support and two-attribute sorts for challenge.",
+        materials: "Emoji cards, chart paper, markers.",
+        vocabulary: "pattern, attribute, category, sort",
+        procedures: "1. Model a sorting rule. 2. Students sort cards. 3. Compare rules. 4. Record patterns.",
+        reflection: "Which attributes were easiest for students to notice?"
+      },
+      {
+        id: "core_68_variables_scratch",
+        title: "Intro to Variables with Scratch",
+        gradeBand: "6–8",
+        topic: "Variables",
+        csStandard: "2-AP-11",
+        programmingLanguage: "Scratch",
+        layer: "core",
+        ctPractice: "Algorithms",
+        objective: "Students will use variables in Scratch to store and display changing information.",
+        task: "Students create a mini-project that asks for input and stores the answer in a variable.",
+        assessment: "Students demonstrate a working project that updates a variable correctly.",
+        udl: "Use a starter file, visual block guide, and pair programming.",
+        differentiation: "Provide a template for support and multiple variables for extension.",
+        materials: "Computers, Scratch, block guide.",
+        vocabulary: "variable, input, value, output",
+        procedures: "1. Model variable creation. 2. Students build mini-project. 3. Test and revise. 4. Share.",
+        reflection: "Where did students confuse storing a value with displaying it?"
+      },
+      {
+        id: "core_912_python_io",
+        title: "Python Input and Output",
+        gradeBand: "9–12",
+        topic: "Python Basics",
+        csStandard: "3A-AP-13",
+        programmingLanguage: "Python",
+        layer: "core",
+        ctPractice: "Algorithms",
+        objective: "Students will write simple Python programs using input and output.",
+        task: "Students create an interactive Python script that asks the user for information and prints a custom response.",
+        assessment: "Students submit and run a working script.",
+        udl: "Provide code starters, syntax guides, and partner support.",
+        differentiation: "Offer sentence frames in code comments and extension with formatted strings.",
+        materials: "Python environment, starter file.",
+        vocabulary: "input, output, string, variable",
+        procedures: "1. Model input/print. 2. Students build script. 3. Test outputs. 4. Reflect.",
+        reflection: "Which syntax errors appeared most often?"
+      },
+      {
+        id: "expanded_k2_handwashing_algorithms",
+        title: "Handwashing Algorithms",
+        gradeBand: "K–2",
+        topic: "Algorithms",
+        csStandard: "1A-AP-10",
+        programmingLanguage: "Unplugged",
+        layer: "expanded",
+        ctPractice: "Algorithms",
+        objective: "Students will create and follow step-by-step algorithms for handwashing.",
+        task: "Students build and test picture-card handwashing algorithms with a partner.",
+        assessment: "Students create a final illustrated algorithm.",
+        udl: "Provide picture cards, visual timers, and verbal rehearsal.",
+        differentiation: "Offer simplified steps or optional if/then statements for extension.",
+        materials: "Picture cards, chart paper, crayons.",
+        vocabulary: "algorithm, instruction, step, order",
+        procedures: "1. Model. 2. Build. 3. Test. 4. Revise. 5. Share.",
+        reflection: "Which steps needed the most precision?"
+      },
+      {
+        id: "expanded_35_flowchart_builder",
+        title: "Flowchart Builder: Mapping Decisions",
+        gradeBand: "3–5",
+        topic: "Algorithms",
+        csStandard: "2-AP-10",
+        programmingLanguage: "Unplugged",
+        layer: "expanded",
+        ctPractice: "Algorithms",
+        objective: "Students will create flowcharts to represent decision-making processes.",
+        task: "Students build a flowchart for choosing a book or activity.",
+        assessment: "Students explain one decision branch in their flowchart.",
+        udl: "Use symbol templates, examples, and optional digital tools.",
+        differentiation: "Provide a partially completed flowchart or add nested decisions.",
+        materials: "Flowchart cards, markers, templates.",
+        vocabulary: "flowchart, branch, decision, process",
+        procedures: "1. Introduce symbols. 2. Model a choice pathway. 3. Students build. 4. Review.",
+        reflection: "Did the flowchart help students organize thinking more clearly?"
+      },
+      {
+        id: "expanded_68_data_visualization",
+        title: "Data Visualizations with Spreadsheets",
+        gradeBand: "6–8",
+        topic: "Data",
+        csStandard: "2-DA-08",
+        programmingLanguage: "Google Sheets",
+        layer: "expanded",
+        ctPractice: "Data",
+        objective: "Students will represent class data using a spreadsheet chart.",
+        task: "Students create a survey, collect responses, and build a chart.",
+        assessment: "Students present one conclusion based on the chart.",
+        udl: "Use worked examples, chart options, and sentence frames.",
+        differentiation: "Offer a starter sheet or require comparison of two charts.",
+        materials: "Spreadsheet software, class survey form.",
+        vocabulary: "data, chart, axis, trend",
+        procedures: "1. Collect data. 2. Enter spreadsheet values. 3. Create chart. 4. Interpret.",
+        reflection: "Which chart type supported student understanding best?"
+      },
+      {
+        id: "expanded_912_python_loops",
+        title: "Python Loop Simulation",
+        gradeBand: "9–12",
+        topic: "Loops",
+        csStandard: "3A-AP-14",
+        programmingLanguage: "Python",
+        layer: "expanded",
+        ctPractice: "Algorithms",
+        objective: "Students will use loops to repeat program actions in a simulation.",
+        task: "Students build a dice-roll simulation and analyze the output.",
+        assessment: "Students submit code and explain what the simulation shows.",
+        udl: "Use starter code, comments, and visual output examples.",
+        differentiation: "Add counters and probability tracking for extension.",
+        materials: "Python environment.",
+        vocabulary: "loop, iteration, simulation, counter",
+        procedures: "1. Model a loop. 2. Build simulation. 3. Run trials. 4. Discuss results.",
+        reflection: "How did simulation connect coding with reasoning?"
       }
-
-      function safeAddListener(id, eventName, handler) {
-        const el = $(id);
-        if (el) el.addEventListener(eventName, handler);
-      }
-
-      function downloadFile(filename, content, mimeType) {
-        const blob =
-          content instanceof Blob ? content : new Blob([content], { type: mimeType });
-
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-      }
-
-      function appendChatMessage(sender, text) {
-        const log = $("aiChatLog");
-        if (!log) return;
-
-        const div = document.createElement("div");
-        div.className = sender === "user" ? "ai-msg-user" : "ai-msg-assistant";
-        div.textContent = \`\${sender === "user" ? "You" : "Assistant"}: \${text}\`;
-        log.appendChild(div);
-        log.scrollTop = log.scrollHeight;
-      }
-
-      function showAIOutput(text, type = "lesson") {
-        const panel = $("tab-" + type);
-        if (!panel) return;
-
-        const pre = document.createElement("pre");
-        pre.textContent = text;
-        panel.innerHTML = "";
-        panel.appendChild(pre);
-
-        aiMemory[type] = text;
-
-        const applyRow = $("applyRow");
-        const exportRow = $("exportRow");
-
-        if (applyRow) applyRow.style.display = "flex";
-        if (exportRow) exportRow.style.display = "flex";
-      }
-
-      function parseAISections(text) {
-        return {
-          objective:
-            (text.match(/Objective[:\\-]\\s*([\\s\\S]*?)(?=\\n\\n|$)/i) || [])[1]?.trim() || "",
-          task:
-            (text.match(/Student Task[:\\-]\\s*([\\s\\S]*?)(?=\\n\\n|$)/i) || [])[1]?.trim() || "",
-          assessment:
-            (text.match(/Assessment[:\\-]\\s*([\\s\\S]*?)(?=\\n\\n|$)/i) || [])[1]?.trim() || "",
-          udl:
-            (text.match(/UDL(?:\\s*&\\s*Equity Supports)?[:\\-]\\s*([\\s\\S]*?)(?=\\n\\n|$)/i) || [])[1]?.trim() || ""
-        };
-      }
-
-      function collectLessonFields() {
-        return {
-          "Learning Objective": $("objective")?.value.trim() || "",
-          "Student Task Description": $("task")?.value.trim() || "",
-          "Assessment / Evidence of Learning": $("assessment")?.value.trim() || "",
-          "Accessibility & Inclusivity Design": $("udl")?.value.trim() || "",
-          "Materials": $("materials")?.value.trim() || "",
-          "Vocabulary": $("vocabulary")?.value.trim() || "",
-          "Lesson Procedures": $("procedures")?.value.trim() || "",
-          "Differentiation": $("differentiation")?.value.trim() || "",
-          "Teacher Reflection": $("reflection")?.value.trim() || "",
-          "Grade Band": $("gradeBand")?.value.trim() || "",
-          "CT Practice": $("ctPractice")?.value.trim() || "",
-          "CS Standard": $("csStandard")?.value.trim() || ""
-        };
-      }
-
-      function escapeHtml(text) {
-        const div = document.createElement("div");
-        div.textContent = text;
-        return div.innerHTML;
-      }
-
-      function buildLessonText() {
-        const fields = collectLessonFields();
-        const aiText = aiMemory.lesson || "";
-        const aiSections = aiText ? parseAISections(aiText) : {};
-
-        const finalObjective =
-          fields["Learning Objective"] || aiSections.objective || "[Not specified]";
-        const finalTask =
-          fields["Student Task Description"] || aiSections.task || "[Not specified]";
-        const finalAssessment =
-          fields["Assessment / Evidence of Learning"] || aiSections.assessment || "[Not specified]";
-        const finalUDL =
-          fields["Accessibility & Inclusivity Design"] || aiSections.udl || "[Not specified]";
-
-        let text = "CS Teaching Toolkit – Lesson Plan\\n\\n";
-        text += \`Learning Objective:\\n\${finalObjective}\\n\\n\`;
-        text += \`Student Task:\\n\${finalTask}\\n\\n\`;
-        text += \`Assessment:\\n\${finalAssessment}\\n\\n\`;
-        text += \`UDL & Equity Supports:\\n\${finalUDL}\\n\\n\`;
-
-        for (const [label, value] of Object.entries(fields)) {
-          if (
-            [
-              "Learning Objective",
-              "Student Task Description",
-              "Assessment / Evidence of Learning",
-              "Accessibility & Inclusivity Design"
-            ].includes(label)
-          ) {
-            continue;
-          }
-          text += \`\${label}:\\n\${value || "[Not specified]"}\\n\\n\`;
-        }
-
-        const chatText = $("aiChatLog")?.innerText.trim() || "";
-        text += \`AI Lesson Assistant Log:\\n\${chatText || "[No chat messages]"}\\n\`;
-
-        return text;
-      }
-
-      function buildLessonHTML() {
-        const fields = collectLessonFields();
-        const aiText = aiMemory.lesson || "";
-        const aiSections = aiText ? parseAISections(aiText) : {};
-
-        const finalObjective =
-          fields["Learning Objective"] || aiSections.objective || "[Not specified]";
-        const finalTask =
-          fields["Student Task Description"] || aiSections.task || "[Not specified]";
-        const finalAssessment =
-          fields["Assessment / Evidence of Learning"] || aiSections.assessment || "[Not specified]";
-        const finalUDL =
-          fields["Accessibility & Inclusivity Design"] || aiSections.udl || "[Not specified]";
-
-        let html = \`
-          <h2>Learning Objective</h2>
-          <p>\${escapeHtml(finalObjective).replace(/\\n/g, "<br>")}</p>
-
-          <h2>Student Task</h2>
-          <p>\${escapeHtml(finalTask).replace(/\\n/g, "<br>")}</p>
-
-          <h2>Assessment</h2>
-          <p>\${escapeHtml(finalAssessment).replace(/\\n/g, "<br>")}</p>
-
-          <h2>UDL & Equity Supports</h2>
-          <p>\${escapeHtml(finalUDL).replace(/\\n/g, "<br>")}</p>
-        \`;
-
-        for (const [label, value] of Object.entries(fields)) {
-          if (
-            [
-              "Learning Objective",
-              "Student Task Description",
-              "Assessment / Evidence of Learning",
-              "Accessibility & Inclusivity Design"
-            ].includes(label)
-          ) {
-            continue;
-          }
-
-          html += \`
-            <h2>\${escapeHtml(label)}</h2>
-            <p>\${escapeHtml(value || "[Not specified]").replace(/\\n/g, "<br>")}</p>
-          \`;
-        }
-
-        const chatText = $("aiChatLog")?.innerText.trim() || "[No chat messages]";
-        html += \`
-          <h2>AI Lesson Assistant Log</h2>
-          <p>\${escapeHtml(chatText).replace(/\\n/g, "<br>")}</p>
-        \`;
-
-        return html;
-      }
-
-      function updateSnapshot() {
-        const snap = $("snapshotContent");
-        if (!snap) return;
-
-        const fields = collectLessonFields();
-
-        snap.innerHTML = \`
-          <strong>Objective:</strong> \${fields["Learning Objective"] || "<em>Not set</em>"}<br><br>
-          <strong>Task:</strong> \${fields["Student Task Description"] || "<em>Not set</em>"}<br><br>
-          <strong>Assessment:</strong> \${fields["Assessment / Evidence of Learning"] || "<em>Not set</em>"}<br><br>
-          <strong>UDL:</strong> \${fields["Accessibility & Inclusivity Design"] || "<em>Not set</em>"}<br><br>
-          <strong>Grade Band:</strong> \${fields["Grade Band"] || "<em>Not set</em>"}<br>
-          <strong>CT Practice:</strong> \${fields["CT Practice"] || "<em>Not set</em>"}<br>
-          <strong>CS Standard:</strong> \${fields["CS Standard"] || "<em>Not set</em>"}<br>
-        \`;
-      }
-
-      function buildQuickPrompt(type) {
-        const gradeBand = $("gradeBand")?.value || "the selected grade band";
-        const ctPractice = $("ctPractice")?.value || "the selected CT practice";
-        const csStandard = $("csStandard")?.value || "the selected CS standard";
-        const objective = $("objective")?.value || "";
-        const task = $("task")?.value || "";
-
-        const context = \`
-Grade Band: \${gradeBand}
-CT Practice: \${ctPractice}
-CS Standard: \${csStandard}
-Current Objective: \${objective}
-Current Task: \${task}
-\`.trim();
-
-        const prompts = {
-          objective: \`\${context}\\n\\nGenerate a clear student-friendly learning objective.\`,
-          task: \`\${context}\\n\\nGenerate a strong student task.\`,
-          assessment: \`\${context}\\n\\nGenerate assessment ideas for this lesson.\`,
-          udl: \`\${context}\\n\\nGenerate UDL and equity supports for this lesson.\`,
-          full: \`\${context}\\n\\nGenerate a full lesson draft.\`,
-          multiday: \`\${context}\\n\\nGenerate a 3-day lesson sequence.\`,
-          materials: \`\${context}\\n\\nGenerate a materials list, preparation steps, and teacher notes.\`,
-          rubric: \`\${context}\\n\\nGenerate a simple classroom rubric for this lesson.\`,
-          worksheet: \`\${context}\\n\\nGenerate a student worksheet for this lesson.\`
-        };
-
-        return prompts[type];
-      }
-
-      function buildAIContext() {
-        const parts = [];
-
-        if (aiMemory.lesson) parts.push("Current Lesson Draft:\\n" + aiMemory.lesson);
-        if (aiMemory.multiday) parts.push("Current Multi-Day Plan:\\n" + aiMemory.multiday);
-        if (aiMemory.materials) parts.push("Current Materials List:\\n" + aiMemory.materials);
-        if (aiMemory.rubric) parts.push("Current Rubric:\\n" + aiMemory.rubric);
-        if (aiMemory.worksheet) parts.push("Current Worksheet:\\n" + aiMemory.worksheet);
-
-        return parts.join("\\n\\n");
-      }
-
-      async function sendChatMessage() {
-        const input = $("aiChatInput");
-        if (!input) return;
-
-        const text = input.value.trim();
-        if (!text) return;
-
-        appendChatMessage("user", text);
-        input.value = "";
-
-        const pageContext = \`
-Grade Band: \${$("gradeBand")?.value || ""}
-CT Practice: \${$("ctPractice")?.value || ""}
-CS Standard: \${$("csStandard")?.value || ""}
-Objective: \${$("objective")?.value || ""}
-Task: \${$("task")?.value || ""}
-Assessment: \${$("assessment")?.value || ""}
-UDL: \${$("udl")?.value || ""}
-\`.trim();
-
-        const aiContext = buildAIContext();
-
-        const fullMessage = \`
-Use the lesson-planning context below when relevant.
-
-PAGE CONTEXT:
-\${pageContext}
-
-EXISTING AI OUTPUT:
-\${aiContext || "None yet."}
-
-USER REQUEST:
-\${text}
-\`.trim();
-
-        try {
-          const response = await fetch("/api/ai", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              message: fullMessage,
-              mode: "lesson"
-            })
-          });
-
-          if (!response.ok) {
-            throw new Error(\`Request failed with status \${response.status}\`);
-          }
-
-          const data = await response.json();
-          const aiText = data.reply || data.text || "[No response]";
-
-          appendChatMessage("assistant", aiText);
-          showAIOutput(aiText, "lesson");
-        } catch (error) {
-          console.error("Chat request failed:", error);
-          const fallback = "Sorry, the assistant could not be reached.";
-          appendChatMessage("assistant", fallback);
-          showAIOutput(fallback, "lesson");
-        }
-      }
-
-      async function sendQuickPrompt(type) {
-        const prompt = buildQuickPrompt(type);
-        if (!prompt) return;
-
-        appendChatMessage("user", prompt);
-
-        const modeMap = {
-          objective: "lesson",
-          task: "lesson",
-          assessment: "lesson",
-          udl: "lesson",
-          full: "lesson",
-          multiday: "multiday",
-          materials: "materials",
-          rubric: "rubric",
-          worksheet: "worksheet"
-        };
-
-        const pageContext = \`
-Grade Band: \${$("gradeBand")?.value || ""}
-CT Practice: \${$("ctPractice")?.value || ""}
-CS Standard: \${$("csStandard")?.value || ""}
-Objective: \${$("objective")?.value || ""}
-Task: \${$("task")?.value || ""}
-Assessment: \${$("assessment")?.value || ""}
-UDL: \${$("udl")?.value || ""}
-\`.trim();
-
-        const aiContext = buildAIContext();
-
-        const fullMessage = \`
-Use the lesson-planning context below when relevant.
-
-PAGE CONTEXT:
-\${pageContext}
-
-EXISTING AI OUTPUT:
-\${aiContext || "None yet."}
-
-USER REQUEST:
-\${prompt}
-\`.trim();
-
-        try {
-          const response = await fetch("/api/ai", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              message: fullMessage,
-              mode: modeMap[type] || "lesson"
-            })
-          });
-
-          if (!response.ok) {
-            throw new Error(\`Request failed with status \${response.status}\`);
-          }
-
-          const data = await response.json();
-          const aiText = data.reply || data.text || "[No response]";
-
-          appendChatMessage("assistant", aiText);
-
-          const outputType =
-            type === "multiday" ||
-            type === "materials" ||
-            type === "rubric" ||
-            type === "worksheet"
-              ? type
-              : "lesson";
-
-          showAIOutput(aiText, outputType);
-        } catch (error) {
-          console.error("Quick prompt request failed:", error);
-          const fallback = "Sorry, the assistant could not be reached.";
-          appendChatMessage("assistant", fallback);
-          showAIOutput(fallback, "lesson");
-        }
-      }
-
-      function clearAIMemory() {
-        aiMemory = {
-          lesson: "",
-          multiday: "",
-          materials: "",
-          rubric: "",
-          worksheet: ""
-        };
-
-        ["lesson", "multiday", "materials", "rubric", "worksheet"].forEach((type) => {
-          const panel = $("tab-" + type);
-          if (panel) panel.innerHTML = "<p class='small-muted'>No AI output yet.</p>";
-        });
-
-        const chatLog = $("aiChatLog");
-        if (chatLog) {
-          chatLog.innerHTML =
-            "<div class='ai-msg-assistant'>Assistant: Memory cleared. Start a new lesson or ask a new question.</div>";
-        }
-
-        const applyRow = $("applyRow");
-        const exportRow = $("exportRow");
-
-        if (applyRow) applyRow.style.display = "none";
-        if (exportRow) exportRow.style.display = "none";
-      }
-
-      function validateLessonLibrary(data) {
-        console.group("Lesson Library Validation");
-
-        const idSet = new Set();
-        const duplicates = [];
-        const missingFields = [];
-
-        const requiredFields = [
-          "id",
-          "title",
-          "topic",
-          "gradeBand",
-          "objective",
-          "task",
-          "materials",
-          "procedures"
-        ];
-
-        let totalLessons = 0;
-
-        Object.keys(data).forEach((band) => {
-          const lessons = data[band];
-
-          if (!Array.isArray(lessons)) {
-            console.error(\`Grade band "\${band}" is not an array\`);
-            return;
-          }
-
-          lessons.forEach((lesson) => {
-            totalLessons++;
-
-            if (idSet.has(lesson.id)) {
-              duplicates.push(lesson.id);
-            } else {
-              idSet.add(lesson.id);
-            }
-
-            requiredFields.forEach((field) => {
-              if (!lesson[field]) {
-                missingFields.push(\`\${lesson.id || "(no id)"} → \${field}\`);
-              }
-            });
-          });
-        });
-
-        console.log("Total lessons:", totalLessons);
-        if (duplicates.length > 0) console.error("Duplicate IDs:", duplicates);
-        else console.log("No duplicate IDs");
-
-        if (missingFields.length > 0) console.warn("Missing fields:", missingFields);
-
-        console.groupEnd();
-        updateLibraryHealthPanel(totalLessons, duplicates, missingFields);
-      }
-
-      function updateLibraryHealthPanel(total, duplicates, missing) {
-        const panel = $("libraryHealth");
-        if (!panel) return;
-
-        let color = "#2e7d32";
-        let status = "Healthy";
-
-        if (duplicates.length > 0 || missing.length > 0) {
-          color = "#b71c1c";
-          status = "Issues Detected";
-        }
-
-        panel.innerHTML = \`
-          <strong>Lesson Library Status</strong><br>
-          Total Lessons: \${total}<br>
-          Duplicate IDs: \${duplicates.length}<br>
-          Missing Fields: \${missing.length}<br>
-          Status: <span style="color:\${color};font-weight:600">\${status}</span>
-        \`;
-      }
-
-      function buildLessonIndex(data) {
-        lessonIndex = {};
-
-        Object.keys(data).forEach((band) => {
-          const lessons = data[band];
-          if (!Array.isArray(lessons)) return;
-
-          lessons.forEach((lesson) => {
-            if (lesson.id) {
-              lessonIndex[lesson.id] = lesson;
-            }
-          });
-        });
-
-        console.log("Lesson index built:", Object.keys(lessonIndex).length, "lessons");
-      }
-
-      function populateDropdown() {
-        const exampleLoader = $("exampleLoader");
-        if (!exampleLoader) return;
-
-        exampleLoader.innerHTML = "";
-
-        const defaultOpt = document.createElement("option");
-        defaultOpt.value = "";
-        defaultOpt.textContent = "— Select an Example Lesson —";
-        exampleLoader.appendChild(defaultOpt);
-
-        const gradeOrder = ["K–2", "3–5", "6–8", "9–12"];
-
-        gradeOrder.forEach((band) => {
-          const lessons = Array.isArray(lessonLibrary[band]) ? lessonLibrary[band] : [];
-          if (lessons.length === 0) return;
-
-          const separator = document.createElement("option");
-          separator.disabled = true;
-          separator.textContent = \`────────── \${band} Lessons ──────────\`;
-          exampleLoader.appendChild(separator);
-
-          const topics = {};
-          lessons.forEach((lesson) => {
-            const topic = lesson.topic || "General";
-            if (!topics[topic]) topics[topic] = [];
-            topics[topic].push(lesson);
-          });
-
-          Object.keys(topics).forEach((topic) => {
-            const topicHeader = document.createElement("option");
-            topicHeader.disabled = true;
-            topicHeader.textContent = \`• \${topic}\`;
-            exampleLoader.appendChild(topicHeader);
-
-            topics[topic].forEach((lesson) => {
-              const opt = document.createElement("option");
-              opt.value = lesson.id || "";
-              opt.textContent = lesson.title || "Untitled Lesson";
-              exampleLoader.appendChild(opt);
-            });
-          });
-        });
-      }
-
-      function findLessonById(id) {
-        return lessonIndex[id] || null;
-      }
-
-      function setChecks(groupName, values) {
-        if (!Array.isArray(values)) return;
-
-        const checkboxes = document.querySelectorAll(\`input[data-group="\${groupName}"]\`);
-        checkboxes.forEach((box) => {
-          box.checked = values.includes(box.value);
-        });
-      }
-
-      document.querySelectorAll(".ai-tab").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          document.querySelectorAll(".ai-tab").forEach((b) => b.classList.remove("active"));
-          btn.classList.add("active");
-
-          const tab = btn.dataset.tab;
-          document.querySelectorAll(".ai-tab-panel").forEach((panel) => {
-            panel.style.display = "none";
-          });
-
-          const target = $("tab-" + tab);
-          if (target) target.style.display = "block";
-        });
+    ];
+
+    const state = {
+      allLessons: [],
+      filteredLessons: [],
+      layer: "all",
+      selectedLessonId: null,
+      aiExpanded: false
+    };
+
+    const ids = {
+      lessonLibraryGrid: document.getElementById("lessonLibraryGrid"),
+      lessonCount: document.getElementById("lessonCount"),
+      filterGradeBand: document.getElementById("filterGradeBand"),
+      filterStandard: document.getElementById("filterStandard"),
+      filterTopic: document.getElementById("filterTopic"),
+      filterLanguage: document.getElementById("filterLanguage"),
+      gradeBand: document.getElementById("gradeBand"),
+      ctPractice: document.getElementById("ctPractice"),
+      csStandard: document.getElementById("csStandard"),
+      objective: document.getElementById("objective"),
+      task: document.getElementById("task"),
+      assessment: document.getElementById("assessment"),
+      udl: document.getElementById("udl"),
+      differentiation: document.getElementById("differentiation"),
+      materials: document.getElementById("materials"),
+      vocabulary: document.getElementById("vocabulary"),
+      procedures: document.getElementById("procedures"),
+      reflection: document.getElementById("reflection"),
+      snapshot: document.getElementById("snapshot"),
+      aiOutput: document.getElementById("aiOutput"),
+      currentLessonBadge: document.getElementById("currentLessonBadge"),
+      currentModeBadge: document.getElementById("currentModeBadge"),
+      layerAllBtn: document.getElementById("layerAllBtn"),
+      layerCoreBtn: document.getElementById("layerCoreBtn"),
+      layerExpandedBtn: document.getElementById("layerExpandedBtn"),
+      toggleMoreAiBtn: document.getElementById("toggleMoreAiBtn")
+    };
+
+    function initializeApp() {
+      state.allLessons = normalizeLessons(demoLessons);
+      populateFilterOptions();
+      populateTemplateGradeBands();
+      bindEvents();
+      applyFilters();
+      updateSnapshot();
+    }
+
+    function normalizeLessons(lessons) {
+      return lessons.map((lesson) => ({
+        ...lesson,
+        programmingLanguage: lesson.programmingLanguage || "General CS"
+      }));
+    }
+
+    function uniqueValues(key) {
+      return [...new Set(state.allLessons.map((lesson) => lesson[key]).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+    }
+
+    function populateSelect(select, values, placeholder) {
+      select.innerHTML = "";
+      const option = document.createElement("option");
+      option.value = "";
+      option.textContent = placeholder;
+      select.appendChild(option);
+      values.forEach((value) => {
+        const item = document.createElement("option");
+        item.value = value;
+        item.textContent = value;
+        select.appendChild(item);
+      });
+    }
+
+    function populateFilterOptions() {
+      populateSelect(ids.filterGradeBand, uniqueValues("gradeBand"), "All Grade Bands");
+      populateSelect(ids.filterTopic, uniqueValues("topic"), "All Topics");
+      populateSelect(ids.filterLanguage, uniqueValues("programmingLanguage"), "All Languages");
+    }
+
+    function populateTemplateGradeBands() {
+      populateSelect(ids.gradeBand, uniqueValues("gradeBand"), "Choose…");
+    }
+
+    function bindEvents() {
+      [ids.filterGradeBand, ids.filterTopic, ids.filterLanguage].forEach((element) => {
+        element.addEventListener("change", applyFilters);
+      });
+      ids.filterStandard.addEventListener("input", applyFilters);
+
+      ids.layerAllBtn.addEventListener("click", () => setLayer("all"));
+      ids.layerCoreBtn.addEventListener("click", () => setLayer("core"));
+      ids.layerExpandedBtn.addEventListener("click", () => setLayer("expanded"));
+
+      document.querySelectorAll("[data-ai]").forEach((button) => {
+        button.addEventListener("click", () => handleAIGeneration(button.dataset.ai));
       });
 
-      safeAddListener("aiChatSendBtn", "click", sendChatMessage);
-      safeAddListener("aiChatInput", "keydown", (e) => {
-        if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
-          sendChatMessage();
-        }
+      ids.toggleMoreAiBtn.addEventListener("click", toggleAIButtons);
+
+      document.getElementById("newLessonBtn").addEventListener("click", () => {
+        clearTemplate();
+        ids.currentModeBadge.textContent = "Designing New Lesson";
+        ids.currentLessonBadge.textContent = "No lesson loaded";
       });
 
-      safeAddListener("aiObjectiveBtn", "click", () => sendQuickPrompt("objective"));
-      safeAddListener("aiTaskBtn", "click", () => sendQuickPrompt("task"));
-      safeAddListener("aiAssessmentBtn", "click", () => sendQuickPrompt("assessment"));
-      safeAddListener("aiUDLBtn", "click", () => sendQuickPrompt("udl"));
-      safeAddListener("aiFullLessonBtn", "click", () => sendQuickPrompt("full"));
-      safeAddListener("aiMultidayBtn", "click", () => sendQuickPrompt("multiday"));
-      safeAddListener("aiMaterialsBtn", "click", () => sendQuickPrompt("materials"));
-      safeAddListener("aiRubricBtn", "click", () => sendQuickPrompt("rubric"));
-      safeAddListener("aiWorksheetBtn", "click", () => sendQuickPrompt("worksheet"));
-
-      safeAddListener("clearAiMemoryBtn", "click", () => {
-        const confirmed = window.confirm("Clear all AI-generated lesson memory and outputs?");
-        if (confirmed) clearAIMemory();
-      });
-
-      safeAddListener("applyObjective", "click", () => {
-        const ai = aiMemory.lesson || "";
-        const match = ai.match(/Objective[:\\-]\\s*([\\s\\S]*?)(?=\\n\\n|$)/i);
-        safeSetValue("objective", match ? match[1].trim() : ai);
-        updateSnapshot();
-      });
-
-      safeAddListener("applyTask", "click", () => {
-        const ai = aiMemory.lesson || "";
-        const match = ai.match(/Student Task[:\\-]\\s*([\\s\\S]*?)(?=\\n\\n|$)/i);
-        safeSetValue("task", match ? match[1].trim() : ai);
-        updateSnapshot();
-      });
-
-      safeAddListener("applyAssessment", "click", () => {
-        const ai = aiMemory.lesson || "";
-        const match = ai.match(/Assessment[:\\-]\\s*([\\s\\S]*?)(?=\\n\\n|$)/i);
-        safeSetValue("assessment", match ? match[1].trim() : ai);
-        updateSnapshot();
-      });
-
-      safeAddListener("applyUDL", "click", () => {
-        const ai = aiMemory.lesson || "";
-        const match = ai.match(/UDL(?:\\s*&\\s*Equity Supports)?[:\\-]\\s*([\\s\\S]*?)(?=\\n\\n|$)/i);
-        safeSetValue("udl", match ? match[1].trim() : ai);
-        updateSnapshot();
-      });
-
-      safeAddListener("applyFull", "click", () => {
-        const ai = aiMemory.lesson || "";
-        const sections = parseAISections(ai);
-
-        safeSetValue("objective", sections.objective);
-        safeSetValue("task", sections.task);
-        safeSetValue("assessment", sections.assessment);
-        safeSetValue("udl", sections.udl);
-
-        updateSnapshot();
-      });
-
-      safeAddListener("exportTxtBtn", "click", () => {
-        downloadFile("lesson-plan.txt", buildLessonText(), "text/plain");
-      });
-
-      safeAddListener("exportDocxBtn", "click", async () => {
-        try {
-          const fields = collectLessonFields();
-          const aiText = aiMemory.lesson || "";
-          const aiSections = aiText ? parseAISections(aiText) : {};
-
-          const finalObjective =
-            fields["Learning Objective"] || aiSections.objective || "[Not specified]";
-          const finalTask =
-            fields["Student Task Description"] || aiSections.task || "[Not specified]";
-          const finalAssessment =
-            fields["Assessment / Evidence of Learning"] || aiSections.assessment || "[Not specified]";
-          const finalUDL =
-            fields["Accessibility & Inclusivity Design"] || aiSections.udl || "[Not specified]";
-
-          const { Document, Packer, Paragraph, TextRun } = window.docx;
-          const children = [];
-
-          children.push(
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: "CS Teaching Toolkit – Lesson Plan",
-                  bold: true,
-                  size: 32
-                })
-              ]
-            })
-          );
-
-          children.push(new Paragraph({ text: "" }));
-
-          const addSection = (label, value) => {
-            children.push(
-              new Paragraph({
-                children: [new TextRun({ text: label, bold: true })]
-              })
-            );
-            children.push(
-              new Paragraph({
-                children: [new TextRun(value || "[Not specified]")]
-              })
-            );
-            children.push(new Paragraph({ text: "" }));
-          };
-
-          addSection("Learning Objective", finalObjective);
-          addSection("Student Task", finalTask);
-          addSection("Assessment", finalAssessment);
-          addSection("UDL & Equity Supports", finalUDL);
-
-          for (const [label, value] of Object.entries(fields)) {
-            if (
-              [
-                "Learning Objective",
-                "Student Task Description",
-                "Assessment / Evidence of Learning",
-                "Accessibility & Inclusivity Design"
-              ].includes(label)
-            ) {
-              continue;
-            }
-            addSection(label, value || "[Not specified]");
-          }
-
-          const chatText = $("aiChatLog")?.innerText.trim() || "[No chat messages]";
-          addSection("AI Lesson Assistant Log", chatText);
-
-          const doc = new Document({
-            sections: [
-              {
-                properties: {},
-                children
-              }
-            ]
-          });
-
-          const blob = await Packer.toBlob(doc);
-          downloadFile(
-            "lesson-plan.docx",
-            blob,
-            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-          );
-        } catch (error) {
-          console.error("DOCX export failed:", error);
-          alert("DOCX export failed. Check the console for details.");
-        }
-      });
-
-      safeAddListener("exportPdfBtn", "click", async () => {
-        try {
-          const exportWrap = $("exportLesson");
-          const exportContent = $("exportLessonContent");
-
-          if (!exportWrap || !exportContent) {
-            alert("Export area not found.");
-            return;
-          }
-
-          exportContent.innerHTML = buildLessonHTML();
-          exportWrap.style.display = "block";
-
-          await html2pdf()
-            .set({
-              margin: 0.5,
-              filename: "lesson-plan.pdf",
-              image: { type: "jpeg", quality: 0.98 },
-              html2canvas: { scale: 2 },
-              jsPDF: { unit: "in", format: "letter", orientation: "portrait" }
-            })
-            .from(exportWrap)
-            .save();
-
-          exportWrap.style.display = "none";
-        } catch (error) {
-          console.error("PDF export failed:", error);
-          alert("PDF export failed. Check the console for details.");
-          const exportWrap = $("exportLesson");
-          if (exportWrap) exportWrap.style.display = "none";
-        }
-      });
-
-      safeAddListener("printBtn", "click", () => {
-        window.print();
-      });
-
-      safeAddListener("exampleLoader", "change", (e) => {
-        const id = e.target.value;
-        if (!id) return;
-
-        const lesson = findLessonById(id);
-        if (!lesson) return;
-
-        safeSetValue("objective", lesson.objective);
-        safeSetValue("task", lesson.task);
-        safeSetValue(
-          "assessment",
-          lesson.assessment ||
-          lesson.formativeAssessment ||
-          lesson.summativeAssessment ||
-          ""
-        );
-        safeSetValue("udl", lesson.udl);
-        safeSetValue("materials", lesson.materials);
-        safeSetValue("vocabulary", lesson.vocabulary);
-        safeSetValue("procedures", lesson.procedures);
-        safeSetValue("differentiation", lesson.differentiation);
-        safeSetValue("reflection", lesson.reflection);
-
-        safeSetValue("gradeBand", lesson.gradeBand);
-        safeSetValue("ctPractice", lesson.ctPractice);
-        safeSetValue("csStandard", lesson.csStandard);
-
-        setChecks("activityType", lesson.activityType);
-        setChecks("equitySupports", lesson.equitySupports);
-        setChecks("accessibilitySupports", lesson.accessibilitySupports);
-        setChecks("assessmentTypes", lesson.assessmentTypes);
-        setChecks("tools", lesson.tools);
-
-        updateSnapshot();
-      });
+      document.getElementById("clearTemplateBtn").addEventListener("click", clearTemplate);
 
       [
-        "objective",
-        "task",
-        "assessment",
-        "udl",
-        "materials",
-        "vocabulary",
-        "procedures",
-        "differentiation",
-        "reflection",
-        "gradeBand",
-        "ctPractice",
-        "csStandard"
+        "gradeBand", "ctPractice", "csStandard", "objective", "task", "assessment",
+        "udl", "differentiation", "materials", "vocabulary", "procedures", "reflection"
       ].forEach((id) => {
-        const el = $(id);
-        if (el) el.addEventListener("input", updateSnapshot);
-        if (el && el.tagName === "SELECT") el.addEventListener("change", updateSnapshot);
+        document.getElementById(id).addEventListener("input", updateSnapshot);
+        document.getElementById(id).addEventListener("change", updateSnapshot);
+      });
+    }
+
+    function setLayer(layer) {
+      state.layer = layer;
+      [ids.layerAllBtn, ids.layerCoreBtn, ids.layerExpandedBtn].forEach((button) => button.classList.remove("active"));
+      if (layer === "all") ids.layerAllBtn.classList.add("active");
+      if (layer === "core") ids.layerCoreBtn.classList.add("active");
+      if (layer === "expanded") ids.layerExpandedBtn.classList.add("active");
+      applyFilters();
+    }
+
+    function applyFilters() {
+      const gradeBand = ids.filterGradeBand.value.trim().toLowerCase();
+      const standard = ids.filterStandard.value.trim().toLowerCase();
+      const topic = ids.filterTopic.value.trim().toLowerCase();
+      const language = ids.filterLanguage.value.trim().toLowerCase();
+
+      state.filteredLessons = state.allLessons.filter((lesson) => {
+        const matchesLayer = state.layer === "all" ? true : lesson.layer === state.layer;
+        const matchesGrade = gradeBand ? lesson.gradeBand.toLowerCase() === gradeBand : true;
+        const matchesStandard = standard ? lesson.csStandard.toLowerCase().includes(standard) : true;
+        const matchesTopic = topic ? lesson.topic.toLowerCase() === topic : true;
+        const matchesLanguage = language ? lesson.programmingLanguage.toLowerCase() === language : true;
+        return matchesLayer && matchesGrade && matchesStandard && matchesTopic && matchesLanguage;
       });
 
-      fetch("lessons.json")
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(\`Unable to load lessons.json (\${response.status})\`);
-          }
-          return response.json();
-        })
-        .then((data) => {
-          lessonLibrary = data || {};
-          validateLessonLibrary(lessonLibrary);
-          buildLessonIndex(lessonLibrary);
-          populateDropdown();
-        })
-        .catch((err) => {
-          console.error("Error loading lessons.json:", err);
-          const panel = $("libraryHealth");
-          if (panel) {
-            panel.innerHTML = '<strong>Lesson Library Status</strong><br><span style="color:#b71c1c;font-weight:600">Could not load lessons.json</span>';
-          }
-        });
+      renderLessonCards();
+    }
 
+    function renderLessonCards() {
+      ids.lessonLibraryGrid.innerHTML = "";
+      ids.lessonCount.textContent = `${state.filteredLessons.length} lessons shown`;
+
+      if (!state.filteredLessons.length) {
+        ids.lessonLibraryGrid.innerHTML = `
+          <div class="empty-state">
+            <strong>No lessons match those filters.</strong>
+            <p>Try another grade band, standard, topic, programming language, or curriculum layer.</p>
+          </div>
+        `;
+        return;
+      }
+
+      state.filteredLessons.forEach((lesson) => {
+        const article = document.createElement("article");
+        article.className = "lesson-card";
+        article.innerHTML = `
+          <div class="lesson-meta">
+            <span class="pill primary">${lesson.gradeBand}</span>
+            <span class="pill">${lesson.csStandard}</span>
+            <span class="pill">${lesson.topic}</span>
+            <span class="pill">${lesson.programmingLanguage}</span>
+            <span class="pill">${lesson.layer === "core" ? "Layer 1 Core" : "Layer 2 Expanded"}</span>
+          </div>
+          <h3>${lesson.title}</h3>
+          <p>${lesson.objective}</p>
+          <div class="lesson-card-actions">
+            <button type="button" class="btn-soft" data-view="${lesson.id}">View Lesson</button>
+            <button type="button" class="btn-primary" data-remix="${lesson.id}">Remix This Lesson</button>
+          </div>
+        `;
+        ids.lessonLibraryGrid.appendChild(article);
+      });
+
+      document.querySelectorAll("[data-view]").forEach((button) => {
+        button.addEventListener("click", () => showLessonPreview(button.dataset.view));
+      });
+
+      document.querySelectorAll("[data-remix]").forEach((button) => {
+        button.addEventListener("click", () => remixLesson(button.dataset.remix));
+      });
+    }
+
+    function findLessonById(id) {
+      return state.allLessons.find((lesson) => lesson.id === id);
+    }
+
+    function showLessonPreview(id) {
+      const lesson = findLessonById(id);
+      if (!lesson) return;
+      ids.aiOutput.textContent = [
+        `Model Lesson Anchor: ${lesson.title}`,
+        `Grade Band: ${lesson.gradeBand}`,
+        `Standard: ${lesson.csStandard}`,
+        `Topic: ${lesson.topic}`,
+        `Programming Language: ${lesson.programmingLanguage}`,
+        "",
+        `Objective: ${lesson.objective}`,
+        `Student Task: ${lesson.task}`,
+        `Assessment: ${lesson.assessment}`,
+        `Accessibility & UDL Supports: ${lesson.udl}`
+      ].join("\n");
+    }
+
+    function remixLesson(id) {
+      const lesson = findLessonById(id);
+      if (!lesson) return;
+
+      ids.gradeBand.value = lesson.gradeBand || "";
+      ids.ctPractice.value = lesson.ctPractice || "";
+      ids.csStandard.value = lesson.csStandard || "";
+      ids.objective.value = lesson.objective || "";
+      ids.task.value = lesson.task || "";
+      ids.assessment.value = lesson.assessment || "";
+      ids.udl.value = lesson.udl || "";
+      ids.differentiation.value = lesson.differentiation || "";
+      ids.materials.value = lesson.materials || "";
+      ids.vocabulary.value = lesson.vocabulary || "";
+      ids.procedures.value = lesson.procedures || "";
+      ids.reflection.value = lesson.reflection || "";
+
+      state.selectedLessonId = lesson.id;
+      ids.currentModeBadge.textContent = "Remixing Lesson";
+      ids.currentLessonBadge.textContent = lesson.title;
+      ids.aiOutput.textContent = `Lesson remixed into the template: ${lesson.title}\n\nYou can now customize the objective, task, accessibility supports, assessment, and every other section while preserving the original model structure.`;
       updateSnapshot();
-    });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function clearTemplate() {
+      [
+        ids.gradeBand, ids.ctPractice, ids.csStandard, ids.objective, ids.task, ids.assessment,
+        ids.udl, ids.differentiation, ids.materials, ids.vocabulary, ids.procedures, ids.reflection
+      ].forEach((element) => {
+        element.value = "";
+      });
+      state.selectedLessonId = null;
+      ids.currentLessonBadge.textContent = "No lesson loaded";
+      ids.currentModeBadge.textContent = "Editing Template";
+      updateSnapshot();
+    }
+
+    function updateSnapshot() {
+      const values = {
+        gradeBand: ids.gradeBand.value || "Not set",
+        ctPractice: ids.ctPractice.value || "Not set",
+        csStandard: ids.csStandard.value || "Not set",
+        objective: ids.objective.value || "Not set",
+        task: ids.task.value || "Not set",
+        assessment: ids.assessment.value || "Not set",
+        udl: ids.udl.value || "Not set",
+        differentiation: ids.differentiation.value || "Not set"
+      };
+
+      ids.snapshot.innerHTML = `
+        <div class="snapshot-item"><strong>Grade Band:</strong> ${values.gradeBand}</div>
+        <div class="snapshot-item"><strong>CT Practice:</strong> ${values.ctPractice}</div>
+        <div class="snapshot-item"><strong>CS Standard:</strong> ${values.csStandard}</div>
+        <div class="snapshot-item"><strong>Objective:</strong> ${values.objective}</div>
+        <div class="snapshot-item"><strong>Student Task:</strong> ${values.task}</div>
+        <div class="snapshot-item"><strong>Assessment:</strong> ${values.assessment}</div>
+        <div class="snapshot-item"><strong>UDL Supports:</strong> ${values.udl}</div>
+        <div class="snapshot-item"><strong>Differentiation / Extensions:</strong> ${values.differentiation}</div>
+      `;
+    }
+
+    function toggleAIButtons() {
+      state.aiExpanded = !state.aiExpanded;
+      const aiButtons = document.querySelectorAll(".ai-controls button:nth-child(n + 8)");
+      aiButtons.forEach((button) => {
+        button.style.display = state.aiExpanded ? "inline-flex" : "none";
+      });
+      ids.toggleMoreAiBtn.textContent = state.aiExpanded ? "Fewer Tools" : "More Tools";
+    }
+
+    function handleAIGeneration(type) {
+      const promptMap = {
+        objective: "Generate Objective",
+        task: "Generate Student Task",
+        assessment: "Assessment Ideas",
+        udl: "UDL Supports",
+        multiday: "Multi-Day Lesson",
+        rubric: "Rubric",
+        materials: "Materials List",
+        worksheet: "Worksheet",
+        remix: "AI Lesson Remix"
+      };
+
+      const summary = [
+        `AI Tool: ${promptMap[type]}`,
+        `Grade Band: ${ids.gradeBand.value || "Not selected"}`,
+        `CT Practice: ${ids.ctPractice.value || "Not selected"}`,
+        `CS Standard: ${ids.csStandard.value || "Not selected"}`,
+        "",
+        "In your connected version, this is where the AI assistant response will appear.",
+        "Keep prompts simple and teacher-focused so the tools feel helpful, not overwhelming."
+      ];
+
+      if (type === "remix") {
+        summary.push("", "Suggested behavior: take the current or selected lesson and generate an adapted version while preserving objectives, student tasks, accessibility supports, and assessment.");
+      }
+
+      ids.aiOutput.textContent = summary.join("\n");
+    }
+
+    initializeApp();
   </script>
 </body>
 </html>
