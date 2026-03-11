@@ -15,14 +15,11 @@
       --accent-soft: #eaf2ff;
       --good: #0f766e;
       --good-soft: #e8fbf8;
-      --warning: #9a3412;
-      --warning-soft: #fff3eb;
       --shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
       --radius: 16px;
     }
 
     * { box-sizing: border-box; }
-
     body {
       margin: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -30,13 +27,8 @@
       color: var(--text);
       line-height: 1.45;
     }
-
     h1, h2, h3, h4, p { margin: 0; }
-
-    button, input, select, textarea {
-      font: inherit;
-    }
-
+    button, input, select, textarea { font: inherit; }
     button {
       cursor: pointer;
       border: 1px solid var(--line);
@@ -45,12 +37,10 @@
       padding: 0.7rem 1rem;
       transition: 0.2s ease;
     }
-
     button:hover {
       transform: translateY(-1px);
       box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
     }
-
     input, select, textarea {
       width: 100%;
       border: 1px solid var(--line);
@@ -59,7 +49,6 @@
       background: #fff;
       color: var(--text);
     }
-
     textarea {
       min-height: 96px;
       resize: vertical;
@@ -72,21 +61,17 @@
       display: grid;
       gap: 1.25rem;
     }
-
-    .hero,
-    .panel {
+    .hero, .panel {
       background: var(--card);
       border: 1px solid var(--line);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
     }
-
     .hero {
       padding: 1.5rem;
       display: grid;
       gap: 1rem;
     }
-
     .hero-top {
       display: flex;
       justify-content: space-between;
@@ -94,7 +79,6 @@
       align-items: flex-start;
       flex-wrap: wrap;
     }
-
     .eyebrow {
       font-size: 0.85rem;
       color: var(--accent);
@@ -103,28 +87,21 @@
       letter-spacing: 0.04em;
       margin-bottom: 0.35rem;
     }
-
     .hero h1 {
       font-size: clamp(1.8rem, 2.6vw, 2.7rem);
       line-height: 1.1;
     }
-
     .hero-subtitle {
       color: var(--muted);
       max-width: 880px;
       margin-top: 0.5rem;
     }
-
-    .badge-row,
-    .pill-row,
-    .action-row {
+    .badge-row, .pill-row, .action-row, .layer-toggle, .ai-controls {
       display: flex;
       gap: 0.6rem;
       flex-wrap: wrap;
     }
-
-    .badge,
-    .pill {
+    .badge, .pill {
       border-radius: 999px;
       padding: 0.45rem 0.8rem;
       font-size: 0.88rem;
@@ -133,56 +110,46 @@
       background: #fff;
       color: var(--text);
     }
-
-    .badge.primary,
-    .pill.primary {
+    .badge.primary, .pill.primary {
       background: var(--accent-soft);
       border-color: #cfe0ff;
       color: var(--accent);
     }
-
     .badge.good {
       background: var(--good-soft);
       border-color: #c7eee8;
       color: var(--good);
     }
-
     .overview-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 0.9rem;
     }
-
     .overview-card {
       border: 1px solid var(--line);
       border-radius: 14px;
       padding: 1rem;
       background: linear-gradient(180deg, #fff, #fafcff);
     }
-
     .overview-card h3 {
       font-size: 1rem;
       margin-bottom: 0.35rem;
     }
-
-    .overview-card p {
+    .overview-card p, .section-help, .small-muted, .lesson-count, .panel-title-wrap p {
       color: var(--muted);
-      font-size: 0.95rem;
+      font-size: 0.92rem;
     }
-
     .workspace {
       display: grid;
       grid-template-columns: 1.15fr 1fr;
       gap: 1.25rem;
       align-items: start;
     }
-
     .panel {
       padding: 1.1rem;
       display: grid;
       gap: 1rem;
     }
-
     .panel-header {
       display: flex;
       justify-content: space-between;
@@ -190,56 +157,33 @@
       align-items: center;
       flex-wrap: wrap;
     }
-
-    .panel-title-wrap p,
-    .section-help,
-    .small-muted {
-      color: var(--muted);
-      font-size: 0.92rem;
-    }
-
     .section-title {
       font-size: 1.05rem;
       font-weight: 700;
     }
-
-    .filter-grid,
-    .template-grid,
-    .mini-grid {
+    .filter-grid, .template-grid, .mini-grid {
       display: grid;
       gap: 0.85rem;
     }
-
     .filter-grid {
       grid-template-columns: repeat(4, minmax(0, 1fr));
     }
-
     .mini-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-
     .field {
       display: grid;
       gap: 0.35rem;
     }
-
     .field label {
       font-size: 0.92rem;
       font-weight: 700;
     }
-
-    .lesson-count {
-      font-size: 0.9rem;
-      color: var(--muted);
-      font-weight: 600;
-    }
-
     .lesson-library-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
       gap: 0.9rem;
     }
-
     .lesson-card {
       border: 1px solid var(--line);
       border-radius: 14px;
@@ -248,58 +192,48 @@
       gap: 0.75rem;
       background: #fff;
     }
-
     .lesson-meta {
       display: flex;
       flex-wrap: wrap;
       gap: 0.45rem;
     }
-
     .lesson-card h3 {
       font-size: 1rem;
       line-height: 1.25;
     }
-
     .lesson-card p {
       color: var(--muted);
       font-size: 0.93rem;
     }
-
     .lesson-card-actions {
       display: flex;
       gap: 0.6rem;
       flex-wrap: wrap;
     }
-
     .btn-primary {
       background: var(--accent);
       border-color: var(--accent);
       color: #fff;
     }
-
     .btn-soft {
       background: var(--accent-soft);
       border-color: #cfe0ff;
       color: var(--accent);
     }
-
     .template-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-
     .template-grid .field.full {
       grid-column: 1 / -1;
     }
-
     .section-box {
       border: 1px solid var(--line);
       border-radius: 14px;
       padding: 0.95rem;
       background: #fcfdff;
       display: grid;
-      gap: 0.7rem;
+      gap: 0.8rem;
     }
-
     .prompt-box {
       border-left: 4px solid var(--accent);
       background: #f7faff;
@@ -308,26 +242,26 @@
       color: var(--muted);
       font-size: 0.92rem;
     }
-
-    .ai-controls {
-      display: flex;
+    .ai-group {
+      display: grid;
       gap: 0.5rem;
-      flex-wrap: wrap;
+      margin-bottom: 0.2rem;
     }
-
-    .ai-controls button:nth-child(n + 7) {
-      display: none;
+    .ai-group h4 {
+      margin: 0;
+      font-size: 0.92rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
     }
-
     .ai-output {
       border: 1px solid var(--line);
       border-radius: 14px;
       background: #fbfcfe;
       padding: 0.95rem;
-      min-height: 130px;
+      min-height: 150px;
       white-space: pre-wrap;
     }
-
     .snapshot {
       border: 1px solid var(--line);
       border-radius: 14px;
@@ -336,12 +270,10 @@
       display: grid;
       gap: 0.6rem;
     }
-
     .snapshot-item strong {
       display: inline-block;
       min-width: 112px;
     }
-
     .empty-state {
       text-align: center;
       padding: 1.5rem 1rem;
@@ -349,14 +281,8 @@
       border: 1px dashed var(--line);
       border-radius: 14px;
       background: #fcfdff;
+      grid-column: 1 / -1;
     }
-
-    .layer-toggle {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
-
     .layer-toggle button.active {
       background: var(--accent);
       border-color: var(--accent);
@@ -364,18 +290,10 @@
     }
 
     @media (max-width: 1180px) {
-      .workspace {
-        grid-template-columns: 1fr;
-      }
+      .workspace { grid-template-columns: 1fr; }
     }
-
     @media (max-width: 900px) {
-      .overview-grid,
-      .filter-grid,
-      .template-grid,
-      .mini-grid {
-        grid-template-columns: 1fr;
-      }
+      .overview-grid, .filter-grid, .template-grid, .mini-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -386,9 +304,7 @@
         <div>
           <div class="eyebrow">CS Teaching Toolkit</div>
           <h1>CS Lesson Design Platform</h1>
-          <p class="hero-subtitle">
-            A guided lesson design framework for computer science teachers that embeds standards, accessibility, and UDL into the planning process.
-          </p>
+          <p class="hero-subtitle">A guided lesson design framework for computer science teachers that embeds standards, accessibility, and UDL into the planning process.</p>
         </div>
         <div class="badge-row" aria-label="Value badges">
           <span class="badge primary">100 Example Lessons Built In</span>
@@ -408,7 +324,7 @@
         </article>
         <article class="overview-card">
           <h3>🤖 AI Lesson Assistant</h3>
-          <p>Generate objectives, student tasks, UDL supports, multi-day lessons, rubrics, and remix ideas without overwhelming teachers.</p>
+          <p>Generate complete lessons, section refinements, variations, and teaching supports in a clear, teacher-friendly workflow.</p>
         </article>
       </div>
     </section>
@@ -461,7 +377,7 @@
         <div class="panel-header">
           <div class="panel-title-wrap">
             <h2 class="section-title">Lesson Design Workspace</h2>
-            <p>Remix a model lesson or start from scratch.</p>
+            <p>Remix a model lesson or generate one from your filters.</p>
           </div>
           <div class="pill-row">
             <span class="pill primary" id="currentModeBadge">Editing Template</span>
@@ -473,21 +389,40 @@
           <div class="panel-header">
             <div>
               <h3 class="section-title">AI Lesson Assistant</h3>
-              <p class="section-help">Keep the prompts simple and teacher-focused.</p>
+              <p class="section-help">Generate lessons, refine sections, and build extensions with clear, teacher-friendly groupings.</p>
             </div>
           </div>
-          <div class="ai-controls">
-            <button type="button" data-ai="objective">Generate Objective</button>
-            <button type="button" data-ai="task">Generate Student Task</button>
-            <button type="button" data-ai="assessment">Assessment Ideas</button>
-            <button type="button" data-ai="udl">UDL Supports</button>
-            <button type="button" data-ai="multiday">Multi-Day Lesson</button>
-            <button type="button" data-ai="rubric">Rubric</button>
-            <button type="button" id="toggleMoreAiBtn">More Tools</button>
-            <button type="button" class="btn-soft" data-ai="materials">Materials</button>
-            <button type="button" class="btn-soft" data-ai="worksheet">Worksheet</button>
-            <button type="button" class="btn-soft" data-ai="remix">AI Lesson Remix</button>
+
+          <div class="ai-group">
+            <h4>Quick Build</h4>
+            <div class="ai-controls">
+              <button type="button" id="aiGenerateFromFiltersBtn" class="btn-primary">Generate Lesson From Filters</button>
+              <button type="button" id="aiGenerateVariationsBtn" class="btn-primary">Generate 3 Variations</button>
+              <button type="button" data-ai="remix">AI Lesson Remix</button>
+            </div>
           </div>
+
+          <div class="ai-group">
+            <h4>Lesson Parts</h4>
+            <div class="ai-controls">
+              <button type="button" data-ai="objective">Generate Objective</button>
+              <button type="button" data-ai="task">Generate Student Task</button>
+              <button type="button" data-ai="assessment">Assessment Ideas</button>
+              <button type="button" data-ai="udl">UDL Supports</button>
+              <button type="button" data-ai="differentiation">Differentiation</button>
+            </div>
+          </div>
+
+          <div class="ai-group">
+            <h4>Extensions</h4>
+            <div class="ai-controls">
+              <button type="button" data-ai="multiday">Multi-Day Lesson</button>
+              <button type="button" data-ai="rubric">Rubric</button>
+              <button type="button" data-ai="worksheet">Worksheet</button>
+              <button type="button" data-ai="materials">Materials List</button>
+            </div>
+          </div>
+
           <div id="aiOutput" class="ai-output">AI suggestions will appear here.</div>
         </div>
 
@@ -495,7 +430,7 @@
           <div class="panel-header">
             <div>
               <h3 class="section-title">Lesson Template</h3>
-              <p class="section-help">Suggested sequence keeps the planning flow clear for teachers.</p>
+              <p class="section-help">Use this sequence to keep planning clear and easy to follow.</p>
             </div>
             <div class="action-row">
               <button type="button" id="newLessonBtn">New Lesson</button>
@@ -587,158 +522,82 @@
   </main>
 
   <script>
-    const demoLessons = [
+    const fallbackLessons = [
       {
-        id: "core_k2_story_sequence",
+        id: "k2_debug_story_sequence",
         title: "Debugging with Story Sequences",
-        gradeBand: "K–2",
         topic: "Debugging",
+        gradeBand: "K–2",
         csStandard: "1A-AP-14",
-        programmingLanguage: "Unplugged",
-        layer: "core",
         ctPractice: "Testing & Debugging",
-        objective: "Students will identify and correct errors in a simple visual story sequence.",
-        task: "Students reorder mixed-up story cards and explain how they fixed the mistake.",
-        assessment: "Students create and explain a corrected sequence.",
-        udl: "Use visual cards, verbal retell, and tactile supports.",
-        differentiation: "Offer 3-card sets for support and distractor cards for challenge.",
-        materials: "Picture cards, sequencing mat, crayons.",
-        vocabulary: "debug, order, first, next, last",
-        procedures: "1. Model a sequence error. 2. Fix together. 3. Students remix a story set. 4. Share and reflect.",
-        reflection: "What clue helped students notice the error?"
-      },
-      {
-        id: "core_35_emoji_patterns",
-        title: "Pattern Recognition with Emoji Sorting",
-        gradeBand: "3–5",
-        topic: "Pattern Recognition",
-        csStandard: "2-AP-10",
         programmingLanguage: "Unplugged",
         layer: "core",
-        ctPractice: "Pattern Recognition",
-        objective: "Students will identify patterns and sorting rules using emoji cards.",
-        task: "Students sort emoji cards by shared attributes and explain the rule they used.",
-        assessment: "Students create a sorting chart and justify one category.",
-        udl: "Provide printed icons, color coding, and optional oral explanation.",
-        differentiation: "Use fewer categories for support and two-attribute sorts for challenge.",
-        materials: "Emoji cards, chart paper, markers.",
-        vocabulary: "pattern, attribute, category, sort",
-        procedures: "1. Model a sorting rule. 2. Students sort cards. 3. Compare rules. 4. Record patterns.",
-        reflection: "Which attributes were easiest for students to notice?"
+        objective: "Students will identify and correct errors in a simple story sequence.",
+        task: "Students work with mixed-up picture cards from a familiar story, place them in the correct order, and explain how they fixed the mistake.",
+        assessment: "Formative: Teacher listens as students explain why a card belongs first, next, or last. Summative: Students create a corrected 4-step story sequence and retell it to a partner.",
+        udl: "Provide visual picture cards, sentence frames, and verbal retell options.",
+        differentiation: "Use 3-step sequences for support. Offer challenge cards with extra distractors for advanced learners.",
+        materials: "Story cards, pocket chart, crayons, glue, sequencing mat.",
+        vocabulary: "debug, sequence, first, next, last, fix",
+        procedures: "1. Introduce debugging as fixing mistakes.\n2. Model correcting a mixed-up story.\n3. Students work in pairs to fix a story sequence.\n4. Students share their corrected sequence.\n5. Reflect on how they found the mistake.",
+        reflection: "How did you know the story was out of order?"
       },
       {
-        id: "core_68_variables_scratch",
+        id: "35_pattern_emoji_sorting",
+        title: "Pattern Recognition with Emoji Sorting",
+        topic: "Pattern Recognition",
+        gradeBand: "3–5",
+        csStandard: "2-AP-10",
+        ctPractice: "Pattern Recognition",
+        programmingLanguage: "Unplugged",
+        layer: "core",
+        objective: "Students will identify patterns and sorting rules using emoji cards.",
+        task: "Students sort emoji cards into categories they define, explain the rule, and compare their categories with a partner.",
+        assessment: "Formative: Teacher checks whether students can clearly explain the pattern or rule they used. Summative: Students create a final sorting chart and write one sentence explaining the rule.",
+        udl: "Provide printed emoji cards, color-coded categories, and optional verbal explanation.",
+        differentiation: "Provide smaller card sets for support. Challenge advanced learners to sort by two attributes.",
+        materials: "Emoji cards, chart paper, markers, sorting mats.",
+        vocabulary: "pattern, sort, rule, category, attribute",
+        procedures: "1. Introduce pattern recognition.\n2. Model sorting a small emoji set.\n3. Students sort emoji cards.\n4. Students compare rules with a partner.\n5. Students complete a final chart.",
+        reflection: "What rule did you use, and how did it help organize the emojis?"
+      },
+      {
+        id: "68_variables_scratch_intro",
         title: "Intro to Variables with Scratch",
-        gradeBand: "6–8",
         topic: "Variables",
+        gradeBand: "6–8",
         csStandard: "2-AP-11",
+        ctPractice: "Algorithms",
         programmingLanguage: "Scratch",
         layer: "core",
-        ctPractice: "Algorithms",
         objective: "Students will use variables in Scratch to store and display changing information.",
-        task: "Students create a mini-project that asks for input and stores the answer in a variable.",
-        assessment: "Students demonstrate a working project that updates a variable correctly.",
-        udl: "Use a starter file, visual block guide, and pair programming.",
-        differentiation: "Provide a template for support and multiple variables for extension.",
-        materials: "Computers, Scratch, block guide.",
-        vocabulary: "variable, input, value, output",
-        procedures: "1. Model variable creation. 2. Students build mini-project. 3. Test and revise. 4. Share.",
-        reflection: "Where did students confuse storing a value with displaying it?"
+        task: "Students build a Scratch mini-project that asks for user input, stores it in a variable, and displays the result on screen.",
+        assessment: "Formative: Teacher checks whether students can identify what the variable stores and when it changes. Summative: Students submit a working Scratch project using at least one variable and a short explanation of its purpose.",
+        udl: "Provide a starter Scratch file, visual coding reference sheet, and partner support.",
+        differentiation: "Provide a starter template for support. Challenge advanced learners to use multiple variables.",
+        materials: "Computers, Scratch accounts, coding guide, projector.",
+        vocabulary: "variable, input, output, value, store",
+        procedures: "1. Introduce variables with real-world examples.\n2. Model creating and changing a variable in Scratch.\n3. Students build a guided mini-project.\n4. Students test and revise projects.\n5. Students share completed projects.",
+        reflection: "How did the variable help your program work?"
       },
       {
-        id: "core_912_python_io",
-        title: "Python Input and Output",
-        gradeBand: "9–12",
-        topic: "Python Basics",
-        csStandard: "3A-AP-13",
-        programmingLanguage: "Python",
-        layer: "core",
-        ctPractice: "Algorithms",
-        objective: "Students will write simple Python programs using input and output.",
-        task: "Students create an interactive Python script that asks the user for information and prints a custom response.",
-        assessment: "Students submit and run a working script.",
-        udl: "Provide code starters, syntax guides, and partner support.",
-        differentiation: "Offer sentence frames in code comments and extension with formatted strings.",
-        materials: "Python environment, starter file.",
-        vocabulary: "input, output, string, variable",
-        procedures: "1. Model input/print. 2. Students build script. 3. Test outputs. 4. Reflect.",
-        reflection: "Which syntax errors appeared most often?"
-      },
-      {
-        id: "expanded_k2_handwashing_algorithms",
-        title: "Handwashing Algorithms",
-        gradeBand: "K–2",
-        topic: "Algorithms",
-        csStandard: "1A-AP-10",
-        programmingLanguage: "Unplugged",
-        layer: "expanded",
-        ctPractice: "Algorithms",
-        objective: "Students will create and follow step-by-step algorithms for handwashing.",
-        task: "Students build and test picture-card handwashing algorithms with a partner.",
-        assessment: "Students create a final illustrated algorithm.",
-        udl: "Provide picture cards, visual timers, and verbal rehearsal.",
-        differentiation: "Offer simplified steps or optional if/then statements for extension.",
-        materials: "Picture cards, chart paper, crayons.",
-        vocabulary: "algorithm, instruction, step, order",
-        procedures: "1. Model. 2. Build. 3. Test. 4. Revise. 5. Share.",
-        reflection: "Which steps needed the most precision?"
-      },
-      {
-        id: "expanded_35_flowchart_builder",
-        title: "Flowchart Builder: Mapping Decisions",
-        gradeBand: "3–5",
-        topic: "Algorithms",
-        csStandard: "2-AP-10",
-        programmingLanguage: "Unplugged",
-        layer: "expanded",
-        ctPractice: "Algorithms",
-        objective: "Students will create flowcharts to represent decision-making processes.",
-        task: "Students build a flowchart for choosing a book or activity.",
-        assessment: "Students explain one decision branch in their flowchart.",
-        udl: "Use symbol templates, examples, and optional digital tools.",
-        differentiation: "Provide a partially completed flowchart or add nested decisions.",
-        materials: "Flowchart cards, markers, templates.",
-        vocabulary: "flowchart, branch, decision, process",
-        procedures: "1. Introduce symbols. 2. Model a choice pathway. 3. Students build. 4. Review.",
-        reflection: "Did the flowchart help students organize thinking more clearly?"
-      },
-      {
-        id: "expanded_68_data_visualization",
+        id: "912_data_visualizations_spreadsheets",
         title: "Data Visualizations with Spreadsheets",
-        gradeBand: "6–8",
-        topic: "Data",
-        csStandard: "2-DA-08",
-        programmingLanguage: "Google Sheets",
-        layer: "expanded",
-        ctPractice: "Data",
-        objective: "Students will represent class data using a spreadsheet chart.",
-        task: "Students create a survey, collect responses, and build a chart.",
-        assessment: "Students present one conclusion based on the chart.",
-        udl: "Use worked examples, chart options, and sentence frames.",
-        differentiation: "Offer a starter sheet or require comparison of two charts.",
-        materials: "Spreadsheet software, class survey form.",
-        vocabulary: "data, chart, axis, trend",
-        procedures: "1. Collect data. 2. Enter spreadsheet values. 3. Create chart. 4. Interpret.",
-        reflection: "Which chart type supported student understanding best?"
-      },
-      {
-        id: "expanded_912_python_loops",
-        title: "Python Loop Simulation",
+        topic: "Data Analysis",
         gradeBand: "9–12",
-        topic: "Loops",
-        csStandard: "3A-AP-14",
-        programmingLanguage: "Python",
-        layer: "expanded",
-        ctPractice: "Algorithms",
-        objective: "Students will use loops to repeat program actions in a simulation.",
-        task: "Students build a dice-roll simulation and analyze the output.",
-        assessment: "Students submit code and explain what the simulation shows.",
-        udl: "Use starter code, comments, and visual output examples.",
-        differentiation: "Add counters and probability tracking for extension.",
-        materials: "Python environment.",
-        vocabulary: "loop, iteration, simulation, counter",
-        procedures: "1. Model a loop. 2. Build simulation. 3. Run trials. 4. Discuss results.",
-        reflection: "How did simulation connect coding with reasoning?"
+        csStandard: "3A-DA-11",
+        ctPractice: "Data",
+        programmingLanguage: "Spreadsheets",
+        layer: "core",
+        objective: "Students will analyze a small data set and create an appropriate chart in a spreadsheet application.",
+        task: "Students import a data table into a spreadsheet, calculate one summary insight, and build a chart that communicates a clear conclusion.",
+        assessment: "Formative: Teacher checks whether students selected a chart type that matches the data and can explain why. Summative: Students submit a completed spreadsheet with chart and a short written analysis.",
+        udl: "Provide a sample data set, step-by-step guide, and optional video directions.",
+        differentiation: "Provide a partially completed spreadsheet for support. Challenge advanced learners to compare two chart types.",
+        materials: "Computers, spreadsheet software, sample data set, guided notes.",
+        vocabulary: "data set, chart, visualization, analysis, trend",
+        procedures: "1. Introduce data visualization principles.\n2. Model importing data and creating a chart.\n3. Students analyze a provided data set.\n4. Students create a chart and written analysis.\n5. Class discussion on chart choices.",
+        reflection: "Why was your chart the best choice for this data?"
       }
     ];
 
@@ -746,8 +605,7 @@
       allLessons: [],
       filteredLessons: [],
       layer: "all",
-      selectedLessonId: null,
-      aiExpanded: false
+      selectedLessonId: null
     };
 
     const ids = {
@@ -775,24 +633,42 @@
       currentModeBadge: document.getElementById("currentModeBadge"),
       layerAllBtn: document.getElementById("layerAllBtn"),
       layerCoreBtn: document.getElementById("layerCoreBtn"),
-      layerExpandedBtn: document.getElementById("layerExpandedBtn"),
-      toggleMoreAiBtn: document.getElementById("toggleMoreAiBtn")
+      layerExpandedBtn: document.getElementById("layerExpandedBtn")
     };
 
-    function initializeApp() {
-      state.allLessons = normalizeLessons(demoLessons);
-      populateFilterOptions();
-      populateTemplateGradeBands();
-      bindEvents();
-      applyFilters();
-      updateSnapshot();
+    function normalizeLessons(input) {
+      if (Array.isArray(input)) return input;
+      const output = [];
+      Object.keys(input || {}).forEach((band) => {
+        const lessons = input[band] || [];
+        lessons.forEach((lesson) => {
+          output.push({
+            layer: lesson.layer || "core",
+            programmingLanguage: inferProgrammingLanguage(lesson),
+            assessment: lesson.assessment || buildAssessment(lesson),
+            ...lesson,
+            gradeBand: lesson.gradeBand || band
+          });
+        });
+      });
+      return output;
     }
 
-    function normalizeLessons(lessons) {
-      return lessons.map((lesson) => ({
-        ...lesson,
-        programmingLanguage: lesson.programmingLanguage || "General CS"
-      }));
+    function inferProgrammingLanguage(lesson) {
+      const tools = Array.isArray(lesson.tools) ? lesson.tools.join(" ").toLowerCase() : "";
+      const title = `${lesson.title || ""} ${lesson.topic || ""}`.toLowerCase();
+      if (tools.includes("scratch") || title.includes("scratch")) return "Scratch";
+      if (tools.includes("excel") || tools.includes("google sheets") || title.includes("spreadsheet")) return "Spreadsheets";
+      if (tools.includes("python") || title.includes("python")) return "Python";
+      if (tools.includes("javascript") || title.includes("javascript") || title.includes("web")) return "JavaScript";
+      if (tools.includes("robot") || title.includes("robot") || title.includes("robotics")) return "Robotics";
+      return "Unplugged";
+    }
+
+    function buildAssessment(lesson) {
+      const formative = lesson.formativeAssessment ? `Formative: ${lesson.formativeAssessment}` : "";
+      const summative = lesson.summativeAssessment ? `Summative: ${lesson.summativeAssessment}` : "";
+      return [formative, summative].filter(Boolean).join(" ");
     }
 
     function uniqueValues(key) {
@@ -817,43 +693,7 @@
       populateSelect(ids.filterGradeBand, uniqueValues("gradeBand"), "All Grade Bands");
       populateSelect(ids.filterTopic, uniqueValues("topic"), "All Topics");
       populateSelect(ids.filterLanguage, uniqueValues("programmingLanguage"), "All Languages");
-    }
-
-    function populateTemplateGradeBands() {
       populateSelect(ids.gradeBand, uniqueValues("gradeBand"), "Choose…");
-    }
-
-    function bindEvents() {
-      [ids.filterGradeBand, ids.filterTopic, ids.filterLanguage].forEach((element) => {
-        element.addEventListener("change", applyFilters);
-      });
-      ids.filterStandard.addEventListener("input", applyFilters);
-
-      ids.layerAllBtn.addEventListener("click", () => setLayer("all"));
-      ids.layerCoreBtn.addEventListener("click", () => setLayer("core"));
-      ids.layerExpandedBtn.addEventListener("click", () => setLayer("expanded"));
-
-      document.querySelectorAll("[data-ai]").forEach((button) => {
-        button.addEventListener("click", () => handleAIGeneration(button.dataset.ai));
-      });
-
-      ids.toggleMoreAiBtn.addEventListener("click", toggleAIButtons);
-
-      document.getElementById("newLessonBtn").addEventListener("click", () => {
-        clearTemplate();
-        ids.currentModeBadge.textContent = "Designing New Lesson";
-        ids.currentLessonBadge.textContent = "No lesson loaded";
-      });
-
-      document.getElementById("clearTemplateBtn").addEventListener("click", clearTemplate);
-
-      [
-        "gradeBand", "ctPractice", "csStandard", "objective", "task", "assessment",
-        "udl", "differentiation", "materials", "vocabulary", "procedures", "reflection"
-      ].forEach((id) => {
-        document.getElementById(id).addEventListener("input", updateSnapshot);
-        document.getElementById(id).addEventListener("change", updateSnapshot);
-      });
     }
 
     function setLayer(layer) {
@@ -888,12 +728,7 @@
       ids.lessonCount.textContent = `${state.filteredLessons.length} lessons shown`;
 
       if (!state.filteredLessons.length) {
-        ids.lessonLibraryGrid.innerHTML = `
-          <div class="empty-state">
-            <strong>No lessons match those filters.</strong>
-            <p>Try another grade band, standard, topic, programming language, or curriculum layer.</p>
-          </div>
-        `;
+        ids.lessonLibraryGrid.innerHTML = '<div class="empty-state"><strong>No lessons match those filters.</strong><p>Try another grade band, standard, topic, programming language, or curriculum layer.</p></div>';
         return;
       }
 
@@ -906,7 +741,7 @@
             <span class="pill">${lesson.csStandard}</span>
             <span class="pill">${lesson.topic}</span>
             <span class="pill">${lesson.programmingLanguage}</span>
-            <span class="pill">${lesson.layer === "core" ? "Layer 1 Core" : "Layer 2 Expanded"}</span>
+            <span class="pill">${lesson.layer === "core" ? "⭐ Core Lesson" : "Expanded Lesson"}</span>
           </div>
           <h3>${lesson.title}</h3>
           <p>${lesson.objective}</p>
@@ -921,7 +756,6 @@
       document.querySelectorAll("[data-view]").forEach((button) => {
         button.addEventListener("click", () => showLessonPreview(button.dataset.view));
       });
-
       document.querySelectorAll("[data-remix]").forEach((button) => {
         button.addEventListener("click", () => remixLesson(button.dataset.remix));
       });
@@ -940,64 +774,58 @@
         `Standard: ${lesson.csStandard}`,
         `Topic: ${lesson.topic}`,
         `Programming Language: ${lesson.programmingLanguage}`,
-        "",
+        '',
         `Objective: ${lesson.objective}`,
         `Student Task: ${lesson.task}`,
         `Assessment: ${lesson.assessment}`,
         `Accessibility & UDL Supports: ${lesson.udl}`
-      ].join("\n");
+      ].join('\n');
     }
 
     function remixLesson(id) {
       const lesson = findLessonById(id);
       if (!lesson) return;
-
-      ids.gradeBand.value = lesson.gradeBand || "";
-      ids.ctPractice.value = lesson.ctPractice || "";
-      ids.csStandard.value = lesson.csStandard || "";
-      ids.objective.value = lesson.objective || "";
-      ids.task.value = lesson.task || "";
-      ids.assessment.value = lesson.assessment || "";
-      ids.udl.value = lesson.udl || "";
-      ids.differentiation.value = lesson.differentiation || "";
-      ids.materials.value = lesson.materials || "";
-      ids.vocabulary.value = lesson.vocabulary || "";
-      ids.procedures.value = lesson.procedures || "";
-      ids.reflection.value = lesson.reflection || "";
-
+      ids.gradeBand.value = lesson.gradeBand || '';
+      ids.ctPractice.value = lesson.ctPractice || '';
+      ids.csStandard.value = lesson.csStandard || '';
+      ids.objective.value = lesson.objective || '';
+      ids.task.value = lesson.task || '';
+      ids.assessment.value = lesson.assessment || '';
+      ids.udl.value = lesson.udl || '';
+      ids.differentiation.value = lesson.differentiation || '';
+      ids.materials.value = lesson.materials || '';
+      ids.vocabulary.value = lesson.vocabulary || '';
+      ids.procedures.value = lesson.procedures || '';
+      ids.reflection.value = lesson.reflection || '';
       state.selectedLessonId = lesson.id;
-      ids.currentModeBadge.textContent = "Remixing Lesson";
+      ids.currentModeBadge.textContent = 'Remixing Lesson';
       ids.currentLessonBadge.textContent = lesson.title;
       ids.aiOutput.textContent = `Lesson remixed into the template: ${lesson.title}\n\nYou can now customize the objective, task, accessibility supports, assessment, and every other section while preserving the original model structure.`;
       updateSnapshot();
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function clearTemplate() {
-      [
-        ids.gradeBand, ids.ctPractice, ids.csStandard, ids.objective, ids.task, ids.assessment,
-        ids.udl, ids.differentiation, ids.materials, ids.vocabulary, ids.procedures, ids.reflection
-      ].forEach((element) => {
-        element.value = "";
+      [ids.gradeBand, ids.ctPractice, ids.csStandard, ids.objective, ids.task, ids.assessment, ids.udl, ids.differentiation, ids.materials, ids.vocabulary, ids.procedures, ids.reflection].forEach((element) => {
+        element.value = '';
       });
       state.selectedLessonId = null;
-      ids.currentLessonBadge.textContent = "No lesson loaded";
-      ids.currentModeBadge.textContent = "Editing Template";
+      ids.currentLessonBadge.textContent = 'No lesson loaded';
+      ids.currentModeBadge.textContent = 'Editing Template';
       updateSnapshot();
     }
 
     function updateSnapshot() {
       const values = {
-        gradeBand: ids.gradeBand.value || "Not set",
-        ctPractice: ids.ctPractice.value || "Not set",
-        csStandard: ids.csStandard.value || "Not set",
-        objective: ids.objective.value || "Not set",
-        task: ids.task.value || "Not set",
-        assessment: ids.assessment.value || "Not set",
-        udl: ids.udl.value || "Not set",
-        differentiation: ids.differentiation.value || "Not set"
+        gradeBand: ids.gradeBand.value || 'Not set',
+        ctPractice: ids.ctPractice.value || 'Not set',
+        csStandard: ids.csStandard.value || 'Not set',
+        objective: ids.objective.value || 'Not set',
+        task: ids.task.value || 'Not set',
+        assessment: ids.assessment.value || 'Not set',
+        udl: ids.udl.value || 'Not set',
+        differentiation: ids.differentiation.value || 'Not set'
       };
-
       ids.snapshot.innerHTML = `
         <div class="snapshot-item"><strong>Grade Band:</strong> ${values.gradeBand}</div>
         <div class="snapshot-item"><strong>CT Practice:</strong> ${values.ctPractice}</div>
@@ -1010,46 +838,237 @@
       `;
     }
 
-    function toggleAIButtons() {
-      state.aiExpanded = !state.aiExpanded;
-      const aiButtons = document.querySelectorAll(".ai-controls button:nth-child(n + 8)");
-      aiButtons.forEach((button) => {
-        button.style.display = state.aiExpanded ? "inline-flex" : "none";
-      });
-      ids.toggleMoreAiBtn.textContent = state.aiExpanded ? "Fewer Tools" : "More Tools";
+    function buildFilterBasedPrompt() {
+      const gradeBand = ids.gradeBand.value || 'Not selected';
+      const ctPractice = ids.ctPractice.value || 'Not selected';
+      const csStandard = ids.csStandard.value || 'Not selected';
+      const topic = ids.filterTopic.value || 'Not selected';
+      const language = ids.filterLanguage.value || 'Not selected';
+      return `
+Create one complete computer science lesson using these teacher-selected filters.
+
+Grade Band: ${gradeBand}
+Topic: ${topic}
+CS Standard: ${csStandard}
+CT Practice: ${ctPractice}
+Programming Language / Technology: ${language}
+
+Return the lesson using exactly these labels:
+Objective:
+Student Task:
+Assessment:
+UDL:
+Differentiation:
+Materials:
+Vocabulary:
+Procedures:
+Reflection:
+
+The lesson should be classroom-ready, standards-aligned, and include strong accessibility and UDL supports.
+`.trim();
     }
 
-    function handleAIGeneration(type) {
-      const promptMap = {
-        objective: "Generate Objective",
-        task: "Generate Student Task",
-        assessment: "Assessment Ideas",
-        udl: "UDL Supports",
-        multiday: "Multi-Day Lesson",
-        rubric: "Rubric",
-        materials: "Materials List",
-        worksheet: "Worksheet",
-        remix: "AI Lesson Remix"
+    function buildVariationPrompt() {
+      const gradeBand = ids.gradeBand.value || 'Not selected';
+      const ctPractice = ids.ctPractice.value || 'Not selected';
+      const csStandard = ids.csStandard.value || 'Not selected';
+      const topic = ids.filterTopic.value || 'Not selected';
+      const language = ids.filterLanguage.value || 'Not selected';
+      return `
+Create 3 lesson variations using these filters.
+
+Grade Band: ${gradeBand}
+Topic: ${topic}
+CS Standard: ${csStandard}
+CT Practice: ${ctPractice}
+Programming Language / Technology: ${language}
+
+Organize the response exactly like this:
+
+Variation 1: Core Lesson
+------------------------
+Objective:
+Student Task:
+Assessment:
+UDL:
+
+Variation 2: Unplugged / Alternate Version
+------------------------------------------
+Objective:
+Student Task:
+Assessment:
+UDL:
+
+Variation 3: Project-Based / Extension Version
+----------------------------------------------
+Objective:
+Student Task:
+Assessment:
+UDL:
+
+Keep each variation practical, clear, and teacher-friendly.
+`.trim();
+    }
+
+    function parseGeneratedLesson(text) {
+      const getSection = (label) => {
+        const regex = new RegExp(`${label}[:\\-]\\s*([\\s\\S]*?)(?=\\n[A-Z][A-Za-z /&()_-]+[:\\-]|$)`, 'i');
+        const match = text.match(regex);
+        return match ? match[1].trim() : '';
       };
-
-      const summary = [
-        `AI Tool: ${promptMap[type]}`,
-        `Grade Band: ${ids.gradeBand.value || "Not selected"}`,
-        `CT Practice: ${ids.ctPractice.value || "Not selected"}`,
-        `CS Standard: ${ids.csStandard.value || "Not selected"}`,
-        "",
-        "In your connected version, this is where the AI assistant response will appear.",
-        "Keep prompts simple and teacher-focused so the tools feel helpful, not overwhelming."
-      ];
-
-      if (type === "remix") {
-        summary.push("", "Suggested behavior: take the current or selected lesson and generate an adapted version while preserving objectives, student tasks, accessibility supports, and assessment.");
-      }
-
-      ids.aiOutput.textContent = summary.join("\n");
+      return {
+        objective: getSection('Objective'),
+        task: getSection('Student Task'),
+        assessment: getSection('Assessment'),
+        udl: getSection('UDL'),
+        differentiation: getSection('Differentiation'),
+        materials: getSection('Materials'),
+        vocabulary: getSection('Vocabulary'),
+        procedures: getSection('Procedures'),
+        reflection: getSection('Reflection')
+      };
     }
 
-    initializeApp();
+    async function callAI(message, mode = 'lesson') {
+      const response = await fetch('/api/ai', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message, mode })
+      });
+      if (!response.ok) throw new Error(`Request failed with status ${response.status}`);
+      const data = await response.json();
+      return data.reply || data.text || '[No response]';
+    }
+
+    async function generateLessonFromFilters() {
+      ids.aiOutput.textContent = 'Generating lesson from selected filters...';
+      try {
+        const aiText = await callAI(buildFilterBasedPrompt(), 'lesson');
+        ids.aiOutput.textContent = aiText;
+        const lesson = parseGeneratedLesson(aiText);
+        if (lesson.objective) ids.objective.value = lesson.objective;
+        if (lesson.task) ids.task.value = lesson.task;
+        if (lesson.assessment) ids.assessment.value = lesson.assessment;
+        if (lesson.udl) ids.udl.value = lesson.udl;
+        if (lesson.differentiation) ids.differentiation.value = lesson.differentiation;
+        if (lesson.materials) ids.materials.value = lesson.materials;
+        if (lesson.vocabulary) ids.vocabulary.value = lesson.vocabulary;
+        if (lesson.procedures) ids.procedures.value = lesson.procedures;
+        if (lesson.reflection) ids.reflection.value = lesson.reflection;
+        ids.currentModeBadge.textContent = 'AI-Generated Lesson';
+        ids.currentLessonBadge.textContent = 'Generated From Filters';
+        updateSnapshot();
+      } catch (error) {
+        console.error('AI lesson generation failed:', error);
+        ids.aiOutput.textContent = 'Sorry, the lesson generator could not be reached.';
+      }
+    }
+
+    async function generateLessonVariations() {
+      ids.aiOutput.textContent = 'Generating 3 lesson variations...';
+      try {
+        const aiText = await callAI(buildVariationPrompt(), 'lesson');
+        ids.aiOutput.textContent = aiText;
+        ids.currentModeBadge.textContent = 'AI Variations';
+        ids.currentLessonBadge.textContent = '3 Lesson Variations';
+      } catch (error) {
+        console.error('AI variations failed:', error);
+        ids.aiOutput.textContent = 'Sorry, the variation generator could not be reached.';
+      }
+    }
+
+    function buildSectionPrompt(type) {
+      const gradeBand = ids.gradeBand.value || 'Not selected';
+      const ctPractice = ids.ctPractice.value || 'Not selected';
+      const csStandard = ids.csStandard.value || 'Not selected';
+      const topic = ids.filterTopic.value || 'Not selected';
+      const language = ids.filterLanguage.value || 'Not selected';
+      const currentObjective = ids.objective.value || '';
+      const currentTask = ids.task.value || '';
+      const currentAssessment = ids.assessment.value || '';
+      const currentUDL = ids.udl.value || '';
+      const context = `
+Grade Band: ${gradeBand}
+Topic: ${topic}
+CS Standard: ${csStandard}
+CT Practice: ${ctPractice}
+Programming Language / Technology: ${language}
+Current Objective: ${currentObjective}
+Current Student Task: ${currentTask}
+Current Assessment: ${currentAssessment}
+Current UDL: ${currentUDL}
+`.trim();
+      const prompts = {
+        objective: `${context}\n\nGenerate only a strong Learning Objective for this lesson.`,
+        task: `${context}\n\nGenerate only a strong Student Task for this lesson.`,
+        assessment: `${context}\n\nGenerate only Assessment ideas for this lesson.`,
+        udl: `${context}\n\nGenerate only UDL supports for this lesson.`,
+        differentiation: `${context}\n\nGenerate only Differentiation / Extensions for this lesson.`,
+        multiday: `${context}\n\nGenerate a multi-day lesson plan for this lesson.`,
+        rubric: `${context}\n\nGenerate a classroom rubric for this lesson.`,
+        worksheet: `${context}\n\nGenerate a student worksheet for this lesson.`,
+        materials: `${context}\n\nGenerate a materials list and teacher prep notes for this lesson.`,
+        remix: `${context}\n\nRemix this lesson into a fresh alternate version while preserving standards alignment, accessibility, and assessment.`
+      };
+      return prompts[type] || context;
+    }
+
+    async function handleAIGeneration(type) {
+      ids.aiOutput.textContent = 'Generating AI support...';
+      try {
+        const aiText = await callAI(buildSectionPrompt(type), 'lesson');
+        ids.aiOutput.textContent = aiText;
+        if (type === 'objective') ids.objective.value = aiText;
+        if (type === 'task') ids.task.value = aiText;
+        if (type === 'assessment') ids.assessment.value = aiText;
+        if (type === 'udl') ids.udl.value = aiText;
+        if (type === 'differentiation') ids.differentiation.value = aiText;
+        updateSnapshot();
+      } catch (error) {
+        console.error('AI section generation failed:', error);
+        ids.aiOutput.textContent = 'Sorry, the AI assistant could not be reached.';
+      }
+    }
+
+    function bindEvents() {
+      [ids.filterGradeBand, ids.filterTopic, ids.filterLanguage].forEach((element) => element.addEventListener('change', applyFilters));
+      ids.filterStandard.addEventListener('input', applyFilters);
+      ids.layerAllBtn.addEventListener('click', () => setLayer('all'));
+      ids.layerCoreBtn.addEventListener('click', () => setLayer('core'));
+      ids.layerExpandedBtn.addEventListener('click', () => setLayer('expanded'));
+      document.querySelectorAll('[data-ai]').forEach((button) => button.addEventListener('click', () => handleAIGeneration(button.dataset.ai)));
+      document.getElementById('aiGenerateFromFiltersBtn').addEventListener('click', generateLessonFromFilters);
+      document.getElementById('aiGenerateVariationsBtn').addEventListener('click', generateLessonVariations);
+      document.getElementById('newLessonBtn').addEventListener('click', () => {
+        clearTemplate();
+        ids.currentModeBadge.textContent = 'Designing New Lesson';
+        ids.currentLessonBadge.textContent = 'No lesson loaded';
+      });
+      document.getElementById('clearTemplateBtn').addEventListener('click', clearTemplate);
+      ['gradeBand', 'ctPractice', 'csStandard', 'objective', 'task', 'assessment', 'udl', 'differentiation', 'materials', 'vocabulary', 'procedures', 'reflection'].forEach((id) => {
+        const el = document.getElementById(id);
+        el.addEventListener('input', updateSnapshot);
+        el.addEventListener('change', updateSnapshot);
+      });
+    }
+
+    async function loadLessons() {
+      try {
+        const response = await fetch('lessons.json');
+        if (!response.ok) throw new Error('Failed to load lessons.json');
+        const json = await response.json();
+        state.allLessons = normalizeLessons(json);
+      } catch (error) {
+        console.warn('Using fallback lessons because lessons.json could not be loaded.', error);
+        state.allLessons = normalizeLessons(fallbackLessons);
+      }
+      populateFilterOptions();
+      applyFilters();
+      updateSnapshot();
+    }
+
+    bindEvents();
+    loadLessons();
   </script>
 </body>
 </html>
