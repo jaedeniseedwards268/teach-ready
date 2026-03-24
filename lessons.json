@@ -1,28 +1,45 @@
 {
   "K–2": [
-    {
-      "id": "k2_debug_story_sequence",
-      "title": "Debugging with Story Sequences",
-      "topic": "Debugging",
-      "gradeBand": "K–2",
-      "objective": "Students will identify and correct errors in a simple story sequence.",
-      "task": "Students work with mixed-up picture cards from a familiar story, place them in the correct order, and explain how they fixed the mistake.",
-      "formativeAssessment": "Teacher listens as students explain why a card belongs first, next, or last.",
-      "summativeAssessment": "Students create a corrected 4-step story sequence and retell it to a partner.",
-      "udl": "Provide visual picture cards, sentence frames, and verbal retell options.",
-      "materials": "Story cards, pocket chart, crayons, glue, sequencing mat.",
-      "vocabulary": "debug, sequence, first, next, last, fix",
-      "procedures": "1. Introduce debugging as fixing mistakes.\n2. Model correcting a mixed-up story.\n3. Students work in pairs to fix a story sequence.\n4. Students share their corrected sequence.\n5. Reflect on how they found the mistake.",
-      "differentiation": "Use 3-step sequences for support. Offer challenge cards with extra distractors for advanced learners.",
-      "reflection": "How did you know the story was out of order?",
-      "ctPractice": "Testing & Debugging",
-      "csStandard": "1A-AP-14",
-      "activityType": ["Unplugged", "Group / Collaborative"],
-      "equitySupports": ["Sentence Starters", "Think-Pair-Share"],
-      "accessibilitySupports": ["Visual supports", "Large-print picture cards"],
-      "assessmentTypes": ["Observation", "Performance Task"],
-      "tools": []
-    }
+  {
+    "id": "k2_algorithms_daily_routine",
+    "title": "Algorithms with Daily Routines",
+    "topic": "Algorithms",
+    "gradeBand": "K–2",
+    "layer": "core",
+    "objective": "Students will understand that an algorithm is a set of ordered steps by creating and explaining a daily routine sequence.",
+    "task": "Students will sequence picture cards representing a daily routine (e.g., wake up, brush teeth, eat breakfast) and explain the order to a partner.",
+    "formativeAssessment": "Teacher listens for correct sequencing language and reasoning.",
+    "summativeAssessment": "Students create and explain their own 4-step routine.",
+    "udl": "Provide visuals, verbal explanations, and physical movement options.",
+    "materials": "Routine cards, chart paper, glue, crayons.",
+    "vocabulary": "algorithm, steps, order, first, next, last",
+    "procedures": "1. Introduce the idea of steps.\n2. Model a routine.\n3. Students sequence cards.\n4. Students explain to partner.\n5. Share out.",
+    "differentiation": "Use fewer steps for support. Add extra steps for challenge.",
+    "reflection": "Why is order important?",
+    "ctPractice": "Algorithms",
+    "csStandard": "1A-AP-08",
+    "tools": []
+  },
+  {
+    "id": "k2_loops_clap_patterns",
+    "title": "Loops with Clap Patterns",
+    "topic": "Loops",
+    "gradeBand": "K–2",
+    "layer": "core",
+    "objective": "Students will recognize repeated patterns as loops.",
+    "task": "Students repeat clap-stomp patterns and identify how many times they repeat.",
+    "formativeAssessment": "Students identify repetition verbally.",
+    "summativeAssessment": "Students create their own pattern loop.",
+    "udl": "Use movement, sound, and visuals.",
+    "materials": "None",
+    "vocabulary": "loop, repeat, pattern",
+    "procedures": "1. Model pattern.\n2. Repeat together.\n3. Students create patterns.\n4. Share.",
+    "differentiation": "Short patterns vs long sequences.",
+    "reflection": "What repeated?",
+    "ctPractice": "Pattern Recognition",
+    "csStandard": "1A-AP-09",
+    "tools": []
+  }
   ],
   "3–5": [
     {
