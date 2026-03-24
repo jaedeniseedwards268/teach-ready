@@ -1629,8 +1629,8 @@ Current UDL: ${ids.udl.value || ""}
           source = "fallback lessons";
         }
 
-        state.allLessons = normalizeLessons(rawLessons);
-
+    const generated = generateBulkLessons();
+    state.allLessons = normalizeLessons(generated);
         if (!state.allLessons.length) {
           state.allLessons = normalizeLessons(fallbackLessons);
           source = "fallback lessons";
@@ -1655,6 +1655,50 @@ Current UDL: ${ids.udl.value || ""}
     bindEvents();
     bindDrilldowns();
     loadLessons();
+    function generateBulkLessons() {
+  const gradeBands = ["K–2", "3–5", "6–8", "9–12"];
+  const topics = ["Algorithms", "Debugging", "Loops", "Conditionals", "Data", "Variables", "Functions"];
+  const tools = ["Unplugged", "Scratch", "Python", "Spreadsheets"];
+
+  const output = {};
+
+  gradeBands.forEach((band) => {
+    output[band] = [];
+
+    const count =
+      band === "K–2" ? 20 :
+      band === "3–5" ? 22 :
+      band === "6–8" ? 30 : 32;
+
+    for (let i = 0; i < count; i++) {
+      const topic = topics[i % topics.length];
+      const tool = tools[i % tools.length];
+
+      output[band].push({
+        id: `${band.replace(/[^a-z0-9]/gi, "").toLowerCase()}_${i}`,
+        title: `${topic} Lesson ${i + 1}`,
+        topic: topic,
+        gradeBand: band,
+        layer: i < 10 ? "core" : "expanded",
+        objective: `Students will learn ${topic.toLowerCase()} concepts through structured activities.`,
+        task: `Students complete a hands-on ${topic.toLowerCase()} task using ${tool}.`,
+        formativeAssessment: "Teacher checks understanding during activity.",
+        summativeAssessment: "Students submit a completed task.",
+        udl: "Visuals, modeling, and flexible supports.",
+        materials: "Teacher materials and student tools.",
+        vocabulary: topic.toLowerCase(),
+        procedures: "Model → Practice → Apply → Reflect.",
+        differentiation: "Scaffold or extend as needed.",
+        reflection: "What did you learn?",
+        ctPractice: "Algorithms",
+        csStandard: "Generated",
+        tools: [tool]
+      });
+    }
+  });
+
+  return output;
+}
   </script>
 </body>
 </html>
