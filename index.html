@@ -20,6 +20,7 @@
     }
 
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -27,8 +28,10 @@
       color: var(--text);
       line-height: 1.45;
     }
+
     h1, h2, h3, h4, p { margin: 0; }
     button, input, select, textarea { font: inherit; }
+
     button {
       cursor: pointer;
       border: 1px solid var(--line);
@@ -37,10 +40,12 @@
       padding: 0.7rem 1rem;
       transition: 0.2s ease;
     }
+
     button:hover {
       transform: translateY(-1px);
       box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
     }
+
     input, select, textarea {
       width: 100%;
       border: 1px solid var(--line);
@@ -49,6 +54,7 @@
       background: #fff;
       color: var(--text);
     }
+
     textarea {
       min-height: 96px;
       resize: vertical;
@@ -61,17 +67,20 @@
       display: grid;
       gap: 1.25rem;
     }
+
     .hero, .panel {
       background: var(--card);
       border: 1px solid var(--line);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
     }
+
     .hero {
       padding: 1.5rem;
       display: grid;
       gap: 1rem;
     }
+
     .hero-top {
       display: flex;
       justify-content: space-between;
@@ -79,6 +88,7 @@
       align-items: flex-start;
       flex-wrap: wrap;
     }
+
     .eyebrow {
       font-size: 0.85rem;
       color: var(--accent);
@@ -87,20 +97,24 @@
       letter-spacing: 0.04em;
       margin-bottom: 0.35rem;
     }
+
     .hero h1 {
       font-size: clamp(1.8rem, 2.6vw, 2.7rem);
       line-height: 1.1;
     }
+
     .hero-subtitle {
       color: var(--muted);
       max-width: 880px;
       margin-top: 0.5rem;
     }
+
     .badge-row, .pill-row, .action-row, .layer-toggle, .ai-controls {
       display: flex;
       gap: 0.6rem;
       flex-wrap: wrap;
     }
+
     .badge, .pill {
       border-radius: 999px;
       padding: 0.45rem 0.8rem;
@@ -110,46 +124,130 @@
       background: #fff;
       color: var(--text);
     }
+
     .badge.primary, .pill.primary {
       background: var(--accent-soft);
       border-color: #cfe0ff;
       color: var(--accent);
     }
+
     .badge.good {
       background: var(--good-soft);
       border-color: #c7eee8;
       color: var(--good);
     }
+
     .overview-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 0.9rem;
     }
-    .overview-card {
+
+    .overview-button {
+      text-align: left;
       border: 1px solid var(--line);
       border-radius: 14px;
       padding: 1rem;
       background: linear-gradient(180deg, #fff, #fafcff);
+      display: grid;
+      gap: 0.4rem;
+      width: 100%;
     }
-    .overview-card h3 {
+
+    .overview-button.active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .overview-button h3 {
       font-size: 1rem;
-      margin-bottom: 0.35rem;
+      margin-bottom: 0.15rem;
     }
-    .overview-card p, .section-help, .small-muted, .lesson-count, .panel-title-wrap p {
+
+    .overview-button p,
+    .section-help,
+    .small-muted,
+    .lesson-count,
+    .panel-title-wrap p {
       color: var(--muted);
       font-size: 0.92rem;
     }
+
+    .drilldown-panel {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 1rem;
+      background: #fcfdff;
+      display: none;
+      gap: 0.75rem;
+    }
+
+    .drilldown-panel.active {
+      display: grid;
+    }
+
+    .drilldown-items {
+      display: grid;
+      gap: 0.65rem;
+    }
+
+    .drilldown-item {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .drilldown-trigger {
+      width: 100%;
+      border: 0;
+      border-radius: 0;
+      background: #fff;
+      text-align: left;
+      padding: 0.9rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: center;
+      box-shadow: none;
+      transform: none !important;
+    }
+
+    .drilldown-trigger:hover {
+      box-shadow: none;
+      background: #f8fbff;
+    }
+
+    .drilldown-trigger span:last-child {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .drilldown-content {
+      display: none;
+      padding: 0 1rem 1rem 1rem;
+      color: var(--muted);
+      font-size: 0.94rem;
+      white-space: pre-wrap;
+    }
+
+    .drilldown-item.open .drilldown-content {
+      display: block;
+    }
+
     .workspace {
       display: grid;
       grid-template-columns: 1.15fr 1fr;
       gap: 1.25rem;
       align-items: start;
     }
+
     .panel {
       padding: 1.1rem;
       display: grid;
       gap: 1rem;
     }
+
     .panel-header {
       display: flex;
       justify-content: space-between;
@@ -157,33 +255,41 @@
       align-items: center;
       flex-wrap: wrap;
     }
+
     .section-title {
       font-size: 1.05rem;
       font-weight: 700;
     }
+
     .filter-grid, .template-grid, .mini-grid {
       display: grid;
       gap: 0.85rem;
     }
+
     .filter-grid {
       grid-template-columns: repeat(4, minmax(0, 1fr));
     }
+
     .mini-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+
     .field {
       display: grid;
       gap: 0.35rem;
     }
+
     .field label {
       font-size: 0.92rem;
       font-weight: 700;
     }
+
     .lesson-library-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
       gap: 0.9rem;
     }
+
     .lesson-card {
       border: 1px solid var(--line);
       border-radius: 14px;
@@ -192,40 +298,49 @@
       gap: 0.75rem;
       background: #fff;
     }
+
     .lesson-meta {
       display: flex;
       flex-wrap: wrap;
       gap: 0.45rem;
     }
+
     .lesson-card h3 {
       font-size: 1rem;
       line-height: 1.25;
     }
+
     .lesson-card p {
       color: var(--muted);
       font-size: 0.93rem;
     }
+
     .lesson-card-actions {
       display: flex;
       gap: 0.6rem;
       flex-wrap: wrap;
     }
+
     .btn-primary {
       background: var(--accent);
       border-color: var(--accent);
       color: #fff;
     }
+
     .btn-soft {
       background: var(--accent-soft);
       border-color: #cfe0ff;
       color: var(--accent);
     }
+
     .template-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+
     .template-grid .field.full {
       grid-column: 1 / -1;
     }
+
     .section-box {
       border: 1px solid var(--line);
       border-radius: 14px;
@@ -234,6 +349,7 @@
       display: grid;
       gap: 0.8rem;
     }
+
     .prompt-box {
       border-left: 4px solid var(--accent);
       background: #f7faff;
@@ -242,11 +358,13 @@
       color: var(--muted);
       font-size: 0.92rem;
     }
+
     .ai-group {
       display: grid;
       gap: 0.5rem;
       margin-bottom: 0.2rem;
     }
+
     .ai-group h4 {
       margin: 0;
       font-size: 0.92rem;
@@ -254,6 +372,7 @@
       text-transform: uppercase;
       letter-spacing: 0.03em;
     }
+
     .ai-output {
       border: 1px solid var(--line);
       border-radius: 14px;
@@ -262,6 +381,7 @@
       min-height: 150px;
       white-space: pre-wrap;
     }
+
     .snapshot {
       border: 1px solid var(--line);
       border-radius: 14px;
@@ -270,10 +390,12 @@
       display: grid;
       gap: 0.6rem;
     }
+
     .snapshot-item strong {
       display: inline-block;
       min-width: 112px;
     }
+
     .empty-state {
       text-align: center;
       padding: 1.5rem 1rem;
@@ -283,17 +405,37 @@
       background: #fcfdff;
       grid-column: 1 / -1;
     }
+
     .layer-toggle button.active {
       background: var(--accent);
       border-color: var(--accent);
       color: #fff;
     }
 
+    .status-note {
+      padding: 0.75rem 0.9rem;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
     @media (max-width: 1180px) {
       .workspace { grid-template-columns: 1fr; }
     }
+
     @media (max-width: 900px) {
-      .overview-grid, .filter-grid, .template-grid, .mini-grid { grid-template-columns: 1fr; }
+      .overview-grid,
+      .filter-grid,
+      .template-grid,
+      .mini-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -304,7 +446,9 @@
         <div>
           <div class="eyebrow">CS Teaching Toolkit</div>
           <h1>CS Lesson Design Platform</h1>
-          <p class="hero-subtitle">A guided lesson design framework for computer science teachers that embeds standards, accessibility, and UDL into the planning process.</p>
+          <p class="hero-subtitle">
+            A guided lesson design framework for computer science teachers that embeds standards, accessibility, and UDL into the planning process.
+          </p>
         </div>
         <div class="badge-row" aria-label="Value badges">
           <span class="badge primary">100 Example Lessons Built In</span>
@@ -314,29 +458,105 @@
       </div>
 
       <div class="overview-grid">
-        <article class="overview-card">
+        <button class="overview-button active" id="navFrameworkBtn" type="button" data-panel="frameworkPanel">
           <h3>🧩 Lesson Framework</h3>
           <p>Design complete, standards-aligned CS lessons with built-in UDL, accessibility, differentiation, and assessment guidance.</p>
-        </article>
-        <article class="overview-card">
+        </button>
+        <button class="overview-button" id="navLibraryBtn" type="button" data-panel="libraryPanel">
           <h3>📚 Example Lesson Library</h3>
           <p>Browse filterable lesson cards by grade band, standard, topic, programming language, and curriculum layer.</p>
-        </article>
-        <article class="overview-card">
+        </button>
+        <button class="overview-button" id="navAIBtn" type="button" data-panel="aiPanel">
           <h3>🤖 AI Lesson Assistant</h3>
           <p>Generate complete lessons, section refinements, variations, and teaching supports in a clear, teacher-friendly workflow.</p>
-        </article>
+        </button>
+      </div>
+
+      <div id="frameworkPanel" class="drilldown-panel active">
+        <h3>Lesson Framework Components</h3>
+        <div class="drilldown-items">
+          <div class="drilldown-item">
+            <button class="drilldown-trigger" type="button">
+              <span>Planning Inputs</span><span>+</span>
+            </button>
+            <div class="drilldown-content">Grade Band, CT Practice, and CS Standard help anchor the lesson before you begin writing.</div>
+          </div>
+          <div class="drilldown-item">
+            <button class="drilldown-trigger" type="button">
+              <span>Core Lesson Parts</span><span>+</span>
+            </button>
+            <div class="drilldown-content">Objective, Student Task, Assessment, UDL, Differentiation, Materials, Vocabulary, Procedures, and Reflection.</div>
+          </div>
+          <div class="drilldown-item">
+            <button class="drilldown-trigger" type="button">
+              <span>Editable Workspace</span><span>+</span>
+            </button>
+            <div class="drilldown-content">Use the template on the right to build a new lesson or remix one from the library.</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="libraryPanel" class="drilldown-panel">
+        <h3>Example Lesson Library Components</h3>
+        <div class="drilldown-items">
+          <div class="drilldown-item">
+            <button class="drilldown-trigger" type="button">
+              <span>Filter by Grade, Topic, Standard, and Language</span><span>+</span>
+            </button>
+            <div class="drilldown-content">Teachers can narrow results and quickly find lessons that fit their grade band, topic, standard, and programming context.</div>
+          </div>
+          <div class="drilldown-item">
+            <button class="drilldown-trigger" type="button">
+              <span>Layer Toggle</span><span>+</span>
+            </button>
+            <div class="drilldown-content">Switch between all lessons, core curriculum lessons, and expanded library lessons.</div>
+          </div>
+          <div class="drilldown-item">
+            <button class="drilldown-trigger" type="button">
+              <span>View or Remix</span><span>+</span>
+            </button>
+            <div class="drilldown-content">Preview a model lesson in the AI output panel or load it directly into the editable lesson template.</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="aiPanel" class="drilldown-panel">
+        <h3>AI Lesson Assistant Components</h3>
+        <div class="drilldown-items">
+          <div class="drilldown-item">
+            <button class="drilldown-trigger" type="button">
+              <span>Quick Build</span><span>+</span>
+            </button>
+            <div class="drilldown-content">Generate a full lesson from selected filters, create three variations, or remix a lesson.</div>
+          </div>
+          <div class="drilldown-item">
+            <button class="drilldown-trigger" type="button">
+              <span>Lesson Parts</span><span>+</span>
+            </button>
+            <div class="drilldown-content">Generate an objective, student task, assessment ideas, UDL supports, and differentiation suggestions.</div>
+          </div>
+          <div class="drilldown-item">
+            <button class="drilldown-trigger" type="button">
+              <span>Extensions</span><span>+</span>
+            </button>
+            <div class="drilldown-content">Create a multi-day version, rubric, worksheet, or materials list even without a live backend.</div>
+          </div>
+        </div>
       </div>
     </section>
 
     <section class="workspace">
-      <section class="panel" aria-label="Lesson library and filters">
+      <section class="panel" aria-label="Lesson library and filters" id="librarySection">
         <div class="panel-header">
           <div class="panel-title-wrap">
             <h2 class="section-title">Filterable Lesson Library</h2>
             <p>Scan model anchor lessons and remix them into your editable template.</p>
           </div>
           <div class="lesson-count" id="lessonCount">Loading lessons…</div>
+        </div>
+
+        <div class="status-note" id="loadStatus">
+          Looking for lesson data...
         </div>
 
         <div class="layer-toggle" role="tablist" aria-label="Curriculum layer toggle">
@@ -373,7 +593,7 @@
         <div id="lessonLibraryGrid" class="lesson-library-grid"></div>
       </section>
 
-      <section class="panel" aria-label="Lesson editor and AI assistant">
+      <section class="panel" aria-label="Lesson editor and AI assistant" id="workspaceSection">
         <div class="panel-header">
           <div class="panel-title-wrap">
             <h2 class="section-title">Lesson Design Workspace</h2>
@@ -385,12 +605,16 @@
           </div>
         </div>
 
-        <div class="section-box">
+        <div class="section-box" id="aiAssistantSection">
           <div class="panel-header">
             <div>
               <h3 class="section-title">AI Lesson Assistant</h3>
               <p class="section-help">Generate lessons, refine sections, and build extensions with clear, teacher-friendly groupings.</p>
             </div>
+          </div>
+
+          <div class="status-note" id="aiStatus">
+            AI mode: local built-in assistant is ready. If you later connect a backend endpoint, it can use that too.
           </div>
 
           <div class="ai-group">
@@ -426,7 +650,7 @@
           <div id="aiOutput" class="ai-output">AI suggestions will appear here.</div>
         </div>
 
-        <div class="section-box">
+        <div class="section-box" id="frameworkSection">
           <div class="panel-header">
             <div>
               <h3 class="section-title">Lesson Template</h3>
@@ -481,13 +705,17 @@
 
             <div class="field full">
               <label for="udl">Accessibility & UDL Supports</label>
-              <div class="prompt-box">How will students access the content in multiple ways? Consider visual supports, alternative instructions, flexible participation options, and accessible materials.</div>
+              <div class="prompt-box">
+                How will students access the content in multiple ways? Consider visual supports, alternative instructions, flexible participation options, and accessible materials.
+              </div>
               <textarea id="udl"></textarea>
             </div>
 
             <div class="field full">
               <label for="differentiation">Differentiation / Extensions</label>
-              <div class="prompt-box">How will students who need additional challenge or support engage with the task? Consider scaffolds, enrichment activities, and alternative approaches.</div>
+              <div class="prompt-box">
+                How will students who need additional challenge or support engage with the task? Consider scaffolds, enrichment activities, and alternative approaches.
+              </div>
               <textarea id="differentiation"></textarea>
             </div>
 
@@ -588,7 +816,7 @@
         csStandard: "3A-DA-11",
         ctPractice: "Data",
         programmingLanguage: "Spreadsheets",
-        layer: "core",
+        layer: "expanded",
         objective: "Students will analyze a small data set and create an appropriate chart in a spreadsheet application.",
         task: "Students import a data table into a spreadsheet, calculate one summary insight, and build a chart that communicates a clear conclusion.",
         assessment: "Formative: Teacher checks whether students selected a chart type that matches the data and can explain why. Summative: Students submit a completed spreadsheet with chart and a short written analysis.",
@@ -605,12 +833,16 @@
       allLessons: [],
       filteredLessons: [],
       layer: "all",
-      selectedLessonId: null
+      selectedLessonId: null,
+      activePanel: "frameworkPanel",
+      aiMode: "local"
     };
 
     const ids = {
       lessonLibraryGrid: document.getElementById("lessonLibraryGrid"),
       lessonCount: document.getElementById("lessonCount"),
+      loadStatus: document.getElementById("loadStatus"),
+      aiStatus: document.getElementById("aiStatus"),
       filterGradeBand: document.getElementById("filterGradeBand"),
       filterStandard: document.getElementById("filterStandard"),
       filterTopic: document.getElementById("filterTopic"),
@@ -633,25 +865,23 @@
       currentModeBadge: document.getElementById("currentModeBadge"),
       layerAllBtn: document.getElementById("layerAllBtn"),
       layerCoreBtn: document.getElementById("layerCoreBtn"),
-      layerExpandedBtn: document.getElementById("layerExpandedBtn")
+      layerExpandedBtn: document.getElementById("layerExpandedBtn"),
+      navFrameworkBtn: document.getElementById("navFrameworkBtn"),
+      navLibraryBtn: document.getElementById("navLibraryBtn"),
+      navAIBtn: document.getElementById("navAIBtn")
     };
 
-    function normalizeLessons(input) {
-      if (Array.isArray(input)) return input;
-      const output = [];
-      Object.keys(input || {}).forEach((band) => {
-        const lessons = input[band] || [];
-        lessons.forEach((lesson) => {
-          output.push({
-            layer: lesson.layer || "core",
-            programmingLanguage: inferProgrammingLanguage(lesson),
-            assessment: lesson.assessment || buildAssessment(lesson),
-            ...lesson,
-            gradeBand: lesson.gradeBand || band
-          });
-        });
-      });
-      return output;
+    function safeText(value) {
+      return (value ?? "").toString();
+    }
+
+    function escapeHtml(str) {
+      return safeText(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
     }
 
     function inferProgrammingLanguage(lesson) {
@@ -671,8 +901,99 @@
       return [formative, summative].filter(Boolean).join(" ");
     }
 
+    function normalizeSingleLesson(lesson, inheritedGradeBand = "") {
+      if (!lesson || typeof lesson !== "object") return null;
+
+      return {
+        id: lesson.id || cryptoRandomId(),
+        title: lesson.title || lesson.name || "Untitled Lesson",
+        topic: lesson.topic || lesson.category || "General CS",
+        gradeBand: lesson.gradeBand || inheritedGradeBand || lesson.band || "Unknown",
+        csStandard: lesson.csStandard || lesson.standard || lesson.cstaStandard || "Not listed",
+        ctPractice: lesson.ctPractice || lesson.ct || "Algorithms",
+        programmingLanguage: lesson.programmingLanguage || lesson.language || inferProgrammingLanguage(lesson),
+        layer: (lesson.layer || lesson.curriculumLayer || "core").toLowerCase().includes("expand") ? "expanded" : (lesson.layer || lesson.curriculumLayer || "core").toLowerCase().includes("core") ? "core" : (lesson.layer || "core"),
+        objective: lesson.objective || "",
+        task: lesson.task || lesson.studentTask || "",
+        assessment: lesson.assessment || buildAssessment(lesson),
+        udl: lesson.udl || lesson.accessibility || "",
+        differentiation: lesson.differentiation || lesson.extensions || "",
+        materials: lesson.materials || "",
+        vocabulary: lesson.vocabulary || "",
+        procedures: lesson.procedures || "",
+        reflection: lesson.reflection || ""
+      };
+    }
+
+    function normalizeLessons(input) {
+      if (!input) return [];
+
+      if (Array.isArray(input)) {
+        return input.map(item => normalizeSingleLesson(item)).filter(Boolean);
+      }
+
+      if (Array.isArray(input.lessons)) {
+        return input.lessons.map(item => normalizeSingleLesson(item)).filter(Boolean);
+      }
+
+      if (Array.isArray(input.data)) {
+        return input.data.map(item => normalizeSingleLesson(item)).filter(Boolean);
+      }
+
+      if (input.core || input.expanded || input.layer1 || input.layer2) {
+        const output = [];
+        const collections = [
+          { key: "core", forcedLayer: "core" },
+          { key: "expanded", forcedLayer: "expanded" },
+          { key: "layer1", forcedLayer: "core" },
+          { key: "layer2", forcedLayer: "expanded" }
+        ];
+
+        collections.forEach(({ key, forcedLayer }) => {
+          const value = input[key];
+          if (Array.isArray(value)) {
+            value.forEach(lesson => {
+              const normalized = normalizeSingleLesson({ ...lesson, layer: lesson.layer || forcedLayer });
+              if (normalized) output.push(normalized);
+            });
+          } else if (value && typeof value === "object") {
+            Object.keys(value).forEach(band => {
+              const list = Array.isArray(value[band]) ? value[band] : [];
+              list.forEach(lesson => {
+                const normalized = normalizeSingleLesson(
+                  { ...lesson, layer: lesson.layer || forcedLayer, gradeBand: lesson.gradeBand || band },
+                  band
+                );
+                if (normalized) output.push(normalized);
+              });
+            });
+          }
+        });
+
+        return output;
+      }
+
+      const output = [];
+      Object.keys(input).forEach((key) => {
+        const value = input[key];
+        if (Array.isArray(value)) {
+          value.forEach((lesson) => {
+            const normalized = normalizeSingleLesson(lesson, key);
+            if (normalized) output.push(normalized);
+          });
+        }
+      });
+
+      return output;
+    }
+
+    function cryptoRandomId() {
+      return "lesson_" + Math.random().toString(36).slice(2, 10);
+    }
+
     function uniqueValues(key) {
-      return [...new Set(state.allLessons.map((lesson) => lesson[key]).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+      return [...new Set(state.allLessons.map((lesson) => safeText(lesson[key]).trim()).filter(Boolean))]
+        .sort((a, b) => a.localeCompare(b));
     }
 
     function populateSelect(select, values, placeholder) {
@@ -681,6 +1002,7 @@
       option.value = "";
       option.textContent = placeholder;
       select.appendChild(option);
+
       values.forEach((value) => {
         const item = document.createElement("option");
         item.value = value;
@@ -712,11 +1034,18 @@
       const language = ids.filterLanguage.value.trim().toLowerCase();
 
       state.filteredLessons = state.allLessons.filter((lesson) => {
-        const matchesLayer = state.layer === "all" ? true : lesson.layer === state.layer;
-        const matchesGrade = gradeBand ? lesson.gradeBand.toLowerCase() === gradeBand : true;
-        const matchesStandard = standard ? lesson.csStandard.toLowerCase().includes(standard) : true;
-        const matchesTopic = topic ? lesson.topic.toLowerCase() === topic : true;
-        const matchesLanguage = language ? lesson.programmingLanguage.toLowerCase() === language : true;
+        const lessonLayer = safeText(lesson.layer).toLowerCase();
+        const lessonGrade = safeText(lesson.gradeBand).toLowerCase();
+        const lessonStandard = safeText(lesson.csStandard).toLowerCase();
+        const lessonTopic = safeText(lesson.topic).toLowerCase();
+        const lessonLanguage = safeText(lesson.programmingLanguage).toLowerCase();
+
+        const matchesLayer = state.layer === "all" ? true : lessonLayer === state.layer;
+        const matchesGrade = gradeBand ? lessonGrade === gradeBand : true;
+        const matchesStandard = standard ? lessonStandard.includes(standard) : true;
+        const matchesTopic = topic ? lessonTopic === topic : true;
+        const matchesLanguage = language ? lessonLanguage === language : true;
+
         return matchesLayer && matchesGrade && matchesStandard && matchesTopic && matchesLanguage;
       });
 
@@ -728,7 +1057,8 @@
       ids.lessonCount.textContent = `${state.filteredLessons.length} lessons shown`;
 
       if (!state.filteredLessons.length) {
-        ids.lessonLibraryGrid.innerHTML = '<div class="empty-state"><strong>No lessons match those filters.</strong><p>Try another grade band, standard, topic, programming language, or curriculum layer.</p></div>';
+        ids.lessonLibraryGrid.innerHTML =
+          '<div class="empty-state"><strong>No lessons match those filters.</strong><p>Try another grade band, standard, topic, programming language, or curriculum layer.</p></div>';
         return;
       }
 
@@ -737,17 +1067,17 @@
         article.className = "lesson-card";
         article.innerHTML = `
           <div class="lesson-meta">
-            <span class="pill primary">${lesson.gradeBand}</span>
-            <span class="pill">${lesson.csStandard}</span>
-            <span class="pill">${lesson.topic}</span>
-            <span class="pill">${lesson.programmingLanguage}</span>
+            <span class="pill primary">${escapeHtml(lesson.gradeBand)}</span>
+            <span class="pill">${escapeHtml(lesson.csStandard)}</span>
+            <span class="pill">${escapeHtml(lesson.topic)}</span>
+            <span class="pill">${escapeHtml(lesson.programmingLanguage)}</span>
             <span class="pill">${lesson.layer === "core" ? "⭐ Core Lesson" : "Expanded Lesson"}</span>
           </div>
-          <h3>${lesson.title}</h3>
-          <p>${lesson.objective}</p>
+          <h3>${escapeHtml(lesson.title)}</h3>
+          <p>${escapeHtml(lesson.objective)}</p>
           <div class="lesson-card-actions">
-            <button type="button" class="btn-soft" data-view="${lesson.id}">View Lesson</button>
-            <button type="button" class="btn-primary" data-remix="${lesson.id}">Remix This Lesson</button>
+            <button type="button" class="btn-soft" data-view="${escapeHtml(lesson.id)}">View Lesson</button>
+            <button type="button" class="btn-primary" data-remix="${escapeHtml(lesson.id)}">Remix This Lesson</button>
           </div>
         `;
         ids.lessonLibraryGrid.appendChild(article);
@@ -756,6 +1086,7 @@
       document.querySelectorAll("[data-view]").forEach((button) => {
         button.addEventListener("click", () => showLessonPreview(button.dataset.view));
       });
+
       document.querySelectorAll("[data-remix]").forEach((button) => {
         button.addEventListener("click", () => remixLesson(button.dataset.remix));
       });
@@ -768,90 +1099,120 @@
     function showLessonPreview(id) {
       const lesson = findLessonById(id);
       if (!lesson) return;
+
       ids.aiOutput.textContent = [
         `Model Lesson Anchor: ${lesson.title}`,
         `Grade Band: ${lesson.gradeBand}`,
         `Standard: ${lesson.csStandard}`,
         `Topic: ${lesson.topic}`,
         `Programming Language: ${lesson.programmingLanguage}`,
-        '',
+        "",
         `Objective: ${lesson.objective}`,
         `Student Task: ${lesson.task}`,
         `Assessment: ${lesson.assessment}`,
         `Accessibility & UDL Supports: ${lesson.udl}`
-      ].join('\n');
+      ].join("\n");
+
+      showTopPanel("libraryPanel");
+      document.getElementById("aiAssistantSection").scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
     function remixLesson(id) {
       const lesson = findLessonById(id);
       if (!lesson) return;
-      ids.gradeBand.value = lesson.gradeBand || '';
-      ids.ctPractice.value = lesson.ctPractice || '';
-      ids.csStandard.value = lesson.csStandard || '';
-      ids.objective.value = lesson.objective || '';
-      ids.task.value = lesson.task || '';
-      ids.assessment.value = lesson.assessment || '';
-      ids.udl.value = lesson.udl || '';
-      ids.differentiation.value = lesson.differentiation || '';
-      ids.materials.value = lesson.materials || '';
-      ids.vocabulary.value = lesson.vocabulary || '';
-      ids.procedures.value = lesson.procedures || '';
-      ids.reflection.value = lesson.reflection || '';
+
+      ids.gradeBand.value = lesson.gradeBand || "";
+      ids.ctPractice.value = lesson.ctPractice || "";
+      ids.csStandard.value = lesson.csStandard || "";
+      ids.objective.value = lesson.objective || "";
+      ids.task.value = lesson.task || "";
+      ids.assessment.value = lesson.assessment || "";
+      ids.udl.value = lesson.udl || "";
+      ids.differentiation.value = lesson.differentiation || "";
+      ids.materials.value = lesson.materials || "";
+      ids.vocabulary.value = lesson.vocabulary || "";
+      ids.procedures.value = lesson.procedures || "";
+      ids.reflection.value = lesson.reflection || "";
+
       state.selectedLessonId = lesson.id;
-      ids.currentModeBadge.textContent = 'Remixing Lesson';
+      ids.currentModeBadge.textContent = "Remixing Lesson";
       ids.currentLessonBadge.textContent = lesson.title;
-      ids.aiOutput.textContent = `Lesson remixed into the template: ${lesson.title}\n\nYou can now customize the objective, task, accessibility supports, assessment, and every other section while preserving the original model structure.`;
+      ids.aiOutput.textContent =
+        `Lesson remixed into the template: ${lesson.title}\n\nYou can now customize the objective, task, accessibility supports, assessment, and every other section while preserving the original model structure.`;
+
       updateSnapshot();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      showTopPanel("frameworkPanel");
+      document.getElementById("frameworkSection").scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
     function clearTemplate() {
-      [ids.gradeBand, ids.ctPractice, ids.csStandard, ids.objective, ids.task, ids.assessment, ids.udl, ids.differentiation, ids.materials, ids.vocabulary, ids.procedures, ids.reflection].forEach((element) => {
-        element.value = '';
+      [
+        ids.gradeBand,
+        ids.ctPractice,
+        ids.csStandard,
+        ids.objective,
+        ids.task,
+        ids.assessment,
+        ids.udl,
+        ids.differentiation,
+        ids.materials,
+        ids.vocabulary,
+        ids.procedures,
+        ids.reflection
+      ].forEach((element) => {
+        element.value = "";
       });
+
       state.selectedLessonId = null;
-      ids.currentLessonBadge.textContent = 'No lesson loaded';
-      ids.currentModeBadge.textContent = 'Editing Template';
+      ids.currentLessonBadge.textContent = "No lesson loaded";
+      ids.currentModeBadge.textContent = "Editing Template";
       updateSnapshot();
     }
 
     function updateSnapshot() {
       const values = {
-        gradeBand: ids.gradeBand.value || 'Not set',
-        ctPractice: ids.ctPractice.value || 'Not set',
-        csStandard: ids.csStandard.value || 'Not set',
-        objective: ids.objective.value || 'Not set',
-        task: ids.task.value || 'Not set',
-        assessment: ids.assessment.value || 'Not set',
-        udl: ids.udl.value || 'Not set',
-        differentiation: ids.differentiation.value || 'Not set'
+        gradeBand: ids.gradeBand.value || "Not set",
+        ctPractice: ids.ctPractice.value || "Not set",
+        csStandard: ids.csStandard.value || "Not set",
+        objective: ids.objective.value || "Not set",
+        task: ids.task.value || "Not set",
+        assessment: ids.assessment.value || "Not set",
+        udl: ids.udl.value || "Not set",
+        differentiation: ids.differentiation.value || "Not set"
       };
+
       ids.snapshot.innerHTML = `
-        <div class="snapshot-item"><strong>Grade Band:</strong> ${values.gradeBand}</div>
-        <div class="snapshot-item"><strong>CT Practice:</strong> ${values.ctPractice}</div>
-        <div class="snapshot-item"><strong>CS Standard:</strong> ${values.csStandard}</div>
-        <div class="snapshot-item"><strong>Objective:</strong> ${values.objective}</div>
-        <div class="snapshot-item"><strong>Student Task:</strong> ${values.task}</div>
-        <div class="snapshot-item"><strong>Assessment:</strong> ${values.assessment}</div>
-        <div class="snapshot-item"><strong>UDL Supports:</strong> ${values.udl}</div>
-        <div class="snapshot-item"><strong>Differentiation / Extensions:</strong> ${values.differentiation}</div>
+        <div class="snapshot-item"><strong>Grade Band:</strong> ${escapeHtml(values.gradeBand)}</div>
+        <div class="snapshot-item"><strong>CT Practice:</strong> ${escapeHtml(values.ctPractice)}</div>
+        <div class="snapshot-item"><strong>CS Standard:</strong> ${escapeHtml(values.csStandard)}</div>
+        <div class="snapshot-item"><strong>Objective:</strong> ${escapeHtml(values.objective)}</div>
+        <div class="snapshot-item"><strong>Student Task:</strong> ${escapeHtml(values.task)}</div>
+        <div class="snapshot-item"><strong>Assessment:</strong> ${escapeHtml(values.assessment)}</div>
+        <div class="snapshot-item"><strong>UDL Supports:</strong> ${escapeHtml(values.udl)}</div>
+        <div class="snapshot-item"><strong>Differentiation / Extensions:</strong> ${escapeHtml(values.differentiation)}</div>
       `;
     }
 
+    function currentContext() {
+      return {
+        gradeBand: ids.gradeBand.value || ids.filterGradeBand.value || "Not selected",
+        topic: ids.filterTopic.value || "General computer science",
+        csStandard: ids.csStandard.value || ids.filterStandard.value || "Not selected",
+        ctPractice: ids.ctPractice.value || "Not selected",
+        language: ids.filterLanguage.value || "Not selected"
+      };
+    }
+
     function buildFilterBasedPrompt() {
-      const gradeBand = ids.gradeBand.value || 'Not selected';
-      const ctPractice = ids.ctPractice.value || 'Not selected';
-      const csStandard = ids.csStandard.value || 'Not selected';
-      const topic = ids.filterTopic.value || 'Not selected';
-      const language = ids.filterLanguage.value || 'Not selected';
+      const c = currentContext();
       return `
 Create one complete computer science lesson using these teacher-selected filters.
 
-Grade Band: ${gradeBand}
-Topic: ${topic}
-CS Standard: ${csStandard}
-CT Practice: ${ctPractice}
-Programming Language / Technology: ${language}
+Grade Band: ${c.gradeBand}
+Topic: ${c.topic}
+CS Standard: ${c.csStandard}
+CT Practice: ${c.ctPractice}
+Programming Language / Technology: ${c.language}
 
 Return the lesson using exactly these labels:
 Objective:
@@ -863,89 +1224,177 @@ Materials:
 Vocabulary:
 Procedures:
 Reflection:
-
-The lesson should be classroom-ready, standards-aligned, and include strong accessibility and UDL supports.
-`.trim();
+      `.trim();
     }
 
     function buildVariationPrompt() {
-      const gradeBand = ids.gradeBand.value || 'Not selected';
-      const ctPractice = ids.ctPractice.value || 'Not selected';
-      const csStandard = ids.csStandard.value || 'Not selected';
-      const topic = ids.filterTopic.value || 'Not selected';
-      const language = ids.filterLanguage.value || 'Not selected';
+      const c = currentContext();
       return `
 Create 3 lesson variations using these filters.
 
-Grade Band: ${gradeBand}
-Topic: ${topic}
-CS Standard: ${csStandard}
-CT Practice: ${ctPractice}
-Programming Language / Technology: ${language}
-
-Organize the response exactly like this:
-
-Variation 1: Core Lesson
-------------------------
-Objective:
-Student Task:
-Assessment:
-UDL:
-
-Variation 2: Unplugged / Alternate Version
-------------------------------------------
-Objective:
-Student Task:
-Assessment:
-UDL:
-
-Variation 3: Project-Based / Extension Version
-----------------------------------------------
-Objective:
-Student Task:
-Assessment:
-UDL:
-
-Keep each variation practical, clear, and teacher-friendly.
-`.trim();
+Grade Band: ${c.gradeBand}
+Topic: ${c.topic}
+CS Standard: ${c.csStandard}
+CT Practice: ${c.ctPractice}
+Programming Language / Technology: ${c.language}
+      `.trim();
     }
 
     function parseGeneratedLesson(text) {
       const getSection = (label) => {
-        const regex = new RegExp(`${label}[:\\-]\\s*([\\s\\S]*?)(?=\\n[A-Z][A-Za-z /&()_-]+[:\\-]|$)`, 'i');
+        const regex = new RegExp(`${label}[:\\-]\\s*([\\s\\S]*?)(?=\\n[A-Z][A-Za-z /&()_-]+[:\\-]|$)`, "i");
         const match = text.match(regex);
-        return match ? match[1].trim() : '';
+        return match ? match[1].trim() : "";
       };
+
       return {
-        objective: getSection('Objective'),
-        task: getSection('Student Task'),
-        assessment: getSection('Assessment'),
-        udl: getSection('UDL'),
-        differentiation: getSection('Differentiation'),
-        materials: getSection('Materials'),
-        vocabulary: getSection('Vocabulary'),
-        procedures: getSection('Procedures'),
-        reflection: getSection('Reflection')
+        objective: getSection("Objective"),
+        task: getSection("Student Task"),
+        assessment: getSection("Assessment"),
+        udl: getSection("UDL"),
+        differentiation: getSection("Differentiation"),
+        materials: getSection("Materials"),
+        vocabulary: getSection("Vocabulary"),
+        procedures: getSection("Procedures"),
+        reflection: getSection("Reflection")
       };
     }
 
-    async function callAI(message, mode = 'lesson') {
-      const response = await fetch('/api/ai', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message, mode })
-      });
-      if (!response.ok) throw new Error(`Request failed with status ${response.status}`);
-      const data = await response.json();
-      return data.reply || data.text || '[No response]';
+    function localAIGenerate(type) {
+      const c = currentContext();
+      const lessonTitle = `${c.topic} Lesson for ${c.gradeBand}`;
+      const baseObjective = `Students will apply ${c.topic.toLowerCase()} concepts to complete a standards-aligned computer science task using ${c.language.toLowerCase()}.`;
+      const baseTask = `Students will complete a guided activity focused on ${c.topic.toLowerCase()}, explain their thinking, test their work, and revise based on feedback.`;
+      const baseAssessment = `Formative: Check student explanations, planning, and testing during work time.\nSummative: Students submit a completed task artifact and a brief written reflection aligned to ${c.csStandard}.`;
+      const baseUDL = `Provide visual models, chunked directions, teacher modeling, optional partner support, and multiple ways to show understanding.`;
+      const baseDiff = `Support: Provide a scaffolded template and teacher check-ins.\nExtension: Ask students to modify, extend, or justify their solution in a new context.`;
+      const baseMaterials = `Teacher slides, student handout, device or manipulatives, exemplar, and exit ticket.`;
+      const baseVocabulary = `${c.topic}, algorithm, sequence, input, output, debug`;
+      const baseProcedures =
+`1. Bellringer connected to ${c.topic.toLowerCase()}.
+2. Mini-lesson and model.
+3. Guided practice.
+4. Independent or partner task.
+5. Check for understanding.
+6. Reflection and exit ticket.`;
+      const baseReflection = `Which students demonstrated independent judgment, and where is more support needed next time?`;
+
+      if (type === "lesson") {
+        return `Objective: ${baseObjective}
+
+Student Task: ${baseTask}
+
+Assessment: ${baseAssessment}
+
+UDL: ${baseUDL}
+
+Differentiation: ${baseDiff}
+
+Materials: ${baseMaterials}
+
+Vocabulary: ${baseVocabulary}
+
+Procedures: ${baseProcedures}
+
+Reflection: ${baseReflection}`;
+      }
+
+      if (type === "variations") {
+        return `Variation 1: Core Lesson
+------------------------
+Objective: Students complete a structured ${c.topic.toLowerCase()} lesson with teacher modeling and guided practice.
+Student Task: Students complete the main task and explain one decision they made.
+Assessment: Students submit their final product and a short explanation.
+UDL: Provide visuals, sentence frames, and optional partner support.
+
+Variation 2: Unplugged / Alternate Version
+------------------------------------------
+Objective: Students explore ${c.topic.toLowerCase()} without relying on a computer.
+Student Task: Students complete a card sort, storyboard, role-play, or paper-based simulation.
+Assessment: Students explain the process and identify one correction or improvement.
+UDL: Use visuals, manipulatives, and oral response options.
+
+Variation 3: Project-Based / Extension Version
+----------------------------------------------
+Objective: Students apply ${c.topic.toLowerCase()} in a more open-ended project.
+Student Task: Students design, build, test, and revise a small project connected to the standard.
+Assessment: Students present their work and justify their choices.
+UDL: Offer flexible tools, checkpoints, and multiple presentation options.`;
+      }
+
+      const generators = {
+        objective: `Students will demonstrate understanding of ${c.topic.toLowerCase()} by completing a standards-aligned task connected to ${c.csStandard}.`,
+        task: `Students will complete a guided ${c.topic.toLowerCase()} activity, document their steps, test their work, and explain one design decision.`,
+        assessment: `Use observation, questioning, and work checks during the lesson. End with a short performance task and reflection tied to ${c.csStandard}.`,
+        udl: `Include visual directions, teacher think-alouds, chunked instructions, flexible grouping, and multiple ways for students to respond.`,
+        differentiation: `Support students with sentence frames, starter code, worked examples, or guided checkpoints. Extend learning with a challenge prompt or redesign task.`,
+        multiday:
+`Day 1: Introduce the concept, model, and begin guided practice.
+Day 2: Students complete the main task and conference with the teacher.
+Day 3: Students revise, extend, and reflect on their learning.`,
+        rubric:
+`Criteria:
+1. Understanding of concept
+2. Accuracy of task completion
+3. Explanation of thinking
+4. Use of feedback or revision
+
+Performance Levels:
+4 - Exceeds
+3 - Meets
+2 - Approaching
+1 - Beginning`,
+        worksheet:
+`Student Worksheet
+1. What is the goal of today's lesson?
+2. What steps will you take?
+3. What did you test?
+4. What did you revise?
+5. What did you learn about ${c.topic.toLowerCase()}?`,
+        materials: `Materials: slides, handout, device or manipulatives, exemplar, and assessment checklist.\nTeacher Prep: review model example, prep materials, and identify support checkpoints.`,
+        remix:
+`Remixed Lesson Version
+Objective: Students will explore ${c.topic.toLowerCase()} through a fresh, student-centered task.
+Student Task: Students analyze an example, create their own version, and explain their reasoning.
+Assessment: Students submit their product and explain what they changed and why.
+UDL: Build in modeling, visual supports, and multiple expression options.`
+      };
+
+      return generators[type] || "AI support is ready.";
+    }
+
+    async function callAI(message, mode = "lesson", type = "lesson") {
+      try {
+        const response = await fetch("/api/ai", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message, mode, type })
+        });
+
+        if (!response.ok) throw new Error(`Request failed with status ${response.status}`);
+
+        const data = await response.json();
+        state.aiMode = "server";
+        ids.aiStatus.textContent = "AI mode: connected to backend endpoint.";
+        return data.reply || data.text || "[No response]";
+      } catch (error) {
+        state.aiMode = "local";
+        ids.aiStatus.textContent = "AI mode: backend not found, using built-in local assistant.";
+        console.warn("AI backend unavailable. Using local assistant instead.", error);
+
+        if (type === "variations") return localAIGenerate("variations");
+        if (type === "lesson") return localAIGenerate("lesson");
+        return localAIGenerate(type);
+      }
     }
 
     async function generateLessonFromFilters() {
-      ids.aiOutput.textContent = 'Generating lesson from selected filters...';
+      ids.aiOutput.textContent = "Generating lesson from selected filters...";
       try {
-        const aiText = await callAI(buildFilterBasedPrompt(), 'lesson');
+        const aiText = await callAI(buildFilterBasedPrompt(), "lesson", "lesson");
         ids.aiOutput.textContent = aiText;
         const lesson = parseGeneratedLesson(aiText);
+
         if (lesson.objective) ids.objective.value = lesson.objective;
         if (lesson.task) ids.task.value = lesson.task;
         if (lesson.assessment) ids.assessment.value = lesson.assessment;
@@ -955,49 +1404,45 @@ Keep each variation practical, clear, and teacher-friendly.
         if (lesson.vocabulary) ids.vocabulary.value = lesson.vocabulary;
         if (lesson.procedures) ids.procedures.value = lesson.procedures;
         if (lesson.reflection) ids.reflection.value = lesson.reflection;
-        ids.currentModeBadge.textContent = 'AI-Generated Lesson';
-        ids.currentLessonBadge.textContent = 'Generated From Filters';
+
+        ids.currentModeBadge.textContent = "AI-Generated Lesson";
+        ids.currentLessonBadge.textContent = "Generated From Filters";
         updateSnapshot();
+        showTopPanel("aiPanel");
       } catch (error) {
-        console.error('AI lesson generation failed:', error);
-        ids.aiOutput.textContent = 'Sorry, the lesson generator could not be reached.';
+        console.error("AI lesson generation failed:", error);
+        ids.aiOutput.textContent = "Sorry, the lesson generator could not be reached.";
       }
     }
 
     async function generateLessonVariations() {
-      ids.aiOutput.textContent = 'Generating 3 lesson variations...';
+      ids.aiOutput.textContent = "Generating 3 lesson variations...";
       try {
-        const aiText = await callAI(buildVariationPrompt(), 'lesson');
+        const aiText = await callAI(buildVariationPrompt(), "lesson", "variations");
         ids.aiOutput.textContent = aiText;
-        ids.currentModeBadge.textContent = 'AI Variations';
-        ids.currentLessonBadge.textContent = '3 Lesson Variations';
+        ids.currentModeBadge.textContent = "AI Variations";
+        ids.currentLessonBadge.textContent = "3 Lesson Variations";
+        showTopPanel("aiPanel");
       } catch (error) {
-        console.error('AI variations failed:', error);
-        ids.aiOutput.textContent = 'Sorry, the variation generator could not be reached.';
+        console.error("AI variations failed:", error);
+        ids.aiOutput.textContent = "Sorry, the variation generator could not be reached.";
       }
     }
 
     function buildSectionPrompt(type) {
-      const gradeBand = ids.gradeBand.value || 'Not selected';
-      const ctPractice = ids.ctPractice.value || 'Not selected';
-      const csStandard = ids.csStandard.value || 'Not selected';
-      const topic = ids.filterTopic.value || 'Not selected';
-      const language = ids.filterLanguage.value || 'Not selected';
-      const currentObjective = ids.objective.value || '';
-      const currentTask = ids.task.value || '';
-      const currentAssessment = ids.assessment.value || '';
-      const currentUDL = ids.udl.value || '';
+      const c = currentContext();
       const context = `
-Grade Band: ${gradeBand}
-Topic: ${topic}
-CS Standard: ${csStandard}
-CT Practice: ${ctPractice}
-Programming Language / Technology: ${language}
-Current Objective: ${currentObjective}
-Current Student Task: ${currentTask}
-Current Assessment: ${currentAssessment}
-Current UDL: ${currentUDL}
-`.trim();
+Grade Band: ${c.gradeBand}
+Topic: ${c.topic}
+CS Standard: ${c.csStandard}
+CT Practice: ${c.ctPractice}
+Programming Language / Technology: ${c.language}
+Current Objective: ${ids.objective.value || ""}
+Current Student Task: ${ids.task.value || ""}
+Current Assessment: ${ids.assessment.value || ""}
+Current UDL: ${ids.udl.value || ""}
+      `.trim();
+
       const prompts = {
         objective: `${context}\n\nGenerate only a strong Learning Objective for this lesson.`,
         task: `${context}\n\nGenerate only a strong Student Task for this lesson.`,
@@ -1010,64 +1455,205 @@ Current UDL: ${currentUDL}
         materials: `${context}\n\nGenerate a materials list and teacher prep notes for this lesson.`,
         remix: `${context}\n\nRemix this lesson into a fresh alternate version while preserving standards alignment, accessibility, and assessment.`
       };
+
       return prompts[type] || context;
     }
 
     async function handleAIGeneration(type) {
-      ids.aiOutput.textContent = 'Generating AI support...';
+      ids.aiOutput.textContent = "Generating AI support...";
       try {
-        const aiText = await callAI(buildSectionPrompt(type), 'lesson');
+        const aiText = await callAI(buildSectionPrompt(type), "lesson", type);
         ids.aiOutput.textContent = aiText;
-        if (type === 'objective') ids.objective.value = aiText;
-        if (type === 'task') ids.task.value = aiText;
-        if (type === 'assessment') ids.assessment.value = aiText;
-        if (type === 'udl') ids.udl.value = aiText;
-        if (type === 'differentiation') ids.differentiation.value = aiText;
+
+        if (type === "objective") ids.objective.value = aiText;
+        if (type === "task") ids.task.value = aiText;
+        if (type === "assessment") ids.assessment.value = aiText;
+        if (type === "udl") ids.udl.value = aiText;
+        if (type === "differentiation") ids.differentiation.value = aiText;
+
         updateSnapshot();
+        showTopPanel("aiPanel");
       } catch (error) {
-        console.error('AI section generation failed:', error);
-        ids.aiOutput.textContent = 'Sorry, the AI assistant could not be reached.';
+        console.error("AI section generation failed:", error);
+        ids.aiOutput.textContent = "Sorry, the AI assistant could not be reached.";
       }
+    }
+
+    function showTopPanel(panelId) {
+      state.activePanel = panelId;
+      document.querySelectorAll(".drilldown-panel").forEach(panel => {
+        panel.classList.toggle("active", panel.id === panelId);
+      });
+
+      document.querySelectorAll(".overview-button").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.panel === panelId);
+      });
+    }
+
+    function bindDrilldowns() {
+      document.querySelectorAll(".overview-button").forEach((button) => {
+        button.addEventListener("click", () => {
+          showTopPanel(button.dataset.panel);
+
+          if (button.dataset.panel === "frameworkPanel") {
+            document.getElementById("frameworkSection").scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+          if (button.dataset.panel === "libraryPanel") {
+            document.getElementById("librarySection").scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+          if (button.dataset.panel === "aiPanel") {
+            document.getElementById("aiAssistantSection").scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        });
+      });
+
+      document.querySelectorAll(".drilldown-trigger").forEach((button) => {
+        button.addEventListener("click", () => {
+          const item = button.closest(".drilldown-item");
+          const isOpen = item.classList.contains("open");
+          item.classList.toggle("open", !isOpen);
+          button.querySelector("span:last-child").textContent = isOpen ? "+" : "−";
+        });
+      });
     }
 
     function bindEvents() {
-      [ids.filterGradeBand, ids.filterTopic, ids.filterLanguage].forEach((element) => element.addEventListener('change', applyFilters));
-      ids.filterStandard.addEventListener('input', applyFilters);
-      ids.layerAllBtn.addEventListener('click', () => setLayer('all'));
-      ids.layerCoreBtn.addEventListener('click', () => setLayer('core'));
-      ids.layerExpandedBtn.addEventListener('click', () => setLayer('expanded'));
-      document.querySelectorAll('[data-ai]').forEach((button) => button.addEventListener('click', () => handleAIGeneration(button.dataset.ai)));
-      document.getElementById('aiGenerateFromFiltersBtn').addEventListener('click', generateLessonFromFilters);
-      document.getElementById('aiGenerateVariationsBtn').addEventListener('click', generateLessonVariations);
-      document.getElementById('newLessonBtn').addEventListener('click', () => {
-        clearTemplate();
-        ids.currentModeBadge.textContent = 'Designing New Lesson';
-        ids.currentLessonBadge.textContent = 'No lesson loaded';
+      [ids.filterGradeBand, ids.filterTopic, ids.filterLanguage].forEach((element) => {
+        element.addEventListener("change", applyFilters);
       });
-      document.getElementById('clearTemplateBtn').addEventListener('click', clearTemplate);
-      ['gradeBand', 'ctPractice', 'csStandard', 'objective', 'task', 'assessment', 'udl', 'differentiation', 'materials', 'vocabulary', 'procedures', 'reflection'].forEach((id) => {
+
+      ids.filterStandard.addEventListener("input", applyFilters);
+      ids.layerAllBtn.addEventListener("click", () => setLayer("all"));
+      ids.layerCoreBtn.addEventListener("click", () => setLayer("core"));
+      ids.layerExpandedBtn.addEventListener("click", () => setLayer("expanded"));
+
+      document.querySelectorAll("[data-ai]").forEach((button) => {
+        button.addEventListener("click", () => handleAIGeneration(button.dataset.ai));
+      });
+
+      document.getElementById("aiGenerateFromFiltersBtn").addEventListener("click", generateLessonFromFilters);
+      document.getElementById("aiGenerateVariationsBtn").addEventListener("click", generateLessonVariations);
+
+      document.getElementById("newLessonBtn").addEventListener("click", () => {
+        clearTemplate();
+        ids.currentModeBadge.textContent = "Designing New Lesson";
+        ids.currentLessonBadge.textContent = "No lesson loaded";
+      });
+
+      document.getElementById("clearTemplateBtn").addEventListener("click", clearTemplate);
+
+      [
+        "gradeBand",
+        "ctPractice",
+        "csStandard",
+        "objective",
+        "task",
+        "assessment",
+        "udl",
+        "differentiation",
+        "materials",
+        "vocabulary",
+        "procedures",
+        "reflection"
+      ].forEach((id) => {
         const el = document.getElementById(id);
-        el.addEventListener('input', updateSnapshot);
-        el.addEventListener('change', updateSnapshot);
+        el.addEventListener("input", updateSnapshot);
+        el.addEventListener("change", updateSnapshot);
       });
     }
 
-    async function loadLessons() {
+    async function tryLoadLessonsFromWindow() {
+      if (Array.isArray(window.lessonsData)) return window.lessonsData;
+      if (window.lessonsData && typeof window.lessonsData === "object") return window.lessonsData;
+      if (Array.isArray(window.LESSONS_DATA)) return window.LESSONS_DATA;
+      if (window.LESSONS_DATA && typeof window.LESSONS_DATA === "object") return window.LESSONS_DATA;
+      return null;
+    }
+
+    function tryLoadLessonsFromInlineScript() {
+      const scriptTag = document.getElementById("lessonsData");
+      if (!scriptTag) return null;
       try {
-        const response = await fetch('lessons.json');
-        if (!response.ok) throw new Error('Failed to load lessons.json');
-        const json = await response.json();
-        state.allLessons = normalizeLessons(json);
+        return JSON.parse(scriptTag.textContent);
       } catch (error) {
-        console.warn('Using fallback lessons because lessons.json could not be loaded.', error);
-        state.allLessons = normalizeLessons(fallbackLessons);
+        console.warn("Inline lessonsData JSON could not be parsed.", error);
+        return null;
       }
+    }
+
+    async function tryFetchLessonFiles() {
+      const possibleFiles = ["lessons.json", "./lessons.json", "data/lessons.json", "./data/lessons.json"];
+
+      for (const path of possibleFiles) {
+        try {
+          const response = await fetch(path);
+          if (response.ok) {
+            const data = await response.json();
+            return { data, source: path };
+          }
+        } catch (error) {
+          // keep trying
+        }
+      }
+
+      return null;
+    }
+
+    async function loadLessons() {
+      let rawLessons = null;
+      let source = "fallback";
+
+      try {
+        rawLessons = await tryLoadLessonsFromWindow();
+        if (rawLessons) {
+          source = "window.lessonsData";
+        }
+
+        if (!rawLessons) {
+          rawLessons = tryLoadLessonsFromInlineScript();
+          if (rawLessons) {
+            source = "inline JSON";
+          }
+        }
+
+        if (!rawLessons) {
+          const fetched = await tryFetchLessonFiles();
+          if (fetched) {
+            rawLessons = fetched.data;
+            source = fetched.source;
+          }
+        }
+
+        if (!rawLessons) {
+          rawLessons = fallbackLessons;
+          source = "fallback lessons";
+        }
+
+        state.allLessons = normalizeLessons(rawLessons);
+
+        if (!state.allLessons.length) {
+          state.allLessons = normalizeLessons(fallbackLessons);
+          source = "fallback lessons";
+        }
+
+        ids.loadStatus.textContent = `Lesson source: ${source}. Loaded ${state.allLessons.length} lesson(s).`;
+
+        if (state.allLessons.length < 100) {
+          ids.loadStatus.textContent += " If you expected 100 lessons, check your lessons.json structure or load it as window.lessonsData.";
+        }
+      } catch (error) {
+        console.warn("Lesson loading failed. Using fallback lessons.", error);
+        state.allLessons = normalizeLessons(fallbackLessons);
+        ids.loadStatus.textContent = `Lesson source: fallback lessons. Loaded ${state.allLessons.length} lesson(s).`;
+      }
+
       populateFilterOptions();
       applyFilters();
       updateSnapshot();
     }
 
     bindEvents();
+    bindDrilldowns();
     loadLessons();
   </script>
 </body>
