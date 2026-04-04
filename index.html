@@ -167,45 +167,50 @@
     </main>
 
     <script>
-        function setTopic(topicName, standardCode) {
-            document.getElementById('topic').value = topicName;
-            document.getElementById('standard').value = standardCode;
-            generateLesson();
-        }
+        // 1. Automatic Date Update
+function updateLiveDate() {
+    const now = new Date();
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('current-date-display').innerText = now.toLocaleDateString('en-US', options);
+}
 
-        function generateLesson() {
-            const topic = document.getElementById('topic').value || "Core CS Concepts";
-            const grade = document.getElementById('grade').value;
-            const standard = document.getElementById('standard').value;
+// 2. Dynamic Prep Tips based on the day of the week
+function updatePrepTip() {
+    const day = new Date().getDay(); // 0 = Sunday, 5 = Friday, etc.
+    const tipContainer = document.querySelector('.bg-blue-50 p');
+    const tipTitle = document.querySelector('.bg-blue-50 h3 span');
+    
+    let tip = "";
+    
+    if (day === 5 || day === 6) { // Friday or Saturday
+        tip = "It's the weekend! Focus on <strong>DOK-3 assessment questions</strong> for Monday to encourage critical thinking without a heavy lecture.";
+    } else if (day === 0) { // Sunday
+        tip = "Preparing for the week? Ensure your <strong>Slide Decks</strong> include a 'Real-World Connection' slide to meet CSTA 2026 Impact standards.";
+    } else if (day === 1) { // Monday
+        tip = "Happy Monday! Use a <strong>3-minute 'Bell Ringer'</strong> to gauge what students remember about AI Ethics from last week.";
+    } else { // Mid-week (Tue-Thu)
+        tip = "Mid-week check: Are students <strong>collaborating</strong>? Standard 3A-AP-13 encourages peer-programming for complex logic.";
+    }
+    
+    tipContainer.innerHTML = tip;
+}
 
-            // UI Transitions
-            document.getElementById('empty-state').classList.add('hidden');
-            document.getElementById('lesson-content').classList.remove('hidden');
+// Run these on page load
+window.onload = function() {
+    updateLiveDate();
+    updatePrepTip();
+};
 
-            // Populate Headers
-            document.getElementById('out-title').innerText = topic;
-            document.getElementById('out-grade').innerText = `Level: ${grade}`;
-            document.getElementById('out-standard').innerText = standard;
+// Existing Logic for Lesson Generation
+function setTopic(topicName, standardCode) {
+    document.getElementById('topic').value = topicName;
+    document.getElementById('standard').value = standardCode;
+    generateLesson();
+}
 
-            // Logical Content Generation
-            document.getElementById('out-objectives').innerHTML = `
-                <li>Identify how <strong>${topic}</strong> interacts with standard human-centric systems.</li>
-                <li>Evaluate the fairness and reliability of ${topic} outputs in diverse environments (Standard ${standard}).</li>
-                <li>Propose a technical modification to improve accessibility for this concept.</li>
-            `;
-
-            document.getElementById('out-ethics').innerText = `As of April 2026, the focus has shifted from "can we build it?" to "should we build it?". Discuss the potential for data redlining or exclusion when implementing ${topic}.`;
-
-            document.getElementById('out-instruction').innerText = `Review the basic vocabulary of ${topic}. Compare traditional deterministic systems with modern probabilistic systems (AI). Explain that Standard ${standard} requires us to verify the 'source of truth' for all system inputs.`;
-
-            document.getElementById('out-activity').innerHTML = `
-                <strong>The "Red Team" Challenge:</strong> Students will attempt to find a edge-case where ${topic} fails or becomes biased. 
-                <br><br>
-                <strong>Deliverable:</strong> A "Failure Mode" report suggesting a fix for better inclusion.
-            `;
-
-            document.getElementById('out-assessment').innerText = `Exit Ticket: "If you were the Lead Designer of ${topic}, how would you ensure that a user from a different cultural background would still find your tool intuitive and safe?"`;
-        }
+function generateLesson() {
+    // ... (Your existing generateLesson code goes here) ...
+}
     </script>
 </body>
 </html>
