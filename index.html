@@ -9,6 +9,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
         .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); }
+        .trending-btn { @apply text-[10px] bg-slate-50 border border-slate-200 px-2 py-1 rounded-md hover:bg-blue-50 hover:border-blue-200 transition-all text-slate-600 font-medium; }
         @media print { .no-print { display: none; } }
     </style>
 </head>
@@ -26,8 +27,8 @@
                 <span class="font-bold text-xl tracking-tight text-slate-800">CS Teaching Toolkit</span>
             </div>
             <div class="text-xs font-medium text-slate-500 text-right">
-                <div>Friday, April 3, 2026</div>
-                <div class="uppercase">CSTA 2026 Standards Compliant</div>
+                <div id="current-date-display">Friday, April 3, 2026</div>
+                <div class="uppercase tracking-widest text-[10px] text-blue-500 font-bold">CSTA 2026 Standards Live</div>
             </div>
         </div>
     </nav>
@@ -37,13 +38,24 @@
         <!-- Sidebar: Configuration -->
         <aside class="lg:col-span-4 space-y-6 no-print">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">Lesson Configuration</h2>
+                <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Lesson Configuration</h2>
                 
                 <div class="space-y-4">
                     <div>
                         <label class="block text-sm font-semibold mb-1">Topic / Concept</label>
                         <input type="text" id="topic" placeholder="e.g., Generative AI Ethics" 
                             class="w-full px-4 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                    </div>
+
+                    <!-- Topic Discovery Suggestions -->
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <h4 class="text-[10px] font-bold text-slate-400 uppercase mb-2">Monday Morning Suggestions</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="setTopic('Large Language Model Bias', '3A-IC-24')" class="trending-btn">LLM Bias</button>
+                            <button onclick="setTopic('Prompt Engineering Logic', '3A-DA-11')" class="trending-btn">Prompt Logic</button>
+                            <button onclick="setTopic('Inclusive Tech Design', '1B-IC-18')" class="trending-btn">Inclusive Design</button>
+                            <button onclick="setTopic('Cybersecurity Ethics', '2-DA-08')" class="trending-btn">Cyber Ethics</button>
+                        </div>
                     </div>
 
                     <div>
@@ -60,10 +72,6 @@
                     <div>
                         <label class="block text-sm font-semibold mb-1">CSTA 2026 Primary Standard</label>
                         <select id="standard" class="w-full px-4 py-2 rounded-xl border border-slate-200 outline-none text-sm">
-                            <optgroup label="Algorithms & Programming (AP)">
-                                <option value="2-AP-10">2-AP-10: Use Flowcharts for Logic</option>
-                                <option value="3A-AP-13">3A-AP-13: Abstract Data via Classes</option>
-                            </optgroup>
                             <optgroup label="Data & AI (DA)">
                                 <option value="3A-DA-11" selected>3A-DA-11: Evaluate AI Models & Data Sets</option>
                                 <option value="2-DA-08">2-DA-08: Data Privacy in IoT</option>
@@ -72,13 +80,17 @@
                                 <option value="3A-IC-24">3A-IC-24: Identify Algorithmic Bias</option>
                                 <option value="1B-IC-18">1B-IC-18: Inclusive Tech Design</option>
                             </optgroup>
+                            <optgroup label="Algorithms & Programming (AP)">
+                                <option value="2-AP-10">2-AP-10: Use Flowcharts for Logic</option>
+                                <option value="3A-AP-13">3A-AP-13: Abstract Data via Classes</option>
+                            </optgroup>
                         </select>
                     </div>
 
                     <div class="pt-4">
                         <button onclick="generateLesson()" 
                             class="w-full bg-slate-900 text-white font-bold py-3 rounded-xl hover:bg-blue-600 transform active:scale-95 transition-all shadow-lg shadow-slate-200">
-                            Generate AI Lesson Plan
+                            Generate Lesson Plan
                         </button>
                     </div>
                 </div>
@@ -86,10 +98,10 @@
 
             <div class="bg-blue-50 border border-blue-100 p-5 rounded-2xl">
                 <h3 class="flex items-center text-blue-800 font-bold mb-2">
-                    <span class="mr-2">💡</span> 2026 Teaching Tip
+                    <span class="mr-2">💡</span> Prep Tip
                 </h3>
-                <p class="text-sm text-blue-700 leading-relaxed">
-                    The 2026 standards prioritize <strong>Inclusive Computing</strong>. Ensure your "Activity" section includes options for screen-reader compatibility and culturally responsive examples.
+                <p class="text-xs text-blue-700 leading-relaxed">
+                    It's Friday night! Focus on <strong>DOK-3 assessment questions</strong> for Monday to encourage critical thinking about AI bias without requiring a heavy lecture.
                 </p>
             </div>
         </aside>
@@ -101,8 +113,8 @@
                 <!-- Initial State -->
                 <div id="empty-state" class="text-center py-20">
                     <div class="bg-slate-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl">📝</div>
-                    <h3 class="text-xl font-bold text-slate-800">Your Toolkit is Ready</h3>
-                    <p class="text-slate-500 max-w-xs mx-auto mt-2">Enter a topic on the left to generate a CSTA-aligned lesson plan for April 2026.</p>
+                    <h3 class="text-xl font-bold text-slate-800">Ready for Monday?</h3>
+                    <p class="text-slate-500 max-w-xs mx-auto mt-2 text-sm">Select a trending topic or type your own to generate a compliant CSTA 2026 lesson plan.</p>
                 </div>
 
                 <!-- Content Holder -->
@@ -125,28 +137,28 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                         <div>
                             <h3 class="text-sm font-bold text-blue-600 uppercase tracking-widest mb-2">Learning Objectives</h3>
-                            <ul id="out-objectives" class="list-disc ml-5 space-y-2 text-slate-700 leading-relaxed"></ul>
+                            <ul id="out-objectives" class="list-disc ml-5 space-y-2 text-slate-700 leading-relaxed text-sm"></ul>
                         </div>
                         <div class="bg-amber-50 p-4 rounded-xl border border-amber-100">
                             <h3 class="text-sm font-bold text-amber-800 uppercase tracking-widest mb-2 flex items-center">
-                                <span class="mr-2">⚖️</span> 2026 Bias & Ethics Note
+                                <span class="mr-2">⚖️</span> 2026 Ethics Pillar
                             </h3>
-                            <p id="out-ethics" class="text-sm text-amber-900 italic"></p>
+                            <p id="out-ethics" class="text-xs text-amber-900 italic leading-relaxed"></p>
                         </div>
                     </div>
 
                     <div class="space-y-6">
                         <section>
                             <h3 class="text-sm font-bold text-slate-900 border-l-4 border-blue-500 pl-3 mb-3">Direct Instruction (15 min)</h3>
-                            <p id="out-instruction" class="text-slate-700"></p>
+                            <p id="out-instruction" class="text-slate-700 text-sm"></p>
                         </section>
                         <section>
                             <h3 class="text-sm font-bold text-slate-900 border-l-4 border-green-500 pl-3 mb-3">Hands-On Activity (30 min)</h3>
-                            <div id="out-activity" class="bg-slate-50 p-4 rounded-xl text-slate-700"></div>
+                            <div id="out-activity" class="bg-slate-50 p-4 rounded-xl text-slate-700 text-sm"></div>
                         </section>
                         <section>
-                            <h3 class="text-sm font-bold text-slate-900 border-l-4 border-purple-500 pl-3 mb-3">DOK-3 Assessment Task</h3>
-                            <p id="out-assessment" class="text-slate-700"></p>
+                            <h3 class="text-sm font-bold text-slate-900 border-l-4 border-purple-500 pl-3 mb-3">Monday Check-In (Assessment)</h3>
+                            <p id="out-assessment" class="text-slate-700 text-sm"></p>
                         </section>
                     </div>
                 </div>
@@ -155,8 +167,14 @@
     </main>
 
     <script>
+        function setTopic(topicName, standardCode) {
+            document.getElementById('topic').value = topicName;
+            document.getElementById('standard').value = standardCode;
+            generateLesson();
+        }
+
         function generateLesson() {
-            const topic = document.getElementById('topic').value || "Introduction to CS";
+            const topic = document.getElementById('topic').value || "Core CS Concepts";
             const grade = document.getElementById('grade').value;
             const standard = document.getElementById('standard').value;
 
@@ -164,28 +182,29 @@
             document.getElementById('empty-state').classList.add('hidden');
             document.getElementById('lesson-content').classList.remove('hidden');
 
-            // Populate Content
+            // Populate Headers
             document.getElementById('out-title').innerText = topic;
-            document.getElementById('out-grade').innerText = `Grade: ${grade}`;
-            document.getElementById('out-standard').innerText = `Standard: ${standard}`;
+            document.getElementById('out-grade').innerText = `Level: ${grade}`;
+            document.getElementById('out-standard').innerText = standard;
 
-            // Logical Content Generation (Simulating AI Logic)
+            // Logical Content Generation
             document.getElementById('out-objectives').innerHTML = `
-                <li>Students will define ${topic} in the context of CSTA 2026 frameworks.</li>
-                <li>Students will demonstrate proficiency in ${standard} via peer-review.</li>
-                <li>Analyze the socioeconomic impact of ${topic} on marginalized communities.</li>
+                <li>Identify how <strong>${topic}</strong> interacts with standard human-centric systems.</li>
+                <li>Evaluate the fairness and reliability of ${topic} outputs in diverse environments (Standard ${standard}).</li>
+                <li>Propose a technical modification to improve accessibility for this concept.</li>
             `;
 
-            document.getElementById('out-ethics').innerText = `Ensure students analyze how the ${topic} data model might perform across different demographics. Discuss the "2026 Digital Equity Act" relevance to this concept.`;
+            document.getElementById('out-ethics').innerText = `As of April 2026, the focus has shifted from "can we build it?" to "should we build it?". Discuss the potential for data redlining or exclusion when implementing ${topic}.`;
 
-            document.getElementById('out-instruction').innerText = `Using a high-level walkthrough, explain the core logic of ${topic}. Use an "Unplugged" analogy first (e.g., sorting a deck of cards) before moving to the IDE or AI playground.`;
+            document.getElementById('out-instruction').innerText = `Review the basic vocabulary of ${topic}. Compare traditional deterministic systems with modern probabilistic systems (AI). Explain that Standard ${standard} requires us to verify the 'source of truth' for all system inputs.`;
 
             document.getElementById('out-activity').innerHTML = `
-                <strong>Task:</strong> Create a modular artifact that solves a community problem using ${topic}.<br><br>
-                <strong>Inclusion Check:</strong> Provide Alt-Text descriptions for all visual elements and ensure variable naming follows international accessibility standards.
+                <strong>The "Red Team" Challenge:</strong> Students will attempt to find a edge-case where ${topic} fails or becomes biased. 
+                <br><br>
+                <strong>Deliverable:</strong> A "Failure Mode" report suggesting a fix for better inclusion.
             `;
 
-            document.getElementById('out-assessment').innerText = `Ask students: "If you were to scale this solution for a global population, which hardware constraints or network latency issues (Standard ${standard}) would become primary blockers?"`;
+            document.getElementById('out-assessment').innerText = `Exit Ticket: "If you were the Lead Designer of ${topic}, how would you ensure that a user from a different cultural background would still find your tool intuitive and safe?"`;
         }
     </script>
 </body>
