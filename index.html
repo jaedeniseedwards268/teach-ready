@@ -173,6 +173,27 @@
     </main>
 
     <script>
+        // 'Standard Matrix' 
+const standardsMatrix = [
+    { keywords: ['data', 'privacy', 'security', 'internet'], code: '2-DA-08', grade: '6-8', desc: 'Data Privacy & IoT' },
+    { keywords: ['bias', 'fairness', 'ethics', 'ai', 'impact'], code: '3A-IC-24', grade: '9-12', desc: 'Social Impacts & Bias' },
+    { keywords: ['accessibility', 'disability', 'assistive', 'design'], code: '1B-IC-18', grade: '3-5', desc: 'Inclusive Design' },
+    { keywords: ['algorithm', 'code', 'logic', 'loop', 'step'], code: '2-AP-12', grade: '6-8', desc: 'Algorithmic Thinking' }
+];
+
+function generateLesson() {
+    const topicInput = document.getElementById('topic').value.toLowerCase();
+    
+    // INFINITE LOGIC: Find the best matching standard based on keywords
+    let matched = standardsMatrix.find(s => s.keywords.some(k => topicInput.includes(k))) 
+                 || { code: 'Gen-CS-01', grade: 'Any', desc: 'General Computing' };
+
+    // Auto-update the UI with the "discovered" standard
+    document.getElementById('out-standard').innerText = `Standard: CSTA ${matched.code} (${matched.desc})`;
+    document.getElementById('out-grade').innerText = `Recommended Grade: ${matched.grade}`;
+    
+    // ... proceed with the rest of the generation ...
+}
         // Initialize App State
         function initApp() {
             // Set dynamic tip for Friday Night
