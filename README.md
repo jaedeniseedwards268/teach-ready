@@ -37,3 +37,50 @@
 ## Troubleshooting
 - 500 errors: check environment variables in Vercel dashboard.
 - 502 from AI: inspect server logs for provider error details.
+# CS Teaching Toolkit
+
+## Lesson Design Template
+**Topic:** Inclusive Functions & Data Validation
+**Date:** Monday, April 6, 2026
+**CSTA Standard:** 3A-IC-24 (Inclusive Design)
+
+### 🎯 Visual Anchors
+*   📥 **Input:** Gathering user data (e.g., `name = input()`)
+*   ⚙️ **Process:** The "Logic Gate" (e.g., `if len(name) < 2:`)
+*   📤 **Output:** The result or feedback (e.g., `print("Welcome!")`)
+
+### 🗣️ Direct Instruction (The Script)
+> [!important]
+> **The Hook:** "In some cultures, names are only two letters long. If our code says names must be 3+ letters, who are we accidentally locking out?"
+
+1.  **Model the Bias:** Show how a simple "length check" can be exclusionary.
+2.  **The Fix:** Show how to adjust the **Process (⚙️)** to be more flexible.
+
+---
+
+## 💻 Student Workspace: Python Lab
+*Instructions: Copy the code below into your editor. Your goal is to make the validation logic more inclusive.*
+
+```python
+def validate_user_registration(name):
+    """
+    📥 INPUT: Takes a string 'name'
+    ⚙️ PROCESS: Checks if the name is valid for our system
+    📤 OUTPUT: Returns a welcome message or an error
+    """
+    
+    # CURRENT LOGIC (Potentially Biased)
+    if len(name) < 3:
+        return "❌ Error: Name is too short. Please use 3+ characters."
+    
+    # TODO: Monday Morning Challenge 
+    # Rewrite the logic above to allow 2-letter names (like 'Jo' or 'Li')
+    # while still preventing empty inputs.
+    
+    else:
+        return f"✅ Welcome to the system, {name}!"
+
+# --- Test Area ---
+user_name = "Jo" 
+print(validate_user_registration(user_name))
+
