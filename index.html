@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CS Teaching Toolkit | CSTA 2026 Edition</title>
+    <title>CS Teaching Toolkit | CSTA 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
@@ -15,19 +15,14 @@
 </head>
 <body class="bg-slate-50 text-slate-900 min-h-screen">
 
-    <!-- Header / Context Bar -->
     <nav class="glass border-b border-slate-200 sticky top-0 z-10 no-print">
         <div class="max-w-6xl mx-auto px-6 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-2">
-                <div class="bg-blue-600 text-white p-1.5 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                    </svg>
-                </div>
+                <div class="bg-blue-600 text-white p-1.5 rounded-lg">💡</div>
                 <span class="font-bold text-xl tracking-tight text-slate-800">CS Teaching Toolkit</span>
             </div>
             <div class="text-xs font-medium text-slate-500 text-right">
-                <div id="current-date-display">Friday, April 3, 2026</div>
+                <div id="current-date-display">...</div>
                 <div class="uppercase tracking-widest text-[10px] text-blue-500 font-bold">CSTA 2026 Standards Live</div>
             </div>
         </div>
@@ -35,7 +30,6 @@
 
     <main class="max-w-6xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
         
-        <!-- Sidebar: Configuration -->
         <aside class="lg:col-span-4 space-y-6 no-print">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Lesson Configuration</h2>
@@ -47,14 +41,14 @@
                             class="w-full px-4 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none transition-all">
                     </div>
 
-                    <!-- Topic Discovery Suggestions -->
                     <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                        <h4 class="text-[10px] font-bold text-slate-400 uppercase mb-2">Monday Morning Suggestions</h4>
+                        <h4 class="text-[10px] font-bold text-slate-400 uppercase mb-2">Monday Morning Quick-Select</h4>
                         <div class="flex flex-wrap gap-2">
-                            <button onclick="setTopic('Large Language Model Bias', '3A-IC-24')" class="trending-btn">LLM Bias</button>
-                            <button onclick="setTopic('Prompt Engineering Logic', '3A-DA-11')" class="trending-btn">Prompt Logic</button>
-                            <button onclick="setTopic('Inclusive Tech Design', '1B-IC-18')" class="trending-btn">Inclusive Design</button>
-                            <button onclick="setTopic('Cybersecurity Ethics', '2-DA-08')" class="trending-btn">Cyber Ethics</button>
+                            <!-- Topic, Standard, Grade -->
+                            <button onclick="setQuickTopic('Large Language Model Bias', '3A-IC-24', '9-10')" class="trending-btn">LLM Bias (HS)</button>
+                            <button onclick="setQuickTopic('Prompt Engineering Logic', '3A-DA-11', '6-8')" class="trending-btn">Prompt Logic (MS)</button>
+                            <button onclick="setQuickTopic('Inclusive Tech Design', '1B-IC-18', '3-5')" class="trending-btn">Inclusive Design (ES)</button>
+                            <button onclick="setQuickTopic('Cybersecurity Ethics', '2-DA-08', '6-8')" class="trending-btn">Cyber Ethics (MS)</button>
                         </div>
                     </div>
 
@@ -80,85 +74,65 @@
                                 <option value="3A-IC-24">3A-IC-24: Identify Algorithmic Bias</option>
                                 <option value="1B-IC-18">1B-IC-18: Inclusive Tech Design</option>
                             </optgroup>
-                            <optgroup label="Algorithms & Programming (AP)">
-                                <option value="2-AP-10">2-AP-10: Use Flowcharts for Logic</option>
-                                <option value="3A-AP-13">3A-AP-13: Abstract Data via Classes</option>
-                            </optgroup>
                         </select>
                     </div>
 
                     <div class="pt-4">
                         <button onclick="generateLesson()" 
-                            class="w-full bg-slate-900 text-white font-bold py-3 rounded-xl hover:bg-blue-600 transform active:scale-95 transition-all shadow-lg shadow-slate-200">
+                            class="w-full bg-slate-900 text-white font-bold py-3 rounded-xl hover:bg-blue-600 transition-all shadow-lg">
                             Generate Lesson Plan
                         </button>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-blue-50 border border-blue-100 p-5 rounded-2xl">
+            <div id="prep-tip-card" class="bg-blue-50 border border-blue-100 p-5 rounded-2xl">
                 <h3 class="flex items-center text-blue-800 font-bold mb-2">
                     <span class="mr-2">💡</span> Prep Tip
                 </h3>
-                <p class="text-xs text-blue-700 leading-relaxed">
-                    It's Friday night! Focus on <strong>DOK-3 assessment questions</strong> for Monday to encourage critical thinking about AI bias without requiring a heavy lecture.
-                </p>
+                <p id="dynamic-tip" class="text-xs text-blue-700 leading-relaxed"></p>
             </div>
         </aside>
 
-        <!-- Main Display: Generated Content -->
         <section id="plan-container" class="lg:col-span-8">
-            <div id="output-canvas" class="bg-white min-h-[600px] rounded-2xl shadow-sm border border-slate-200 p-8 lg:p-12 relative">
+            <div id="output-canvas" class="bg-white min-h-[600px] rounded-2xl shadow-sm border border-slate-200 p-8 lg:p-12">
                 
-                <!-- Initial State -->
                 <div id="empty-state" class="text-center py-20">
                     <div class="bg-slate-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl">📝</div>
                     <h3 class="text-xl font-bold text-slate-800">Ready for Monday?</h3>
-                    <p class="text-slate-500 max-w-xs mx-auto mt-2 text-sm">Select a trending topic or type your own to generate a compliant CSTA 2026 lesson plan.</p>
+                    <p class="text-slate-500 max-w-xs mx-auto mt-2 text-sm">Select a quick-select topic or enter your own above.</p>
                 </div>
 
-                <!-- Content Holder -->
                 <div id="lesson-content" class="hidden">
                     <div class="flex justify-between items-start mb-8 border-b pb-6">
                         <div>
-                            <h1 id="out-title" class="text-3xl font-extrabold text-slate-900 mb-2 underline decoration-blue-500 decoration-4 underline-offset-8"></h1>
+                            <h1 id="out-title" class="text-3xl font-extrabold text-slate-900 mb-2"></h1>
                             <div class="flex space-x-3 text-sm">
                                 <span id="out-grade" class="bg-slate-100 px-3 py-1 rounded-full font-bold"></span>
                                 <span id="out-standard" class="bg-blue-50 text-blue-700 px-3 py-1 rounded-full font-bold"></span>
                             </div>
                         </div>
-                        <button onclick="window.print()" class="no-print bg-slate-100 hover:bg-slate-200 p-2 rounded-lg transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                            </svg>
-                        </button>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                         <div>
-                            <h3 class="text-sm font-bold text-blue-600 uppercase tracking-widest mb-2">Learning Objectives</h3>
-                            <ul id="out-objectives" class="list-disc ml-5 space-y-2 text-slate-700 leading-relaxed text-sm"></ul>
+                            <h3 class="text-sm font-bold text-blue-600 uppercase mb-2">Learning Objectives</h3>
+                            <ul id="out-objectives" class="list-disc ml-5 space-y-2 text-slate-700 text-sm"></ul>
                         </div>
                         <div class="bg-amber-50 p-4 rounded-xl border border-amber-100">
-                            <h3 class="text-sm font-bold text-amber-800 uppercase tracking-widest mb-2 flex items-center">
-                                <span class="mr-2">⚖️</span> 2026 Ethics Pillar
-                            </h3>
-                            <p id="out-ethics" class="text-xs text-amber-900 italic leading-relaxed"></p>
+                            <h3 class="text-sm font-bold text-amber-800 uppercase mb-2">⚖️ 2026 Ethics Pillar</h3>
+                            <p id="out-ethics" class="text-xs text-amber-900 italic"></p>
                         </div>
                     </div>
 
                     <div class="space-y-6">
                         <section>
-                            <h3 class="text-sm font-bold text-slate-900 border-l-4 border-blue-500 pl-3 mb-3">Direct Instruction (15 min)</h3>
+                            <h3 class="text-sm font-bold text-slate-900 border-l-4 border-blue-500 pl-3 mb-3">Direct Instruction</h3>
                             <p id="out-instruction" class="text-slate-700 text-sm"></p>
                         </section>
                         <section>
-                            <h3 class="text-sm font-bold text-slate-900 border-l-4 border-green-500 pl-3 mb-3">Hands-On Activity (30 min)</h3>
+                            <h3 class="text-sm font-bold text-slate-900 border-l-4 border-green-500 pl-3 mb-3">Activity</h3>
                             <div id="out-activity" class="bg-slate-50 p-4 rounded-xl text-slate-700 text-sm"></div>
-                        </section>
-                        <section>
-                            <h3 class="text-sm font-bold text-slate-900 border-l-4 border-purple-500 pl-3 mb-3">Monday Check-In (Assessment)</h3>
-                            <p id="out-assessment" class="text-slate-700 text-sm"></p>
                         </section>
                     </div>
                 </div>
@@ -167,50 +141,62 @@
     </main>
 
     <script>
-        // 1. Automatic Date Update
-function updateLiveDate() {
-    const now = new Date();
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    document.getElementById('current-date-display').innerText = now.toLocaleDateString('en-US', options);
-}
+        // 1. Live Date & Dynamic Tips
+        function initApp() {
+            // Update Date
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('current-date-display').innerText = now.toLocaleDateString('en-US', options);
 
-// 2. Dynamic Prep Tips based on the day of the week
-function updatePrepTip() {
-    const day = new Date().getDay(); // 0 = Sunday, 5 = Friday, etc.
-    const tipContainer = document.querySelector('.bg-blue-50 p');
-    const tipTitle = document.querySelector('.bg-blue-50 h3 span');
-    
-    let tip = "";
-    
-    if (day === 5 || day === 6) { // Friday or Saturday
-        tip = "It's the weekend! Focus on <strong>DOK-3 assessment questions</strong> for Monday to encourage critical thinking without a heavy lecture.";
-    } else if (day === 0) { // Sunday
-        tip = "Preparing for the week? Ensure your <strong>Slide Decks</strong> include a 'Real-World Connection' slide to meet CSTA 2026 Impact standards.";
-    } else if (day === 1) { // Monday
-        tip = "Happy Monday! Use a <strong>3-minute 'Bell Ringer'</strong> to gauge what students remember about AI Ethics from last week.";
-    } else { // Mid-week (Tue-Thu)
-        tip = "Mid-week check: Are students <strong>collaborating</strong>? Standard 3A-AP-13 encourages peer-programming for complex logic.";
-    }
-    
-    tipContainer.innerHTML = tip;
-}
+            // Update Prep Tip based on day of week
+            const day = now.getDay(); 
+            const tipEl = document.getElementById('dynamic-tip');
+            if (day === 5 || day === 6) {
+                tipEl.innerHTML = "It's Friday night! Stick to <strong>Unplugged Activities</strong> for Monday to ease back into the week without tech troubleshooting.";
+            } else if (day === 0) {
+                tipEl.innerHTML = "Sunday prep: Check your <strong>AI Sandbox links</strong>. Standard 3A-DA-11 requires students to test live models.";
+            } else {
+                tipEl.innerHTML = "Mid-week tip: Use <strong>Peer Code Reviews</strong> to hit CSTA Collaboration standards.";
+            }
+        }
 
-// Run these on page load
-window.onload = function() {
-    updateLiveDate();
-    updatePrepTip();
-};
+        // 2. Automated Selection for Quick Suggestions
+        function setQuickTopic(topic, standard, grade) {
+            document.getElementById('topic').value = topic;
+            document.getElementById('standard').value = standard;
+            document.getElementById('grade').value = grade;
+            
+            // Trigger the generation automatically
+            generateLesson();
+        }
 
-// Existing Logic for Lesson Generation
-function setTopic(topicName, standardCode) {
-    document.getElementById('topic').value = topicName;
-    document.getElementById('standard').value = standardCode;
-    generateLesson();
-}
+        // 3. The Generation Engine
+        function generateLesson() {
+            const topic = document.getElementById('topic').value || "Computer Science Discovery";
+            const grade = document.getElementById('grade').value;
+            const standard = document.getElementById('standard').value;
 
-function generateLesson() {
-    // ... (Your existing generateLesson code goes here) ...
-}
+            document.getElementById('empty-state').classList.add('hidden');
+            document.getElementById('lesson-content').classList.remove('hidden');
+
+            document.getElementById('out-title').innerText = topic;
+            document.getElementById('out-grade').innerText = `Grade: ${grade}`;
+            document.getElementById('out-standard').innerText = `Standard: ${standard}`;
+
+            document.getElementById('out-objectives').innerHTML = `
+                <li>Understand the role of <strong>${topic}</strong> in modern society.</li>
+                <li>Analyze potential biases within systems using ${topic}.</li>
+                <li>Design a solution that adheres to CSTA Standard ${standard}.</li>
+            `;
+
+            document.getElementById('out-ethics').innerText = `Critical Thinking Question: If ${topic} is trained on biased data, who is legally responsible for the output in 2026?`;
+
+            document.getElementById('out-instruction').innerText = `Start with a 'Think-Pair-Share' regarding ${topic}. Explain how this relates to ${standard} by showing a 5-minute case study of ${topic} in a real-world application.`;
+
+            document.getElementById('out-activity').innerHTML = `<strong>Collaborative Design:</strong> In groups of 3, students will sketch a prototype of an app that uses ${topic} but includes a 'Safety Valve' for user privacy.`;
+        }
+
+        window.onload = initApp;
     </script>
 </body>
 </html>
