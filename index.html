@@ -3,33 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CS Teaching Toolkit | CSTA 2026</title>
+    <title>CS Teaching Toolkit | Inclusive 2026 Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
         .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); }
         .trending-btn { @apply text-[10px] bg-slate-50 border border-slate-200 px-2 py-1 rounded-md hover:bg-blue-50 hover:border-blue-200 transition-all text-slate-600 font-medium; }
-        @media print { .no-print { display: none; } }
+        @media print { 
+            .no-print { display: none !important; } 
+            body { background: white; }
+            .section-card { border: 1px solid #e2e8f0; break-inside: avoid; }
+        }
+        .section-card { @apply bg-white p-5 rounded-2xl border border-slate-200 shadow-sm mb-4; }
+        .inclusion-tag { @apply text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-tighter mr-2; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900 min-h-screen">
+<body class="bg-slate-50 text-slate-900 min-h-screen pb-20">
 
+    <!-- Navigation -->
     <nav class="glass border-b border-slate-200 sticky top-0 z-10 no-print">
         <div class="max-w-6xl mx-auto px-6 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-2">
-                <div class="bg-blue-600 text-white p-1.5 rounded-lg">💡</div>
-                <span class="font-bold text-xl tracking-tight text-slate-800">CS Teaching Toolkit</span>
+                <div class="bg-blue-600 text-white p-1.5 rounded-lg font-bold">🛡️</div>
+                <span class="font-bold text-xl text-slate-800 tracking-tight">CS Teaching Toolkit</span>
             </div>
             <div class="text-xs font-medium text-slate-500 text-right">
-                <div id="current-date-display">...</div>
-                <div class="uppercase tracking-widest text-[10px] text-blue-500 font-bold">CSTA 2026 Standards Live</div>
+                <div id="current-date-display">Friday, April 3, 2026</div>
+                <div class="uppercase tracking-widest text-[10px] text-blue-500 font-bold italic">Inclusive Design Mode Active</div>
             </div>
         </div>
     </nav>
 
     <main class="max-w-6xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
         
+        <!-- Sidebar: Input Controls (Hidden during Print) -->
         <aside class="lg:col-span-4 space-y-6 no-print">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Lesson Configuration</h2>
@@ -37,18 +45,17 @@
                 <div class="space-y-4">
                     <div>
                         <label class="block text-sm font-semibold mb-1">Topic / Concept</label>
-                        <input type="text" id="topic" placeholder="e.g., Generative AI Ethics" 
+                        <input type="text" id="topic" placeholder="e.g., Algorithmic Bias" 
                             class="w-full px-4 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none transition-all">
                     </div>
 
                     <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
                         <h4 class="text-[10px] font-bold text-slate-400 uppercase mb-2">Monday Morning Quick-Select</h4>
                         <div class="flex flex-wrap gap-2">
-                            <!-- Topic, Standard, Grade -->
-                            <button onclick="setQuickTopic('Large Language Model Bias', '3A-IC-24', '9-10')" class="trending-btn">LLM Bias (HS)</button>
-                            <button onclick="setQuickTopic('Prompt Engineering Logic', '3A-DA-11', '6-8')" class="trending-btn">Prompt Logic (MS)</button>
-                            <button onclick="setQuickTopic('Inclusive Tech Design', '1B-IC-18', '3-5')" class="trending-btn">Inclusive Design (ES)</button>
-                            <button onclick="setQuickTopic('Cybersecurity Ethics', '2-DA-08', '6-8')" class="trending-btn">Cyber Ethics (MS)</button>
+                            <button onclick="setQuickTopic('Assistive AI Tech', '1B-IC-18', '3-5')" class="trending-btn">Accessibility (ES)</button>
+                            <button onclick="setQuickTopic('Data Privacy & Ethics', '2-DA-08', '6-8')" class="trending-btn">Privacy (MS)</button>
+                            <button onclick="setQuickTopic('Neural Network Bias', '3A-IC-24', '9-12')" class="trending-btn">AI Bias (HS)</button>
+                            <button onclick="setQuickTopic('Prompt Logic', '3A-DA-11', '6-8')" class="trending-btn">Prompting (MS)</button>
                         </div>
                     </div>
 
@@ -58,82 +65,107 @@
                             <option value="K-2">Lower Elementary (K-2)</option>
                             <option value="3-5">Upper Elementary (3-5)</option>
                             <option value="6-8" selected>Middle School (6-8)</option>
-                            <option value="9-10">High School Intro (9-10)</option>
-                            <option value="11-12">High School Advanced (11-12)</option>
+                            <option value="9-12">High School (9-12)</option>
                         </select>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold mb-1">CSTA 2026 Primary Standard</label>
+                        <label class="block text-sm font-semibold mb-1">CSTA 2026 Standard</label>
                         <select id="standard" class="w-full px-4 py-2 rounded-xl border border-slate-200 outline-none text-sm">
-                            <optgroup label="Data & AI (DA)">
-                                <option value="3A-DA-11" selected>3A-DA-11: Evaluate AI Models & Data Sets</option>
-                                <option value="2-DA-08">2-DA-08: Data Privacy in IoT</option>
-                            </optgroup>
-                            <optgroup label="Impacts of Computing (IC)">
-                                <option value="3A-IC-24">3A-IC-24: Identify Algorithmic Bias</option>
-                                <option value="1B-IC-18">1B-IC-18: Inclusive Tech Design</option>
-                            </optgroup>
+                            <option value="3A-IC-24">3A-IC-24: Identify Algorithmic Bias</option>
+                            <option value="1B-IC-18">1B-IC-18: Inclusive Tech Design</option>
+                            <option value="2-DA-08">2-DA-08: Data Privacy in IoT</option>
+                            <option value="3A-DA-11">3A-DA-11: Evaluate AI Models</option>
                         </select>
                     </div>
 
-                    <div class="pt-4">
-                        <button onclick="generateLesson()" 
-                            class="w-full bg-slate-900 text-white font-bold py-3 rounded-xl hover:bg-blue-600 transition-all shadow-lg">
-                            Generate Lesson Plan
-                        </button>
-                    </div>
+                    <button onclick="generateLesson()" 
+                        class="w-full bg-slate-900 text-white font-bold py-3 rounded-xl hover:bg-blue-600 transition-all shadow-lg mt-4">
+                        Generate Inclusive Plan
+                    </button>
                 </div>
             </div>
-
-            <div id="prep-tip-card" class="bg-blue-50 border border-blue-100 p-5 rounded-2xl">
-                <h3 class="flex items-center text-blue-800 font-bold mb-2">
-                    <span class="mr-2">💡</span> Prep Tip
+            
+            <div id="prep-tip-card" class="bg-indigo-50 border border-indigo-100 p-5 rounded-2xl">
+                <h3 class="flex items-center text-indigo-800 font-bold mb-2 text-sm">
+                    <span class="mr-2">💡</span> Weekend Prep Tip
                 </h3>
-                <p id="dynamic-tip" class="text-xs text-blue-700 leading-relaxed"></p>
+                <p id="dynamic-tip" class="text-xs text-indigo-700 leading-relaxed"></p>
             </div>
         </aside>
 
+        <!-- Main Content: The Lesson Plan -->
         <section id="plan-container" class="lg:col-span-8">
-            <div id="output-canvas" class="bg-white min-h-[600px] rounded-2xl shadow-sm border border-slate-200 p-8 lg:p-12">
+            <div id="output-canvas" class="min-h-[600px] relative">
                 
-                <div id="empty-state" class="text-center py-20">
-                    <div class="bg-slate-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl">📝</div>
-                    <h3 class="text-xl font-bold text-slate-800">Ready for Monday?</h3>
-                    <p class="text-slate-500 max-w-xs mx-auto mt-2 text-sm">Select a quick-select topic or enter your own above.</p>
+                <!-- Empty State -->
+                <div id="empty-state" class="text-center py-20 bg-white rounded-2xl border border-dashed border-slate-300">
+                    <div class="bg-slate-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl">✨</div>
+                    <h3 class="text-xl font-bold text-slate-800">Ready for Monday Morning?</h3>
+                    <p class="text-slate-500 max-w-xs mx-auto mt-2 text-sm">Select a quick-select topic above to generate your inclusive, UDL-aligned lesson plan instantly.</p>
                 </div>
 
-                <div id="lesson-content" class="hidden">
-                    <div class="flex justify-between items-start mb-8 border-b pb-6">
-                        <div>
-                            <h1 id="out-title" class="text-3xl font-extrabold text-slate-900 mb-2"></h1>
-                            <div class="flex space-x-3 text-sm">
-                                <span id="out-grade" class="bg-slate-100 px-3 py-1 rounded-full font-bold"></span>
-                                <span id="out-standard" class="bg-blue-50 text-blue-700 px-3 py-1 rounded-full font-bold"></span>
+                <!-- Generated Content Section -->
+                <div id="lesson-content" class="hidden space-y-4">
+                    
+                    <!-- Header -->
+                    <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm mb-6">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h1 id="out-title" class="text-4xl font-black text-slate-900 tracking-tight leading-tight"></h1>
+                                <div class="flex space-x-3 mt-4">
+                                    <span id="out-grade" class="bg-slate-100 px-3 py-1 rounded-full text-[10px] font-bold uppercase"></span>
+                                    <span id="out-standard" class="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-[10px] font-bold uppercase"></span>
+                                </div>
+                            </div>
+                            <button onclick="window.print()" class="no-print bg-slate-100 p-2 rounded-lg hover:bg-slate-200 transition-colors" title="Print Lesson Plan">
+                                🖨️
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- UDL, Accessibility & Differentiation Pillar -->
+                    <div class="bg-emerald-50 border border-emerald-100 p-6 rounded-2xl">
+                        <h3 class="text-emerald-800 font-bold text-xs uppercase tracking-widest mb-4 flex items-center">
+                            <span class="mr-2">🧩</span> Inclusion & Accessibility Strategies
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs leading-relaxed">
+                            <div class="bg-white/60 p-3 rounded-xl border border-emerald-100">
+                                <span class="inclusion-tag bg-emerald-600 text-white">Differentiation</span>
+                                <p id="out-diff" class="mt-2 text-emerald-900 font-medium"></p>
+                            </div>
+                            <div class="bg-white/60 p-3 rounded-xl border border-blue-100">
+                                <span class="inclusion-tag bg-blue-600 text-white">Accessibility</span>
+                                <p id="out-access" class="mt-2 text-blue-900 font-medium"></p>
                             </div>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                        <div>
-                            <h3 class="text-sm font-bold text-blue-600 uppercase mb-2">Learning Objectives</h3>
-                            <ul id="out-objectives" class="list-disc ml-5 space-y-2 text-slate-700 text-sm"></ul>
+                    <!-- Core Lesson Structure -->
+                    <div class="section-card">
+                        <h3 class="text-sm font-bold text-slate-900 border-l-4 border-blue-500 pl-3 mb-3 uppercase tracking-tighter">Direct Instruction</h3>
+                        <p id="out-instruction" class="text-slate-700 text-sm leading-relaxed"></p>
+                    </div>
+
+                    <div class="section-card">
+                        <h3 class="text-sm font-bold text-slate-900 border-l-4 border-green-500 pl-3 mb-3 uppercase tracking-tighter">Hands-on Activity (UDL-Aligned)</h3>
+                        <p id="out-activity" class="text-slate-700 text-sm leading-relaxed"></p>
+                    </div>
+
+                    <!-- Assessment & Reflection -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-slate-900 text-white p-6 rounded-2xl shadow-sm">
+                            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Assessment (Exit Ticket)</h3>
+                            <p id="out-assessment" class="text-sm leading-relaxed italic text-slate-200"></p>
                         </div>
-                        <div class="bg-amber-50 p-4 rounded-xl border border-amber-100">
-                            <h3 class="text-sm font-bold text-amber-800 uppercase mb-2">⚖️ 2026 Ethics Pillar</h3>
-                            <p id="out-ethics" class="text-xs text-amber-900 italic"></p>
+                        <div class="bg-amber-50 border border-amber-100 p-6 rounded-2xl shadow-sm">
+                            <h3 class="text-xs font-bold text-amber-800 uppercase tracking-widest mb-3">After-Lesson Reflection</h3>
+                            <p id="out-reflection" class="text-[10px] text-amber-800 font-medium italic leading-normal"></p>
                         </div>
                     </div>
 
-                    <div class="space-y-6">
-                        <section>
-                            <h3 class="text-sm font-bold text-slate-900 border-l-4 border-blue-500 pl-3 mb-3">Direct Instruction</h3>
-                            <p id="out-instruction" class="text-slate-700 text-sm"></p>
-                        </section>
-                        <section>
-                            <h3 class="text-sm font-bold text-slate-900 border-l-4 border-green-500 pl-3 mb-3">Activity</h3>
-                            <div id="out-activity" class="bg-slate-50 p-4 rounded-xl text-slate-700 text-sm"></div>
-                        </section>
+                    <div class="print-only hidden mt-8 text-center text-slate-400 text-[10px]">
+                        Generated by CS Teaching Toolkit | CSTA 2026 Standards Framework
                     </div>
                 </div>
             </div>
@@ -141,61 +173,55 @@
     </main>
 
     <script>
-        // 1. Live Date & Dynamic Tips
+        // Initialize App State
         function initApp() {
-            // Update Date
-            const now = new Date();
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('current-date-display').innerText = now.toLocaleDateString('en-US', options);
-
-            // Update Prep Tip based on day of week
-            const day = now.getDay(); 
+            // Set dynamic tip for Friday Night
             const tipEl = document.getElementById('dynamic-tip');
-            if (day === 5 || day === 6) {
-                tipEl.innerHTML = "It's Friday night! Stick to <strong>Unplugged Activities</strong> for Monday to ease back into the week without tech troubleshooting.";
-            } else if (day === 0) {
-                tipEl.innerHTML = "Sunday prep: Check your <strong>AI Sandbox links</strong>. Standard 3A-DA-11 requires students to test live models.";
-            } else {
-                tipEl.innerHTML = "Mid-week tip: Use <strong>Peer Code Reviews</strong> to hit CSTA Collaboration standards.";
-            }
+            tipEl.innerHTML = "It's <strong>Friday Night</strong>. This tool has automatically prioritized <strong>Low-Prep Inclusion</strong> so you don't have to source extra materials over the weekend.";
         }
 
-        // 2. Automated Selection for Quick Suggestions
+        // Automated Quick-Select Logic
         function setQuickTopic(topic, standard, grade) {
             document.getElementById('topic').value = topic;
             document.getElementById('standard').value = standard;
             document.getElementById('grade').value = grade;
             
-            // Trigger the generation automatically
+            // Run the generator immediately
             generateLesson();
         }
 
-        // 3. The Generation Engine
+        // The Lesson Generation Engine
         function generateLesson() {
-            const topic = document.getElementById('topic').value || "Computer Science Discovery";
+            const topic = document.getElementById('topic').value || "Emerging CS Concepts";
             const grade = document.getElementById('grade').value;
             const standard = document.getElementById('standard').value;
 
+            // UI Transitions
             document.getElementById('empty-state').classList.add('hidden');
             document.getElementById('lesson-content').classList.remove('hidden');
 
+            // Header Content
             document.getElementById('out-title').innerText = topic;
-            document.getElementById('out-grade').innerText = `Grade: ${grade}`;
-            document.getElementById('out-standard').innerText = `Standard: ${standard}`;
+            document.getElementById('out-grade').innerText = `Grade Level: ${grade}`;
+            document.getElementById('out-standard').innerText = `Standard: CSTA ${standard}`;
 
-            document.getElementById('out-objectives').innerHTML = `
-                <li>Understand the role of <strong>${topic}</strong> in modern society.</li>
-                <li>Analyze potential biases within systems using ${topic}.</li>
-                <li>Design a solution that adheres to CSTA Standard ${standard}.</li>
-            `;
+            // UDL & Inclusion Data
+            document.getElementById('out-diff').innerText = `Support for ELL/IEP: Use 'Scaffolded Pseudocode' blocks and visual iconography. For Advanced: Implement an extension where they analyze the 'Statistical Significance' of the ${topic} dataset.`;
+            document.getElementById('out-access').innerText = `Large Print materials ready. Activity is compatible with screen-readers. For non-verbal students, use the 'Choice Board' for the final prototype stage.`;
 
-            document.getElementById('out-ethics').innerText = `Critical Thinking Question: If ${topic} is trained on biased data, who is legally responsible for the output in 2026?`;
+            // Instructional Logic
+            document.getElementById('out-instruction').innerText = `Multi-Modal Intro: Show a 3-minute visual case study of ${topic}. Lead a classroom discussion on how Standard ${standard} ensures that computing systems are designed for ALL people, not just a majority.`;
+            document.getElementById('out-activity').innerText = `UDL Choice: Students choose one way to show understanding: 1. Draw a flow-diagram of how ${topic} works. 2. Write a 'User Story' for an accessible version of this tech. 3. Build a physical wireframe using classroom supplies.`;
 
-            document.getElementById('out-instruction').innerText = `Start with a 'Think-Pair-Share' regarding ${topic}. Explain how this relates to ${standard} by showing a 5-minute case study of ${topic} in a real-world application.`;
-
-            document.getElementById('out-activity').innerHTML = `<strong>Collaborative Design:</strong> In groups of 3, students will sketch a prototype of an app that uses ${topic} but includes a 'Safety Valve' for user privacy.`;
+            // Assessment & Reflection
+            document.getElementById('out-assessment').innerText = `"Assessment Prompt: In your own words (or a drawing), identify one way ${topic} might be unfair to a specific group of people, and suggest one 'Inclusive Design' change to fix it."`;
+            document.getElementById('out-reflection').innerText = `Reflection Note: Monitor how students utilized the 'Choice' options in the activity. Did the differentiation for Standard ${standard} allow IEP students to reach the same cognitive depth as their peers?`;
+            
+            // Scroll into view for better UX
+            document.getElementById('output-canvas').scrollIntoView({ behavior: 'smooth' });
         }
 
+        // Run on load
         window.onload = initApp;
     </script>
 </body>
