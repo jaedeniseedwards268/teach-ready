@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CS Teaching Toolkit | Inclusive 2026 Edition</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
+
+    body { font-family: 'Inter', sans-serif; }
+    .glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); }
+
+    @media print {
+      .no-print { display: none !important; }
+      body { background: white; }
+      .section-card { border: 1px solid #e2e8f0; break-inside: avoid; }
+    }
+
+    .section-card {
+      background: white;
+      padding: 1.25rem;
+      border-radius: 1rem;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      margin-bottom: 1rem;
+    }
+
+    .inclusion-tag {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 0.125rem 0.5rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: .03em;
+      margin-right: .5rem;
+    }
+
+    .trending-btn {
+      font-size: 10px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: .35rem .6rem;
+      border-radius: .5rem;
+      transition: all .2s ease;
+      color: #475569;
+      font-weight: 600;
+    }
+
+    .trending-btn:hover {
+      background: #eff6ff;
+      border-color: #bfdbfe;
+    }
+
+    .agent-chip {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      border-radius: 999px;
+      padding: .25rem .6rem;
+    }
+
+    .mini-btn {
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: .75rem;
+      padding: .55rem .8rem;
+      transition: all .2s ease;
+      border: 1px solid #e2e8f0;
+      background: white;
+    }
+
+    .mini-btn:hover {
+      background: #f8fafc;
+    }
+
+    .mini-btn-primary {
+      background: #0f172a;
+      color: white;
+      border-color: #0f172a;
+    }
+
+    .mini-btn-primary:hover {
+      background: #2563eb;
+      border-color: #2563eb;
+    }
+
+    textarea, input, select {
+      transition: all .2s ease;
+    }
+
+    textarea:focus, input:focus, select:focus {
+      outline: none;
+      ring: 2px;
+      ring-color: #3b82f6;
+      border-color: #3b82f6;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen pb-20">
+
+  <!-- Navigation -->
+  <nav class="glass border-b border-slate-200 sticky top-0 z-10 no-print">
+    <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
+      <div class="flex items-center space-x-2">
+        <div class="bg-blue-600 text-white p-1.5 rounded-lg font-bold">🛡️</div>
+        <span class="font-bold text-xl text-slate-800 tracking-tight">CS Teaching Toolkit</span>
+      </div>
+      <div class="text-xs font-medium text-slate-500 text-right">
+        <div id="current-date-display">Monday, April 6, 2026</div>
+        <div class="uppercase tracking-widest text-[10px] text-blue-500 font-bold italic">Inclusive Design Mode Active</div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+    <!-- Sidebar -->
+    <aside class="lg:col-span-4 space-y-6 no-print">
+
+      <!-- Lesson Setup -->
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+        <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Lesson Configuration</h2>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-semibold mb-1">Topic / Concept</label>
+            <input
+              type="text"
+              id="topic"
+              placeholder="e.g., Algorithmic Bias"
+              class="w-full px-4 py-2 rounded-xl border border-slate-200"
+            />
+          </div>
+
+          <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+            <h4 class="text-[10px] font-bold text-slate-400 uppercase mb-2">Quick-Select</h4>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="setQuickTopic('Assistive AI Tech', '1B-IC-18', '3-5')" class="trending-btn">Accessibility (ES)</button>
+              <button onclick="setQuickTopic('Data Privacy & Ethics', '2-DA-08', '6-8')" class="trending-btn">Privacy (MS)</button>
+              <button onclick="setQuickTopic('Neural Network Bias', '3A-IC-24', '9-12')" class="trending-btn">AI Bias (HS)</button>
+              <button onclick="setQuickTopic('Prompt Logic', '3A-DA-11', '6-8')" class="trending-btn">Prompting (MS)</button>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold mb-1">Grade Level</label>
+            <select id="grade" class="w-full px-4 py-2 rounded-xl border border-slate-200">
+              <option value="K-2">Lower Elementary (K-2)</option>
+              <option value="3-5">Upper Elementary (3-5)</option>
+              <option value="6-8" selected>Middle School (6-8)</option>
+              <option value="9-12">High School (9-12)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold mb-1">CSTA Standard</label>
+            <select id="standard" class="w-full px-4 py-2 rounded-xl border border-slate-200 text-sm">
+              <option value="3A-IC-24">3A-IC-24: Identify Algorithmic Bias</option>
+              <option value="1B-IC-18">1B-IC-18: Inclusive Tech Design</option>
+              <option value="2-DA-08">2-DA-08: Data Privacy in IoT</option>
+              <option value="3A-DA-11">3A-DA-11: Evaluate AI Models</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold mb-1">Lesson Time Frame</label>
+            <select id="timeframe" class="w-full px-4 py-2 rounded-xl border border-slate-200">
+              <option value="45 minutes">45 minutes</option>
+              <option value="60 minutes">60 minutes</option>
+              <option value="90 minutes" selected>90 minutes</option>
+              <option value="2 class periods">2 class periods</option>
+            </select>
+          </div>
+
+          <button
+            onclick="suggestDirection()"
+            class="w-full bg-slate-900 text-white font-bold py-3 rounded-xl hover:bg-blue-600 transition-all shadow-lg mt-4"
+          >
+            Suggest Lesson Direction
+          </button>
+        </div>
+      </div>
+
+      <!-- Prep Tip -->
+      <div id="prep-tip-card" class="bg-indigo-50 border border-indigo-100 p-5 rounded-2xl">
+        <h3 class="flex items-center text-indigo-800 font-bold mb-2 text-sm">
+          <span class="mr-2">💡</span> Planning Tip
+        </h3>
+        <p id="dynamic-tip" class="text-xs text-indigo-700 leading-relaxed"></p>
+      </div>
+
+      <!-- Agent Support Panel -->
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Agent Support</h2>
+          <span id="agent-status" class="agent-chip bg-blue-50 text-blue-700">Ready</span>
+        </div>
+
+        <div class="space-y-3 text-sm">
+          <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+            <div class="font-bold text-slate-700 mb-1">Current Step</div>
+            <div id="agent-step" class="text-slate-600">Select grade, standard, and topic to begin.</div>
+          </div>
+
+          <div class="p-3 rounded-xl bg-amber-50 border border-amber-100">
+            <div class="font-bold text-amber-800 mb-1">Alignment Note</div>
+            <div id="agent-alignment-note" class="text-amber-800 text-xs leading-relaxed">
+              The agent will suggest lesson direction before building the full lesson.
+            </div>
+          </div>
+
+          <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-100">
+            <div class="font-bold text-emerald-800 mb-1">Review Summary</div>
+            <div id="agent-review-summary" class="text-emerald-800 text-xs leading-relaxed">
+              No review yet.
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <section id="plan-container" class="lg:col-span-8">
+      <div id="output-canvas" class="min-h-[600px] relative">
+
+        <!-- Empty State -->
+        <div id="empty-state" class="text-center py-20 bg-white rounded-2xl border border-dashed border-slate-300">
+          <div class="bg-slate-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl">✨</div>
+          <h3 class="text-xl font-bold text-slate-800">Ready to Build a Stronger Lesson?</h3>
+          <p class="text-slate-500 max-w-md mx-auto mt-2 text-sm">
+            Start with the lesson configuration panel. The agent will suggest a direction before generating the full lesson.
+          </p>
+        </div>
+
+        <!-- Agent Direction -->
+        <div id="direction-panel" class="hidden space-y-4 mb-6">
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+              <div>
+                <h3 class="text-sm font-bold text-slate-900 uppercase tracking-widest">Agent Suggested Direction</h3>
+                <p class="text-xs text-slate-500 mt-1">Review, edit, or accept before building the full lesson.</p>
+              </div>
+              <span class="agent-chip bg-violet-50 text-violet-700">Step 1 of 4</span>
+            </div>
+
+            <div class="grid grid-cols-1 gap-4">
+              <div class="section-card mb-0">
+                <label class="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Suggested Objective</label>
+                <textarea id="dir-objective" rows="3" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm"></textarea>
+              </div>
+
+              <div class="section-card mb-0">
+                <label class="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Suggested Lesson Focus</label>
+                <textarea id="dir-focus" rows="3" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm"></textarea>
+              </div>
+
+              <div class="section-card mb-0">
+                <label class="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Suggested Student Performance</label>
+                <textarea id="dir-performance" rows="3" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm"></textarea>
+              </div>
+
+              <div class="section-card mb-0">
+                <label class="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Grade-Level Expectation</label>
+                <textarea id="dir-expectation" rows="3" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm"></textarea>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap gap-2 mt-4">
+              <button class="mini-btn mini-btn-primary" onclick="buildLesson()">Build Full Lesson</button>
+              <button class="mini-btn" onclick="regenerateDirection()">Regenerate Direction</button>
+              <button class="mini-btn" onclick="acceptDirection()">Accept Direction</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lesson Content -->
+        <div id="lesson-content" class="hidden space-y-4">
+
+          <!-- Header -->
+          <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm mb-6">
+            <div class="flex flex-wrap justify-between items-start gap-4">
+              <div>
+                <h1 id="out-title" class="text-4xl font-black text-slate-900 tracking-tight leading-tight"></h1>
+                <div class="flex flex-wrap gap-3 mt-4">
+                  <span id="out-grade" class="bg-slate-100 px-3 py-1 rounded-full text-[10px] font-bold uppercase"></span>
+                  <span id="out-standard" class="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-[10px] font-bold uppercase"></span>
+                  <span id="out-timeframe" class="bg-violet-50 text-violet-700 px-3 py-1 rounded-full text-[10px] font-bold uppercase"></span>
+                </div>
+              </div>
+              <div class="flex gap-2 no-print">
+                <button onclick="finalizeLesson()" class="mini-btn mini-btn-primary">Finalize Lesson</button>
+                <button onclick="window.print()" class="mini-btn" title="Print Lesson Plan">🖨️ Print</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Agent Review -->
+          <div id="review-panel" class="bg-amber-50 border border-amber-100 p-6 rounded-2xl hidden">
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+              <div>
+                <h3 class="text-amber-800 font-bold text-xs uppercase tracking-widest">Agent Review</h3>
+                <p class="text-xs text-amber-700 mt-1">The agent critiques alignment, rigor, and instructional completeness.</p>
+              </div>
+              <span class="agent-chip bg-amber-100 text-amber-800">Step 3 of 4</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+              <div class="bg-white/70 p-4 rounded-xl border border-amber-100">
+                <div class="font-bold text-slate-700 mb-2">Alignment Check</div>
+                <p id="review-alignment" class="text-slate-700"></p>
+              </div>
+              <div class="bg-white/70 p-4 rounded-xl border border-amber-100">
+                <div class="font-bold text-slate-700 mb-2">Assessment Match</div>
+                <p id="review-assessment-match" class="text-slate-700"></p>
+              </div>
+              <div class="bg-white/70 p-4 rounded-xl border border-amber-100">
+                <div class="font-bold text-slate-700 mb-2">UDL Coverage</div>
+                <p id="review-udl" class="text-slate-700"></p>
+              </div>
+              <div class="bg-white/70 p-4 rounded-xl border border-amber-100">
+                <div class="font-bold text-slate-700 mb-2">Pacing Check</div>
+                <p id="review-pacing" class="text-slate-700"></p>
+              </div>
+            </div>
+
+            <div class="mt-4 bg-white/70 p-4 rounded-xl border border-amber-100">
+              <div class="font-bold text-slate-700 mb-2 text-xs uppercase tracking-widest">Revision Suggestions</div>
+              <p id="review-suggestions" class="text-sm text-slate-700 leading-relaxed"></p>
+            </div>
+
+            <div class="flex flex-wrap gap-2 mt-4 no-print">
+              <button class="mini-btn" onclick="reviseSection('assessment')">Improve Assessment</button>
+              <button class="mini-btn" onclick="reviseSection('activity')">Strengthen Activity</button>
+              <button class="mini-btn" onclick="reviseSection('udl')">Add Better UDL Supports</button>
+              <button class="mini-btn" onclick="reviseSection('instruction')">Make More Rigorous</button>
+            </div>
+          </div>
+
+          <!-- Direction Snapshot -->
+          <div class="section-card">
+            <h3 class="text-sm font-bold text-slate-900 border-l-4 border-violet-500 pl-3 mb-3 uppercase tracking-tighter">Approved Lesson Direction</h3>
+            <div class="space-y-3 text-sm">
+              <div><span class="font-bold">Objective:</span> <span id="out-objective"></span></div>
+              <div><span class="font-bold">Lesson Focus:</span> <span id="out-focus"></span></div>
+              <div><span class="font-bold">Student Performance:</span> <span id="out-performance"></span></div>
+              <div><span class="font-bold">Grade-Level Expectation:</span> <span id="out-expectation"></span></div>
+            </div>
+          </div>
+
+          <!-- UDL, Accessibility & Differentiation -->
+          <div class="bg-emerald-50 border border-emerald-100 p-6 rounded-2xl">
+            <h3 class="text-emerald-800 font-bold text-xs uppercase tracking-widest mb-4 flex items-center">
+              <span class="mr-2">🧩</span> Inclusion & Accessibility Strategies
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs leading-relaxed">
+              <div class="bg-white/60 p-3 rounded-xl border border-emerald-100">
+                <span class="inclusion-tag bg-emerald-600 text-white">Differentiation</span>
+                <p id="out-diff" class="mt-2 text-emerald-900 font-medium"></p>
+              </div>
+              <div class="bg-white/60 p-3 rounded-xl border border-blue-100">
+                <span class="inclusion-tag bg-blue-600 text-white">Accessibility</span>
+                <p id="out-access" class="mt-2 text-blue-900 font-medium"></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Core Structure -->
+          <div class="section-card">
+            <div class="flex items-center justify-between gap-3 mb-3">
+              <h3 class="text-sm font-bold text-slate-900 border-l-4 border-blue-500 pl-3 uppercase tracking-tighter">Direct Instruction</h3>
+              <button class="mini-btn no-print" onclick="reviseSection('instruction')">Revise This Section</button>
+            </div>
+            <p id="out-instruction" class="text-slate-700 text-sm leading-relaxed"></p>
+          </div>
+
+          <div class="section-card">
+            <div class="flex items-center justify-between gap-3 mb-3">
+              <h3 class="text-sm font-bold text-slate-900 border-l-4 border-green-500 pl-3 uppercase tracking-tighter">Hands-On Activity</h3>
+              <button class="mini-btn no-print" onclick="reviseSection('activity')">Revise This Section</button>
+            </div>
+            <p id="out-activity" class="text-slate-700 text-sm leading-relaxed"></p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-slate-900 text-white p-6 rounded-2xl shadow-sm">
+              <div class="flex items-center justify-between gap-3 mb-3">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Assessment (Exit Ticket)</h3>
+                <button class="mini-btn no-print" onclick="reviseSection('assessment')">Revise</button>
+              </div>
+              <p id="out-assessment" class="text-sm leading-relaxed italic text-slate-200"></p>
+            </div>
+
+            <div class="bg-amber-50 border border-amber-100 p-6 rounded-2xl shadow-sm">
+              <h3 class="text-xs font-bold text-amber-800 uppercase tracking-widest mb-3">After-Lesson Reflection</h3>
+              <p id="out-reflection" class="text-[11px] text-amber-800 font-medium italic leading-relaxed"></p>
+            </div>
+          </div>
+
+          <div class="print-only hidden mt-8 text-center text-slate-400 text-[10px]">
+            Generated by CS Teaching Toolkit | CSTA 2026 Standards Framework
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const standardProfiles = {
+      "3A-IC-24": {
+        title: "Identify Algorithmic Bias",
+        strand: "Impacts of Computing",
+        expectation: {
+          "K-2": "Students begin noticing that technologies can help some people more than others.",
+          "3-5": "Students describe simple ways technology should work for different users.",
+          "6-8": "Students analyze how choices in data and design can affect fairness.",
+          "9-12": "Students evaluate how algorithmic systems may advantage or disadvantage groups and propose design improvements."
+        }
+      },
+      "1B-IC-18": {
+        title: "Inclusive Tech Design",
+        strand: "Impacts of Computing",
+        expectation: {
+          "K-2": "Students recognize that different people may need different tools.",
+          "3-5": "Students design or improve technologies to meet diverse user needs.",
+          "6-8": "Students explain how accessibility improves usability for all users.",
+          "9-12": "Students justify inclusive design choices using evidence from user needs."
+        }
+      },
+      "2-DA-08": {
+        title: "Data Privacy in IoT",
+        strand: "Data & Analysis",
+        expectation: {
+          "K-2": "Students begin identifying personal information and safe sharing habits.",
+          "3-5": "Students describe why some data should stay private.",
+          "6-8": "Students explain data collection and privacy risks in connected devices.",
+          "9-12": "Students evaluate privacy tradeoffs in networked systems and recommend protections."
+        }
+      },
+      "3A-DA-11": {
+        title: "Evaluate AI Models",
+        strand: "Data & Analysis",
+        expectation: {
+          "K-2": "Students notice that computers can follow patterns to make decisions.",
+          "3-5": "Students compare how different inputs can affect system outputs.",
+          "6-8": "Students test and evaluate AI-generated results for accuracy and bias.",
+          "9-12": "Students critique model behavior, limitations, and sources of error using evidence."
+        }
+      }
+    };
+
+    const standardsMatrix = [
+      { keywords: ['data', 'privacy', 'security', 'internet'], code: '2-DA-08', grade: '6-8', desc: 'Data Privacy & IoT' },
+      { keywords: ['bias', 'fairness', 'ethics', 'ai', 'impact'], code: '3A-IC-24', grade: '9-12', desc: 'Social Impacts & Bias' },
+      { keywords: ['accessibility', 'disability', 'assistive', 'design'], code: '1B-IC-18', grade: '3-5', desc: 'Inclusive Design' },
+      { keywords: ['algorithm', 'code', 'logic', 'loop', 'step', 'prompt'], code: '3A-DA-11', grade: '6-8', desc: 'Evaluate AI Models' }
+    ];
+
+    const appState = {
+      acceptedDirection: false,
+      finalized: false,
+      lesson: {}
+    };
+
+    function initApp() {
+      document.getElementById('dynamic-tip').innerHTML =
+        "Start with a strong topic, grade band, and standard. The agent now suggests direction first, then builds, critiques, and helps revise the lesson before export.";
+    }
+
+    function setQuickTopic(topic, standard, grade) {
+      document.getElementById('topic').value = topic;
+      document.getElementById('standard').value = standard;
+      document.getElementById('grade').value = grade;
+      suggestDirection();
+    }
+
+    function inferStandardFromTopic(topicInput) {
+      const topic = (topicInput || '').toLowerCase();
+      return standardsMatrix.find(s => s.keywords.some(k => topic.includes(k))) || null;
+    }
+
+    function updateAgentPanel(status, step, alignmentNote, reviewSummary) {
+      document.getElementById('agent-status').textContent = status;
+      document.getElementById('agent-step').textContent = step;
+      document.getElementById('agent-alignment-note').textContent = alignmentNote;
+      document.getElementById('agent-review-summary').textContent = reviewSummary;
+    }
+
+    function suggestDirection() {
+      const topicField = document.getElementById('topic');
+      const gradeField = document.getElementById('grade');
+      const standardField = document.getElementById('standard');
+
+      let topic = topicField.value.trim() || "Emerging CS Concepts";
+      let grade = gradeField.value;
+      let standard = standardField.value;
+
+      const inferred = inferStandardFromTopic(topic);
+      if (inferred && !topicField.value.trim()) {
+        standard = inferred.code;
+        grade = inferred.grade;
+        standardField.value = inferred.code;
+        gradeField.value = inferred.grade;
+      }
+
+      const profile = standardProfiles[standard] || standardProfiles["3A-DA-11"];
+      const expectation = profile.expectation[grade] || "Students should demonstrate grade-appropriate computing understanding.";
+
+      const objective = `Students will analyze ${topic} through the lens of ${profile.title} and explain how design choices affect people, systems, or outcomes.`;
+      const focus = `This lesson should be framed as a guided exploration where students examine ${topic}, discuss the standard ${standard}, and apply ideas through a concrete task rather than only definitions.`;
+      const performance = `Students should show understanding by explaining their reasoning, identifying a concern or design challenge, and proposing an evidence-based improvement related to ${topic}.`;
+
+      document.getElementById('dir-objective').value = objective;
+      document.getElementById('dir-focus').value = focus;
+      document.getElementById('dir-performance').value = performance;
+      document.getElementById('dir-expectation').value = expectation;
+
+      document.getElementById('empty-state').classList.add('hidden');
+      document.getElementById('lesson-content').classList.add('hidden');
+      document.getElementById('review-panel').classList.add('hidden');
+      document.getElementById('direction-panel').classList.remove('hidden');
+
+      appState.acceptedDirection = false;
+      appState.finalized = false;
+
+      updateAgentPanel(
+        "Suggesting",
+        "The agent suggested a lesson direction. Review and edit before building.",
+        `The selected standard is ${standard}. The suggested direction is aligned to ${profile.strand} and grade band ${grade}.`,
+        "No review yet. Build the lesson after approving the direction."
+      );
+
+      document.getElementById('output-canvas').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function regenerateDirection() {
+      const current = document.getElementById('dir-focus').value;
+      document.getElementById('dir-focus').value =
+        current.includes("guided exploration")
+          ? current.replace("guided exploration", "problem-based inquiry")
+          : current.replace("problem-based inquiry", "guided exploration");
+
+      document.getElementById('dir-performance').value =
+        document.getElementById('dir-performance').value +
+        " Students should also justify which design or evaluation choice is most responsible and why.";
+
+      updateAgentPanel(
+        "Revised",
+        "The agent regenerated the lesson direction.",
+        "Direction was refreshed to offer a slightly different instructional framing.",
+        "Still waiting for build step."
+      );
+    }
+
+    function acceptDirection() {
+      appState.acceptedDirection = true;
+      updateAgentPanel(
+        "Accepted",
+        "Direction accepted. Build the full lesson when ready.",
+        "The teacher-approved direction is ready to become a full lesson.",
+        "Still waiting for review."
+      );
+    }
+
+    function buildLesson() {
+      const topic = document.getElementById('topic').value.trim() || "Emerging CS Concepts";
+      const grade = document.getElementById('grade').value;
+      const standard = document.getElementById('standard').value;
+      const timeframe = document.getElementById('timeframe').value;
+
+      const profile = standardProfiles[standard] || standardProfiles["3A-DA-11"];
+      const objective = document.getElementById('dir-objective').value;
+      const focus = document.getElementById('dir-focus').value;
+      const performance = document.getElementById('dir-performance').value;
+      const expectation = document.getElementById('dir-expectation').value;
+
+      appState.lesson = {
+        topic,
+        grade,
+        standard,
+        timeframe,
+        objective,
+        focus,
+        performance,
+        expectation,
+        diff: `Provide scaffolded prompts, vocabulary supports, and visual examples for learners who need more structure. Offer an extension where advanced learners compare multiple approaches to ${topic} and justify which design or evaluation is strongest.`,
+        access: `Use readable formatting, chunked instructions, optional read-aloud support, and multiple response formats such as speaking, drawing, or writing. Ensure the task allows students to demonstrate understanding without depending on one output mode.`,
+        instruction: `Begin with a short hook connected to ${topic}. Introduce the standard ${standard} in student-friendly language, then model how to analyze a real or realistic example. Use guided questioning so students move beyond recall and explain why the issue, pattern, or design decision matters.`,
+        activity: `Students work in pairs or teams to examine a scenario related to ${topic}. They identify a problem, design choice, or evaluation concern connected to ${standard}, then create a response such as a diagram, annotated example, user story, critique, or redesign proposal. Require each group to explain the reasoning behind its decisions.`,
+        assessment: `Exit Ticket: Explain one important idea you learned about ${topic}. Then identify one issue, pattern, or design concern connected to ${standard} and propose one improvement. Your response must include a short justification.`,
+        reflection: `Teacher Reflection: Did students simply identify facts, or did they explain their reasoning? Review whether the lesson gave students enough structure to succeed while still requiring independent judgment and evidence-based thinking.`
+      };
+
+      document.getElementById('out-title').textContent = topic;
+      document.getElementById('out-grade').textContent = `Grade Level: ${grade}`;
+      document.getElementById('out-standard').textContent = `Standard: CSTA ${standard}`;
+      document.getElementById('out-timeframe').textContent = timeframe;
+
+      document.getElementById('out-objective').textContent = objective;
+      document.getElementById('out-focus').textContent = focus;
+      document.getElementById('out-performance').textContent = performance;
+      document.getElementById('out-expectation').textContent = expectation;
+
+      document.getElementById('out-diff').textContent = appState.lesson.diff;
+      document.getElementById('out-access').textContent = appState.lesson.access;
+      document.getElementById('out-instruction').textContent = appState.lesson.instruction;
+      document.getElementById('out-activity').textContent = appState.lesson.activity;
+      document.getElementById('out-assessment').textContent = appState.lesson.assessment;
+      document.getElementById('out-reflection').textContent = appState.lesson.reflection;
+
+      document.getElementById('direction-panel').classList.add('hidden');
+      document.getElementById('lesson-content').classList.remove('hidden');
+      document.getElementById('review-panel').classList.remove('hidden');
+
+      runAgentReview();
+
+      updateAgentPanel(
+        "Built",
+        "The lesson has been built. Review the critique and revise as needed.",
+        `The lesson was built from the approved direction and aligned to ${standard}.`,
+        "Agent review completed. Suggested revisions are available."
+      );
+
+      document.getElementById('output-canvas').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function runAgentReview() {
+      const timeframe = document.getElementById('timeframe').value;
+      const standard = document.getElementById('standard').value;
+      const topic = document.getElementById('topic').value.trim() || "Emerging CS Concepts";
+
+      let pacingText = timeframe === "45 minutes"
+        ? "Needs attention. The current lesson may be slightly ambitious for a 45-minute block unless the hook or group task is shortened."
+        : "Appropriate. The pacing is realistic for the selected lesson timeframe.";
+
+      document.getElementById('review-alignment').textContent =
+        `Strong. The objective, topic, and core task all connect to ${standard}, and students are expected to explain thinking rather than only define terms.`;
+
+      document.getElementById('review-assessment-match').textContent =
+        `Moderate to strong. The exit ticket checks understanding of ${topic}, but it is strongest when students must justify their proposed improvement with evidence or reasoning.`;
+
+      document.getElementById('review-udl').textContent =
+        "Good foundation. The lesson includes multiple means of access and expression, but it could be even stronger with explicit supports for collaboration, language development, or pacing.";
+
+      document.getElementById('review-pacing').textContent = pacingText;
+
+      document.getElementById('review-suggestions').textContent =
+        "Consider strengthening the activity by requiring students to compare two possible solutions before choosing one. Add a clearer success criterion for the exit ticket. Include a sentence frame or discussion structure so all learners can participate meaningfully.";
+    }
+
+    function reviseSection(section) {
+      const topic = appState.lesson.topic || "the topic";
+      const standard = appState.lesson.standard || "the selected standard";
+
+      if (section === 'assessment') {
+        appState.lesson.assessment =
+          `Revised Exit Ticket: Describe one important issue or insight related to ${topic}. Then propose one improvement connected to ${standard}. Finally, explain why your improvement would be more fair, useful, accurate, or inclusive.`;
+        document.getElementById('out-assessment').textContent = appState.lesson.assessment;
+      }
+
+      if (section === 'activity') {
+        appState.lesson.activity =
+          `Revised Activity: Students analyze two contrasting examples related to ${topic}. In teams, they compare the strengths and weaknesses of each example, decide which one better aligns to ${standard}, and defend their choice using evidence. Groups then revise one example to improve it.`;
+        document.getElementById('out-activity').textContent = appState.lesson.activity;
+      }
+
+      if (section === 'udl') {
+        appState.lesson.diff =
+          `Revised Differentiation: Provide sentence stems, guided notes, visual examples, and structured group roles for students needing support. Offer a challenge option where advanced learners must critique tradeoffs and propose multiple possible redesigns before selecting one.`;
+        appState.lesson.access =
+          `Revised Accessibility: Offer chunked text, audio support, larger visuals, flexible output choices, and accessible digital templates. Ensure directions are available in both written and verbal form and allow students to respond through speaking, drawing, typing, or presenting.`;
+        document.getElementById('out-diff').textContent = appState.lesson.diff;
+        document.getElementById('out-access').textContent = appState.lesson.access;
+      }
+
+      if (section === 'instruction') {
+        appState.lesson.instruction =
+          `Revised Instruction: Begin with a short scenario and ask students to predict what could go wrong or whom it might affect. Model how to analyze the example using key vocabulary from ${standard}. Then guide students through a think-aloud that focuses on explanation, comparison, and evidence-based judgment.`;
+        document.getElementById('out-instruction').textContent = appState.lesson.instruction;
+      }
+
+      document.getElementById('review-suggestions').textContent =
+        "Revision applied. Recheck whether the lesson now better matches the objective, requires reasoning, and gives students more than one pathway to success.";
+
+      updateAgentPanel(
+        "Revising",
+        `A revision was applied to the ${section} section.`,
+        "The lesson is being strengthened through targeted agent-supported edits.",
+        `The ${section} section has been improved.`
+      );
+    }
+
+    function finalizeLesson() {
+      appState.finalized = true;
+
+      updateAgentPanel(
+        "Finalized",
+        "The lesson is finalized and ready to print or export.",
+        "The agent completed the build-review-revise cycle.",
+        "Lesson finalized. You can now print or adapt this into export actions such as PDF or Word."
+      );
+
+      document.getElementById('review-suggestions').textContent =
+        "Finalized. This lesson is now classroom-ready, but you can still revise any section before printing.";
+
+      alert("Lesson finalized. Your next step can be print, PDF export, or wiring a Word/Google Docs export.");
+    }
+
+    window.onload = initApp;
+  </script>
+</body>
+</html>
