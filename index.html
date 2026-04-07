@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Teach Ready Toolkit | Version 3</title>
+  <title>Teach Ready Toolkit | Version 3.1</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="https://unpkg.com/docx@8.5.0/build/index.umd.js"></script>
@@ -13,13 +13,14 @@
 
     :root {
       --brand-1: #1d4ed8;
-      --brand-2: #7c3aed;
+      --brand-2: #6d28d9;
       --brand-3: #0f766e;
       --ink: #0f172a;
-      --muted: #64748b;
+      --muted: #475569;
       --line: #dbe4f0;
-      --card: #ffffff;
       --bg: linear-gradient(135deg, #f8fafc 0%, #eef2ff 45%, #ecfeff 100%);
+      --safe-light-text: #0f172a;
+      --safe-dark-text: #ffffff;
     }
 
     * { box-sizing: border-box; }
@@ -28,7 +29,7 @@
       background: var(--bg);
       color: var(--ink);
     }
-    .glass { background: rgba(255,255,255,.86); backdrop-filter: blur(12px); }
+    .glass { background: rgba(255,255,255,.9); backdrop-filter: blur(12px); }
     .panel-card {
       background: linear-gradient(135deg, #ffffff 0%, #fbfdff 100%);
       border: 1px solid var(--line);
@@ -43,9 +44,9 @@
       padding: 1rem;
     }
     .hero-card {
-      background: linear-gradient(135deg, rgba(29,78,216,.95) 0%, rgba(124,58,237,.94) 52%, rgba(15,118,110,.92) 100%);
-      color: white;
-      border: 1px solid rgba(255,255,255,.18);
+      background: linear-gradient(135deg, rgba(29,78,216,.98) 0%, rgba(109,40,217,.96) 52%, rgba(15,118,110,.94) 100%);
+      color: var(--safe-dark-text);
+      border: 1px solid rgba(255,255,255,.2);
       border-radius: 1.25rem;
       box-shadow: 0 20px 50px rgba(29, 78, 216, 0.18);
     }
@@ -56,20 +57,22 @@
       padding: .72rem .95rem;
       transition: all .2s ease;
       border: 1px solid var(--line);
-      background: white;
+      background: #ffffff;
+      color: var(--ink);
     }
-    .mini-btn:hover { background: #f8fafc; transform: translateY(-1px); }
+    .mini-btn:hover { background: #f8fafc; color: var(--ink); transform: translateY(-1px); }
     .mini-btn-primary {
       background: linear-gradient(135deg, var(--brand-1) 0%, var(--brand-2) 100%);
-      color: white;
+      color: var(--safe-dark-text);
       border-color: transparent;
     }
-    .mini-btn-primary:hover { filter: brightness(1.05); }
+    .mini-btn-primary:hover { filter: brightness(1.04); color: var(--safe-dark-text); }
     .mini-btn-success {
       background: linear-gradient(135deg, #059669 0%, #0f766e 100%);
-      color: white;
+      color: var(--safe-dark-text);
       border-color: transparent;
     }
+    .mini-btn-success:hover { filter: brightness(1.04); color: var(--safe-dark-text); }
     .step-pill {
       font-size: 11px;
       font-weight: 800;
@@ -90,7 +93,7 @@
     }
     .completed-step {
       background: linear-gradient(135deg, #10b981 0%, #22c55e 100%);
-      color: white;
+      color: var(--safe-dark-text);
       border-color: #10b981;
       box-shadow: 0 0 0 3px rgba(16,185,129,.12), 0 12px 26px rgba(16,185,129,.22);
     }
@@ -115,19 +118,20 @@
       outline: none;
       border: 1px solid #d7e0eb;
       background: white;
+      color: var(--ink);
     }
     input:focus, textarea:focus, select:focus {
-      border-color: #60a5fa;
-      box-shadow: 0 0 0 3px rgba(96,165,250,.15);
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37,99,235,.15);
     }
     .sidebar-note {
       background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-      color: white;
+      color: var(--safe-dark-text);
     }
     .collapse-body.hidden { display: none; }
-    .variation-visual { border-left: 4px solid #8b5cf6; background: #faf5ff; }
-    .variation-hands { border-left: 4px solid #16a34a; background: #f0fdf4; }
-    .variation-discuss { border-left: 4px solid #d97706; background: #fffbeb; }
+    .variation-visual { border-left: 4px solid #7c3aed; background: #faf5ff; }
+    .variation-hands { border-left: 4px solid #15803d; background: #f0fdf4; }
+    .variation-discuss { border-left: 4px solid #b45309; background: #fffbeb; }
     .soft-animate { animation: softFade .3s ease; }
     @keyframes softFade { from { opacity: 0; transform: translateY(4px);} to { opacity: 1; transform: translateY(0);} }
     .chip {
@@ -152,7 +156,7 @@
     }
     .district-header {
       background: linear-gradient(135deg, #1e3a8a 0%, #6d28d9 55%, #0f766e 100%);
-      color: white;
+      color: var(--safe-dark-text);
     }
     .district-subbar {
       background: linear-gradient(135deg, #e0f2fe 0%, #ede9fe 100%);
@@ -181,8 +185,10 @@
       background: white;
       font-size: 13px;
       line-height: 1.5;
+      color: var(--ink);
     }
     .hidden-admin { display: none; }
+    button:hover { filter: brightness(.98); }
     @page { size: landscape; margin: 0.5in; }
     @media print {
       .no-print { display: none !important; }
@@ -199,7 +205,7 @@
         <span class="font-bold text-xl tracking-tight">Teach Ready Toolkit</span>
       </div>
       <div class="text-right text-xs text-slate-500">
-        <div>Version 3 • Full Intelligence</div>
+        <div>Version 3.1 • Subject-Specific Intelligence</div>
         <div class="uppercase tracking-widest text-[10px] text-blue-600 font-bold">Agentic Workflow Active</div>
       </div>
     </div>
@@ -215,7 +221,7 @@
           </div>
           <span id="agentStatus" class="chip bg-white/10 border-white/20 text-white">Ready</span>
         </div>
-        <p class="text-sm text-blue-50 leading-relaxed">This builder uses standards progression, intelligent lesson matching, guided direction, assessments, and export-ready formatting to help you move from idea to polished lesson fast.</p>
+        <p class="text-sm text-blue-50 leading-relaxed">This builder uses standards progression, intelligent lesson matching, lesson-type awareness, guided direction, assessments, and export-ready formatting to help you move from idea to polished lesson fast.</p>
       </div>
 
       <div class="panel-card p-5">
@@ -236,13 +242,13 @@
         </div>
         <div class="mt-4 rounded-xl bg-slate-50 border border-slate-200 p-4">
           <div class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Agent Note</div>
-          <p id="agentNote" class="text-sm text-slate-700 leading-relaxed">Start with the lesson setup. The agent will suggest direction, build the lesson, explain why it chose a lesson path, and finalize the lesson in a district-style one-page format.</p>
+          <p id="agentNote" class="text-sm text-slate-700 leading-relaxed">Start with the lesson setup. The agent will suggest direction, infer lesson type, build the lesson, explain why it chose a lesson path, and finalize the lesson in a district-style one-page format.</p>
         </div>
       </div>
 
       <div class="panel-card p-5 sidebar-note">
         <div class="text-xs font-bold uppercase tracking-widest text-slate-300 mb-2">AI Assistant Sidebar</div>
-        <p id="aiInsight" class="text-sm leading-relaxed text-slate-100">Waiting for lesson setup. Once a lesson is built, the assistant will explain the match, show similar lessons, suggest variations, and recommend what to teach next.</p>
+        <p id="aiInsight" class="text-sm leading-relaxed text-slate-100">Waiting for lesson setup. Once a lesson is built, the assistant will explain the match, infer the lesson type, show similar lessons, suggest variations, and recommend what to teach next.</p>
       </div>
 
       <div class="panel-card p-5">
@@ -356,7 +362,7 @@
       <div id="emptyState" class="panel-card p-12 text-center">
         <div class="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-blue-50 to-violet-50 flex items-center justify-center text-3xl mb-6">✨</div>
         <h2 class="text-3xl font-black tracking-tight">Build Smarter Lessons in Minutes</h2>
-        <p class="mt-3 text-slate-500 max-w-2xl mx-auto">Use standards, progression, teacher guidance, and intelligent lesson support to create lessons that are classroom-ready, export-ready, and visually polished.</p>
+        <p class="mt-3 text-slate-500 max-w-2xl mx-auto">Use standards, progression, teacher guidance, lesson-type intelligence, and intelligent lesson support to create lessons that are classroom-ready, export-ready, and visually polished.</p>
       </div>
 
       <div id="panelDirection" class="workflow-panel panel-card p-6">
@@ -403,9 +409,10 @@
         <div class="flex items-start justify-between gap-4 mb-6">
           <div>
             <h3 class="text-sm font-bold uppercase tracking-widest">Panel 3: Build and Review</h3>
-            <p class="text-sm text-slate-500 mt-1">The lesson output includes teacher script, workspace, assessments, match reasoning, and export-ready formatting.</p>
+            <p class="text-sm text-slate-500 mt-1">The lesson output includes actual bellringer, teacher demo, student engagement, assessments, lesson-type-specific tasks, match reasoning, and export-ready formatting.</p>
           </div>
           <div class="flex gap-2 no-print">
+            <button class="mini-btn" onclick="requestAssessmentRefresh()">Generate Assessments</button>
             <button class="mini-btn mini-btn-success" onclick="finalizeLesson()">Finalize</button>
             <button class="mini-btn mini-btn-primary" onclick="window.print()">Print</button>
           </div>
@@ -416,24 +423,31 @@
             <span id="outGrade" class="chip"></span>
             <span id="outStandard" class="chip"></span>
             <span id="outMeta" class="chip"></span>
+            <span id="outLessonType" class="chip"></span>
           </div>
           <h1 id="outTitle" class="text-4xl font-black tracking-tight"></h1>
           <p id="outSubtitle" class="text-slate-500 mt-2 text-sm"></p>
         </div>
 
-        <div class="section-card mb-4">
-          <h3 class="text-sm font-bold uppercase tracking-widest mb-3">Lesson Direction Snapshot</h3>
-          <div class="space-y-3 text-sm">
-            <p><strong>Objective:</strong> <span id="outObjective"></span></p>
-            <p><strong>Lesson Focus:</strong> <span id="outFocus"></span></p>
-            <p><strong>Student Performance:</strong> <span id="outPerformance"></span></p>
-            <p><strong>Pacing Recommendation:</strong> <span id="outPacing"></span></p>
+        <div class="grid md:grid-cols-2 gap-4 mb-4">
+          <div class="section-card">
+            <h3 class="text-sm font-bold uppercase tracking-widest mb-3">Bellringer</h3>
+            <p id="outBellringer" class="text-sm leading-relaxed"></p>
+          </div>
+          <div class="section-card">
+            <h3 class="text-sm font-bold uppercase tracking-widest mb-3">Objective</h3>
+            <p id="outObjective" class="text-sm leading-relaxed"></p>
           </div>
         </div>
 
         <div class="section-card mb-4">
+          <h3 class="text-sm font-bold uppercase tracking-widest mb-3">Lesson Focus</h3>
+          <p id="outFocus" class="text-sm leading-relaxed"></p>
+        </div>
+
+        <div class="section-card mb-4">
           <div class="flex items-center justify-between gap-3 mb-3">
-            <h3 class="text-sm font-bold uppercase tracking-widest">Direct Instruction Script</h3>
+            <h3 class="text-sm font-bold uppercase tracking-widest">Teacher Demo / Model</h3>
             <button class="mini-btn no-print" onclick="toggleCollapse('scriptBody')">Toggle</button>
           </div>
           <div id="scriptBody" class="collapse-body">
@@ -443,12 +457,12 @@
 
         <div class="section-card mb-4">
           <div class="flex items-center justify-between gap-3 mb-3">
-            <h3 class="text-sm font-bold uppercase tracking-widest">Student Activity</h3>
+            <h3 class="text-sm font-bold uppercase tracking-widest">Student Engagement Activity</h3>
             <button class="mini-btn no-print" onclick="toggleCollapse('activityBody')">Toggle</button>
           </div>
           <div id="activityBody" class="collapse-body">
             <p id="outActivity" class="text-sm leading-relaxed mb-4"></p>
-            <h4 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Step-by-Step Student Directions</h4>
+            <h4 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Step-by-Step Directions</h4>
             <ol id="outSteps" class="list-decimal pl-5 text-sm leading-relaxed space-y-1"></ol>
           </div>
         </div>
@@ -496,7 +510,7 @@
         </div>
 
         <div class="section-card bg-amber-50 border-amber-100 mb-4">
-          <h3 class="text-sm font-bold uppercase tracking-widest mb-3 text-amber-800">Agent Review</h3>
+          <h3 class="text-sm font-bold uppercase tracking-widest mb-3 text-amber-800">Agent Improvement Suggestions</h3>
           <p id="outReview" class="text-sm leading-relaxed text-amber-900"></p>
         </div>
 
@@ -573,6 +587,7 @@
                 <span class="chip" id="exportBadgeGrade"></span>
                 <span class="chip" id="exportBadgeStandard"></span>
                 <span class="chip" id="exportBadgeMeta"></span>
+                <span class="chip" id="exportBadgeLessonType"></span>
               </div>
               <h2 id="exportPlanTitle" class="text-2xl font-black tracking-tight text-slate-900"></h2>
               <p id="exportPlanSubtitle" class="text-sm text-slate-700 mt-1"></p>
@@ -652,6 +667,7 @@
         title: 'Unit Testing with unittest',
         gradeBand: 'HS',
         concept: 'Programming',
+        lessonType: 'coding_lab',
         objective: 'Students test and debug code using unittest.',
         activity: 'Students write and test functions.',
         formativeAssessment: 'Teacher observation during guided practice and checkpoint review of test cases.',
@@ -666,6 +682,7 @@
         title: 'Conditional Logic with If Else',
         gradeBand: 'HS',
         concept: 'Programming',
+        lessonType: 'coding_lab',
         objective: 'Students use if/else statements to make decisions in code.',
         activity: 'Students analyze scenarios and write decision-based code responses.',
         formativeAssessment: 'Students explain why each branch condition is triggered during guided examples.',
@@ -680,6 +697,7 @@
         title: 'Pseudocode Translation Task',
         gradeBand: 'HS',
         concept: 'Algorithms & Design',
+        lessonType: 'analysis_discussion',
         objective: 'Students translate pseudocode into more formal logic and explain the output.',
         activity: 'Students analyze pseudocode, determine output, and rewrite it as structured statements.',
         formativeAssessment: 'Teacher checks whether students can identify the sequence and output before rewriting.',
@@ -780,7 +798,7 @@
       list.innerHTML = lessonBank.map(item => `
         <div class="rounded-xl border border-slate-200 p-3 text-sm">
           <div class="font-bold">${item.title}</div>
-          <div class="text-slate-500 text-xs mt-1">${item.gradeBand} · ${item.concept}</div>
+          <div class="text-slate-500 text-xs mt-1">${item.gradeBand} · ${item.concept} · ${formatLessonType(item.lessonType || 'guided_practice')}</div>
         </div>
       `).join('');
       updateLessonBankCount();
@@ -864,18 +882,19 @@
       const selected = getSelectedStandard();
       if (!selected) return;
 
+      const inferredType = inferLessonType(topic + ' ' + selected.label, selected.concept, selected.keywords || []);
       const pacing = classLength >= 90
-        ? 'Use a 10-minute hook, 15-minute teacher model, 35-minute student activity, 15-minute share-out, and 10-minute reflection or closure.'
-        : 'Use a short hook, brief direct instruction, one focused activity, and a concise closing check.';
+        ? 'Use a short bellringer, focused teacher demo, extended student task, midpoint check, and closure.'
+        : 'Use a quick hook, brief direct instruction, one focused activity, and a concise closing check.';
 
-      document.getElementById('dirObjective').value = `Students will apply ${selected.concept.toLowerCase()} ideas to ${topic} and show understanding through explanation, design, or evaluation aligned to ${selected.code}. The task should reflect what students are expected to know now and prepare them for the next step in the progression.`;
+      document.getElementById('dirObjective').value = `Students will apply ${selected.concept.toLowerCase()} ideas to ${topic} and show understanding through explanation, design, or evaluation aligned to ${selected.code}. The task should match the ${formatLessonType(inferredType)} lesson structure and prepare students for the next step in the progression.`;
       document.getElementById('dirFocus').value = `${pathway} pathway focus: this lesson should feel practical, high-impact, and classroom-ready. This lesson sits in ${placement}, so the task should match where students are in the sequence. Use the progression note to distinguish what students should already know, what they are learning now, and what comes next.`;
-      document.getElementById('dirPerformance').value = `Students should explain their thinking, complete a structured task, and produce an artifact that shows how they applied ${selected.code} at the ${grade} level.`;
+      document.getElementById('dirPerformance').value = `Students should explain their thinking, complete a structured ${formatLessonType(inferredType)} task, and produce an artifact that shows how they applied ${selected.code} at the ${grade} level.`;
       document.getElementById('dirPacing').value = `${pacing} Because this is a ${courseLength} course, the lesson should be strong enough to stand alone but still fit into a larger sequence.`;
-      document.getElementById('dirWorkspace').value = `Suggested workspace: a guided student handout with a warm-up box, vocabulary box, model/example space, task checklist, response workspace, and reflection box. For coding lessons, include predict-run-observe-fix sections.`;
+      document.getElementById('dirWorkspace').value = `Suggested workspace: a guided student handout with a warm-up box, model/example space, task checklist, work space, and reflection box. Tailor the sections to a ${formatLessonType(inferredType)} lesson.`;
 
-      document.getElementById('agentNote').textContent = 'The agent suggested a lesson direction with pacing, unit placement, workspace, and pathway-aware framing. Edit as needed, then build the lesson.';
-      document.getElementById('aiInsight').textContent = `Direction suggested for ${selected.code}. Build the lesson to see whether the toolkit reuses a curated lesson or generates a new one.`;
+      document.getElementById('agentNote').textContent = `The agent suggested a ${formatLessonType(inferredType)} direction with pacing, unit placement, and workspace.`;
+      document.getElementById('aiInsight').textContent = `Direction suggested for ${selected.code}. Inferred lesson type: ${formatLessonType(inferredType)}.`;
       setStep(2);
       openPanel('panelDirection');
     }
@@ -929,12 +948,36 @@
         pseudocode: /pseudocode|flowchart|ipo/i,
         worksheet: /worksheet|independent practice/i,
         challenge: /challenge|exercism/i,
-        certification: /certiport|its python|gmetrix|workshop/i
+        certification: /certiport|its python|gmetrix|workshop/i,
+        project: /project|prototype|design challenge|build/i,
+        discussion: /discussion|debate|justify|compare|analysis/i,
+        data: /data|dataset|graph|chart|visualize/i
       };
       Object.entries(keywordBuckets).forEach(([tag, regex]) => {
         if (regex.test(lower)) tags.add(tag);
       });
-      return [...tags].slice(0, 12);
+      return [...tags].slice(0, 14);
+    }
+
+    function inferLessonType(text, concept, tags = []) {
+      const t = String(text).toLowerCase();
+      const joined = Array.isArray(tags) ? tags.join(' ').toLowerCase() : String(tags).toLowerCase();
+      if (/project|prototype|build|design challenge|lab project/.test(t) || joined.includes('project')) return 'project_lab';
+      if (/debate|discussion|analyze|analysis|compare|justify|reflection|pseudocode/.test(t) || concept === 'Algorithms & Design') return 'analysis_discussion';
+      if (/debug|python|code|unittest|function|conditional|loop|class|program/.test(t) || concept === 'Programming') return 'coding_lab';
+      if (/data|graph|chart|dataset|visualize/.test(t) || concept === 'Data & Analysis') return 'data_investigation';
+      return 'guided_practice';
+    }
+
+    function formatLessonType(type) {
+      const map = {
+        coding_lab: 'Coding Lab',
+        analysis_discussion: 'Analysis / Discussion',
+        project_lab: 'Project Lab',
+        data_investigation: 'Data Investigation',
+        guided_practice: 'Guided Practice'
+      };
+      return map[type] || 'Guided Practice';
     }
 
     function inferStandardsFromLesson(lesson) {
@@ -964,12 +1007,14 @@
       const concept = detectConceptFromText(normalized, cleanTitle);
       const tags = extractTagsFromText(cleanTitle + ' ' + normalized);
       const standards = inferStandardsFromLesson({ title: cleanTitle, raw: normalized, concept, gradeBand, tags });
+      const lessonType = inferLessonType(cleanTitle + ' ' + normalized, concept, tags);
       const formativeAssessment = extractSection(normalized, ['formative assessment', 'check for understanding', 'observation', 'guided questions']) || 'Teacher observation, questioning, and checkpoint review during guided practice.';
       const summativeAssessment = extractSection(normalized, ['summative assessment', 'assessment', 'exit ticket', 'evaluation', 'quiz']) || 'Final student product, completed task, or exit ticket aligned to the lesson objective.';
       return {
         title: cleanTitle,
         gradeBand,
         concept,
+        lessonType,
         objective: extractSection(normalized, ['objective', 'goal', 'students will']) || 'Imported lesson objective not clearly detected.',
         activity: extractSection(normalized, ['activity', 'student engage', 'task', 'procedure', 'challenge']) || 'Imported lesson activity not clearly detected.',
         formativeAssessment,
@@ -998,6 +1043,8 @@
       (lesson.standards || []).forEach(code => {
         if (code === standard.code) score += 5;
       });
+      const inferredTargetType = inferLessonType(topic + ' ' + standard.label, standard.concept, standard.keywords || []);
+      if (lesson.lessonType && lesson.lessonType === inferredTargetType) score += 2;
       return score;
     }
 
@@ -1058,7 +1105,7 @@
         ? similar.map(item => `
           <div class="rounded-xl border border-slate-200 p-3 bg-slate-50">
             <div class="font-bold text-sm">${item.lesson.title}</div>
-            <div class="text-xs text-slate-500 mt-1">${item.lesson.gradeBand} · ${item.lesson.concept} · Match score ${item.score}</div>
+            <div class="text-xs text-slate-500 mt-1">${item.lesson.gradeBand} · ${item.lesson.concept} · ${formatLessonType(item.lesson.lessonType || 'guided_practice')} · Match score ${item.score}</div>
             <div class="text-sm mt-2">${item.lesson.activity || item.lesson.objective}</div>
           </div>
         `).join('')
@@ -1083,9 +1130,51 @@
       if (matchResult.lesson) {
         const lesson = matchResult.lesson;
         const standardsText = (lesson.standards || []).length ? ` Inferred lesson standards: ${lesson.standards.join(', ')}.` : '';
-        return `The toolkit chose “${lesson.title}” because it strongly aligned to ${selected.code}. The match considered grade band (${grade}), concept (${selected.concept}), topic keywords from “${topic}”, extracted tags (${(lesson.tags || []).join(', ')}), and the lesson’s inferred standards.${standardsText}`;
+        return `The toolkit chose “${lesson.title}” because it strongly aligned to ${selected.code}. The match considered grade band (${grade}), concept (${selected.concept}), inferred lesson type (${formatLessonType(lesson.lessonType || 'guided_practice')}), topic keywords from “${topic}”, extracted tags (${(lesson.tags || []).join(', ')}), and the lesson’s inferred standards.${standardsText}`;
       }
-      return `No strong lesson bank match was found for ${selected.code}, so the toolkit generated a new lesson using the selected standard, progression notes, and setup suggestions.`;
+      return `No strong lesson bank match was found for ${selected.code}, so the toolkit generated a new lesson using the selected standard, progression notes, and a lesson type inferred from the topic and concept.`;
+    }
+
+    function buildLessonDetailsByType(lessonType, topic, selected, usingLessonBank, matchedLessonTitle) {
+      const bankRef = usingLessonBank && matchedLessonTitle ? ` based on ${matchedLessonTitle}` : '';
+      const templates = {
+        coding_lab: {
+          bellringer: 'Read the short code snippet and predict what it will output or where it will fail. Then explain your prediction in one sentence.',
+          demo: `Teacher Demo:\n\nModel one complete ${topic} example${bankRef}. Think aloud while identifying the input, the rule or condition being used, and the expected output. Show students how to test the example and how to notice mistakes before fixing them.`,
+          activity: `Students complete a hands-on coding task on ${topic}. They annotate a starter example, then write or revise code, test it, and explain why their solution meets lesson target ${selected.code}.`,
+          formative: 'During coding, students complete a checkpoint where they must show one test case, explain one line of code, and identify one improvement they made.',
+          summative: `Students submit a working code solution for ${topic} plus a short written explanation of how their code satisfies the lesson objective and why their output is correct.`
+        },
+        analysis_discussion: {
+          bellringer: 'Study the prompt or scenario and write one claim about what is happening, then cite one clue or piece of evidence that supports your claim.',
+          demo: `Teacher Demo:\n\nModel how to analyze the ${topic} example${bankRef}. Think aloud while identifying the key idea, comparing two possible interpretations, and justifying the stronger one using evidence tied to ${selected.code}.`,
+          activity: `Students work in pairs to analyze a ${topic} scenario, compare possible responses, and defend the strongest answer using a structured discussion guide and written evidence.`,
+          formative: 'Students complete a mid-lesson reasoning check in which they state one claim, one piece of evidence, and one revision to strengthen their thinking.',
+          summative: `Students submit a written analysis of ${topic} that includes evidence, reasoning, and a justified conclusion aligned to ${selected.code}.`
+        },
+        project_lab: {
+          bellringer: 'Review the design challenge and list one user need, one design requirement, and one possible constraint you should keep in mind today.',
+          demo: `Teacher Demo:\n\nModel a mini build or prototype process for ${topic}${bankRef}. Show how to move from requirement to design choice, how to test an early draft, and how to record revisions based on feedback.`,
+          activity: `Students complete a structured project-based task on ${topic}. They plan, build, test, and revise a product or prototype that demonstrates the lesson outcome connected to ${selected.code}.`,
+          formative: 'Students participate in a design checkpoint where they explain their plan, show a draft or prototype, and identify one revision they will make next.',
+          summative: `Students submit a completed product, prototype, or project brief for ${topic} along with a short reflection explaining how it meets the lesson goal and success criteria.`
+        },
+        data_investigation: {
+          bellringer: 'Examine the small data sample and write one pattern, one question, and one possible conclusion you might investigate today.',
+          demo: `Teacher Demo:\n\nModel how to inspect the ${topic} data${bankRef}, choose a useful representation, and explain what the evidence suggests. Highlight how to avoid weak conclusions and support claims with data.`,
+          activity: `Students investigate a ${topic} dataset or data display, organize evidence, answer a focus question, and present a data-based conclusion aligned to ${selected.code}.`,
+          formative: 'Students complete a checkpoint chart where they record one pattern, one supporting value, and one question they still need to answer.',
+          summative: `Students submit a data summary, graph, or written conclusion about ${topic} that includes evidence from the dataset and a justified interpretation.`
+        },
+        guided_practice: {
+          bellringer: `Respond to the opening prompt and identify one thing you already know and one thing you need to learn about ${topic}.`,
+          demo: `Teacher Demo:\n\nModel the first part of the ${topic} task${bankRef}, showing students how to use the process, checklist, and success criteria before they begin independent work.`,
+          activity: `Students complete a guided practice task on ${topic}, moving from teacher-supported examples to independent responses that show progress toward ${selected.code}.`,
+          formative: 'Students complete a quick guided check where they show one example, one explanation, and one correction or revision.',
+          summative: `Students submit an independent response or completed task that demonstrates the target skill from today's lesson on ${topic}.`
+        }
+      };
+      return templates[lessonType] || templates.guided_practice;
     }
 
     function buildLesson() {
@@ -1101,62 +1190,91 @@
       const matchResult = matchLessonToStandard(selected, topic, grade);
       const matchedLesson = matchResult.lesson;
       const usingLessonBank = Boolean(matchedLesson);
+      const lessonType = usingLessonBank
+        ? (matchedLesson.lessonType || inferLessonType(topic + ' ' + selected.label, selected.concept, selected.keywords || []))
+        : inferLessonType(topic + ' ' + selected.label, selected.concept, selected.keywords || []);
+      const typedDetails = buildLessonDetailsByType(lessonType, topic, selected, usingLessonBank, matchedLesson?.title || '');
 
       const objective = usingLessonBank ? (matchedLesson.objective || document.getElementById('dirObjective').value) : document.getElementById('dirObjective').value;
       const focus = usingLessonBank ? `Adapted from lesson bank item: ${matchedLesson.title}. ${document.getElementById('dirFocus').value}` : document.getElementById('dirFocus').value;
       const performance = document.getElementById('dirPerformance').value;
       const pacing = document.getElementById('dirPacing').value;
       const workspace = document.getElementById('dirWorkspace').value;
+      const bellringer = typedDetails.bellringer;
+      const directScript = typedDetails.demo;
+      const activity = typedDetails.activity;
 
-      const directScript = usingLessonBank
-        ? `Teacher Script:\n\nToday we are building from an existing lesson bank item titled ${matchedLesson.title}. Our goal is to adapt that lesson so it aligns to ${selected.code} and fits the current class context.\n\nStart by connecting the prior lesson idea to the new standard focus. Ask students what they already know, what needs to be revised, and what evidence they will use to show mastery.\n\nDuring the lesson, explicitly name what is being reused from the original lesson and what is being strengthened for this standard.\n\nBy the end of class, students should be able to explain their reasoning, complete the task, and show how their work connects back to the standard.`
-        : `Teacher Script:\n\nToday we are focusing on ${topic}. Our goal is to connect this lesson to ${selected.code} and think carefully about how we apply computing ideas, not just memorize them.\n\nFirst, look at this example and ask yourself: what is happening here, what decisions are being made, and what should we notice?\n\nAs we work, I want you to pay attention to three things: the problem, the choices being made, and the evidence you can use to support your thinking.\n\nBy the end of class, you should be able to explain your reasoning, complete the task, and show how your work connects back to the standard.`;
-
-      const activity = usingLessonBank
-        ? (matchedLesson.activity || `Students adapt and improve a task from the lesson bank so it aligns to ${selected.code}.`)
-        : `Students complete a structured task connected to ${topic}. They analyze an example, identify an issue or design choice, work through a guided response, and create an artifact that demonstrates their understanding of ${selected.code}.`;
-
-      const steps = usingLessonBank
+      const steps = lessonType === 'coding_lab'
         ? [
-            'Review the original lesson task and identify what parts can be reused.',
-            'Compare the original lesson focus to the selected standard.',
-            'Revise the task so the activity clearly targets the new standard.',
-            'Complete the adapted task and gather evidence of understanding.',
-            'Explain what was changed and why the revision improves alignment.',
-            'Complete the final reflection or exit ticket.'
+            'Complete the bellringer and predict the output, error, or code behavior.',
+            'Watch the teacher demo and annotate the strategy being modeled.',
+            'Open the starter task and identify the coding target.',
+            'Write, revise, or debug your code using the workspace checklist.',
+            'Run tests or trial cases and record what changed.',
+            'Submit your final code and explanation.'
+          ]
+        : lessonType === 'analysis_discussion'
+        ? [
+            'Complete the bellringer and make an initial claim.',
+            'Watch the teacher demo and note what counts as strong evidence.',
+            'Read or examine the lesson prompt and identify the main issue or question.',
+            'Discuss possible responses with a partner and record evidence in the workspace.',
+            'Revise your reasoning based on peer discussion.',
+            'Submit your final written explanation or analysis.'
+          ]
+        : lessonType === 'project_lab'
+        ? [
+            'Complete the bellringer and identify a user need or design goal.',
+            'Watch the teacher demo and note the design process being modeled.',
+            'Plan your build or prototype using the workspace checklist.',
+            'Create a first draft or prototype.',
+            'Test and revise your work based on feedback.',
+            'Submit the finished product and short reflection.'
+          ]
+        : lessonType === 'data_investigation'
+        ? [
+            'Complete the bellringer and identify an initial pattern or question.',
+            'Watch the teacher demo and note how evidence is pulled from the data.',
+            'Study the dataset or graph and record observations.',
+            'Answer the focus question using data evidence.',
+            'Compare conclusions with a partner and revise if needed.',
+            'Submit your final data-based conclusion.'
           ]
         : [
-            'Read or examine the starter example with your partner or group.',
-            'Identify the main problem, design decision, or pattern you notice.',
-            'Use the guided workspace to record evidence, vocabulary, and observations.',
-            'Complete the core task by creating your explanation, design, test, or evaluation response.',
-            'Check your work against the success criteria before sharing.',
-            'Complete the exit reflection and explain how your work connects to the standard.'
+            'Complete the bellringer and record your initial thinking.',
+            'Watch the teacher demo and annotate one important move or example.',
+            'Read the student task prompt and underline what you must produce.',
+            'Use the workspace checklist to organize vocabulary, evidence, and your response.',
+            'Complete the engagement task with a partner or small group.',
+            'Revise your work after peer discussion and complete the exit assessment.'
           ];
 
-      const workspaceBlocks = ['Warm-Up / Hook Response', 'Key Vocabulary Box', 'Model Example Notes', 'Task Checklist', 'Evidence / Code / Design Workspace', 'Reflection and Exit Ticket Box'];
-      const workspaceChecks = ['Checkpoint 1: students can identify the main issue or target.', 'Checkpoint 2: students can explain the evidence they are using.', 'Checkpoint 3: students can justify their response before turning it in.'];
+      const workspaceBlocks = lessonType === 'coding_lab'
+        ? ['Bellringer Prediction', 'Code Notes', 'Starter Code / Draft Space', 'Test Cases', 'Revision Notes', 'Exit Reflection']
+        : lessonType === 'analysis_discussion'
+        ? ['Bellringer Claim', 'Evidence Notes', 'Discussion Guide', 'Reasoning Draft', 'Revision Notes', 'Final Response']
+        : lessonType === 'project_lab'
+        ? ['Bellringer Idea', 'Plan Sketch', 'Materials / Build Notes', 'Prototype Notes', 'Revision Log', 'Reflection']
+        : lessonType === 'data_investigation'
+        ? ['Bellringer Pattern', 'Data Notes', 'Table / Graph Space', 'Evidence Box', 'Conclusion Draft', 'Exit Reflection']
+        : ['Bellringer Response', 'Key Vocabulary', 'Teacher Demo Notes', 'Task Checklist', 'Work Space', 'Reflection / Exit Response'];
+      const workspaceChecks = ['Checkpoint 1: student can explain the task.', 'Checkpoint 2: student can point to evidence or reasoning.', 'Checkpoint 3: student can revise work before submitting.'];
 
-      const formative = usingLessonBank
-        ? (matchedLesson.formativeAssessment || 'Teacher observation, questioning, and checkpoint review during guided practice.')
-        : 'Teacher observation during guided practice, short oral checks, and review of student workspace notes before independent completion.';
-
-      const summative = usingLessonBank
-        ? (matchedLesson.summativeAssessment || `Final student product or exit ticket aligned to ${selected.code}.`)
-        : `Students submit a completed artifact and an exit ticket in which they explain what they learned about ${topic}, describe the choice or issue they addressed, and justify why their response is effective.`;
+      const formative = usingLessonBank ? (matchedLesson.formativeAssessment || typedDetails.formative) : typedDetails.formative;
+      const summative = usingLessonBank ? (matchedLesson.summativeAssessment || typedDetails.summative) : typedDetails.summative;
 
       const pacingMap = classLength >= 90
-        ? `${placement}: 10 min opening hook, 15 min direct instruction and model, 30–35 min guided student work, 10–15 min collaboration or check-in, 10 min share-out, 5–10 min assessment closure.`
-        : `${placement}: 5 min hook, 10 min direct instruction, 20 min focused activity, 5–10 min share-out, 5 min assessment closure.`;
+        ? `${placement}: 8 min bellringer, 12 min teacher demo, 35 min student engagement, 10 min peer review, 10 min formative checkpoint, 10 min summative exit ticket, 5 min closure.`
+        : `${placement}: 5 min bellringer, 10 min teacher demo, 20 min student engagement, 5 min formative checkpoint, 5 min summative exit ticket.`;
 
-      const support = 'Supports: chunked directions, model example, sentence frames, visual supports, optional read-aloud, flexible output choices, peer collaboration, extension prompt for advanced learners, and a teacher checkpoint midway through the activity.';
+      const support = 'Supports: chunked directions, model example, sentence frames, visual supports, optional read-aloud, flexible response options, peer collaboration, and an extension prompt for early finishers.';
       const review = usingLessonBank
-        ? 'Agent Review: A matching lesson was found in the lesson bank and used as the instructional base. The toolkit adapted that lesson to the selected standard instead of generating from scratch.'
-        : 'Agent Review: No strong lesson bank match was found, so the toolkit auto-generated a lesson from the selected standard, progression notes, and setup suggestions.';
+        ? 'Improvement suggestion: tighten alignment between the reused activity and the selected standard by adding one explicit evidence requirement or revision checkpoint.'
+        : 'Improvement suggestion: add one more concrete example or misconception check if students are new to the concept.';
 
       appState.lesson = {
-        topic, pathway, grade, classLength, courseLength, placement, selected,
-        objective, focus, performance, pacing, workspace, workspaceBlocks, workspaceChecks,
+        topic, pathway, grade, classLength, courseLength, placement, selected, lessonType,
+        bellringer, objective, focus, performance, pacing, workspace, workspaceBlocks, workspaceChecks,
         directScript, activity, steps, formative, summative, pacingMap, support, review,
         usingLessonBank, matchedLessonTitle: matchedLesson?.title || ''
       };
@@ -1164,8 +1282,10 @@
       document.getElementById('outGrade').textContent = `Grade ${grade}`;
       document.getElementById('outStandard').textContent = selected.code;
       document.getElementById('outMeta').textContent = `${pathway} · ${classLength} min · ${courseLength === 'semester' ? 'Semester' : 'Yearlong'} · ${placement}`;
+      document.getElementById('outLessonType').textContent = formatLessonType(lessonType);
       document.getElementById('outTitle').textContent = topic;
       document.getElementById('outSubtitle').textContent = `${selected.label} | ${selected.concept} | ${selected.subconcept}`;
+      document.getElementById('outBellringer').textContent = bellringer;
       document.getElementById('outObjective').textContent = objective;
       document.getElementById('outFocus').textContent = focus;
       document.getElementById('outPerformance').textContent = performance;
@@ -1191,14 +1311,25 @@
 
       document.getElementById('finalView').classList.add('hidden');
       document.getElementById('agentNote').textContent = usingLessonBank
-        ? `Lesson built from the lesson bank using ${matchedLesson.title}.`
-        : 'No lesson bank match was found, so a new lesson was generated from the selected standard and suggestions.';
+        ? `Lesson built from the lesson bank using ${matchedLesson.title} as a ${formatLessonType(lessonType)}.`
+        : `No lesson bank match was found, so a new ${formatLessonType(lessonType)} was generated from the selected standard and suggestions.`;
       document.getElementById('aiInsight').textContent = usingLessonBank
-        ? `I matched ${matchedLesson.title} to ${selected.code} using grade band, concept, topic keywords, extracted tags, and inferred standards.`
-        : `I did not find a strong lesson bank match for ${selected.code}, so I generated a lesson from the standard, progression notes, and your planning inputs.`;
+        ? `I matched ${matchedLesson.title} to ${selected.code} and kept the ${formatLessonType(lessonType)} structure because it best fits the concept and expected student outcome.`
+        : `I inferred a ${formatLessonType(lessonType)} structure from the standard, concept, and topic, then generated lesson details to match that outcome.`;
 
       setStep(3);
       openPanel('panelBuild');
+    }
+
+    function requestAssessmentRefresh() {
+      if (!appState.lesson) return;
+      const l = appState.lesson;
+      const typedDetails = buildLessonDetailsByType(l.lessonType || 'guided_practice', l.topic, l.selected, l.usingLessonBank, l.matchedLessonTitle || '');
+      l.formative = `Generated formative assessment: ${typedDetails.formative}`;
+      l.summative = `Generated summative assessment: ${typedDetails.summative}`;
+      document.getElementById('outFormative').textContent = l.formative;
+      document.getElementById('outSummative').textContent = l.summative;
+      document.getElementById('agentNote').textContent = 'Assessments refreshed on request using the current lesson type.';
     }
 
     function finalizeLesson() {
@@ -1212,7 +1343,8 @@
       document.getElementById('exportBadgeGrade').textContent = `Grade ${l.grade}`;
       document.getElementById('exportBadgeStandard').textContent = l.selected.code;
       document.getElementById('exportBadgeMeta').textContent = `${l.pathway} · ${l.classLength} min · ${l.courseLength === 'semester' ? 'Semester' : 'Yearlong'} · ${l.placement}`;
-      document.getElementById('finalObjective').textContent = l.objective;
+      document.getElementById('exportBadgeLessonType').textContent = formatLessonType(l.lessonType || 'guided_practice');
+      document.getElementById('finalObjective').textContent = `${l.bellringer} Objective: ${l.objective}`;
       document.getElementById('exportFocus').textContent = l.focus;
       document.getElementById('finalScript').textContent = l.directScript.replace(/\n+/g, ' ');
       document.getElementById('finalActivity').textContent = `${l.activity} Steps: ${l.steps.join(' ')}`;
@@ -1225,7 +1357,7 @@
       document.getElementById('finalView').classList.remove('hidden');
       document.getElementById('agentStatus').textContent = 'Finalized';
       document.getElementById('agentNote').textContent = 'This lesson is finalized and now displayed in a district-style one-page layout for clear viewing and export.';
-      document.getElementById('aiInsight').textContent = 'Lesson finalized. You can print, export PDF, or export Word.';
+      document.getElementById('aiInsight').textContent = `Lesson finalized as a ${formatLessonType(l.lessonType || 'guided_practice')}. You can print, export PDF, or export Word.`;
       setStep(4);
     }
 
@@ -1291,7 +1423,7 @@
           properties: { page: { size: { orientation: 'landscape' }, margin: { top: 720, right: 720, bottom: 720, left: 720 } } },
           children: [
             new Paragraph({ text: 'Teach Ready Toolkit', heading: HeadingLevel.HEADING_1 }),
-            new Paragraph({ children: [new TextRun({ text: `${l.topic} | ${l.selected.code} | ${l.selected.concept} | ${l.pathway} | ${l.classLength} min | ${l.placement}`, italics: true })] }),
+            new Paragraph({ children: [new TextRun({ text: `${l.topic} | ${l.selected.code} | ${l.selected.concept} | ${formatLessonType(l.lessonType || 'guided_practice')} | ${l.pathway} | ${l.classLength} min | ${l.placement}`, italics: true })] }),
             table
           ]
         }]
@@ -1310,6 +1442,7 @@
       console.assert(typeof explainMatch === 'function', 'Explanation layer missing.');
       console.assert(typeof inferStandardsFromLesson === 'function', 'Standard inference missing.');
       console.assert(typeof detectGradeBand === 'function', 'Grade detection missing.');
+      console.assert(typeof inferLessonType === 'function', 'Lesson type inference missing.');
     }
 
     document.getElementById('standardsMode').addEventListener('change', (e) => {
