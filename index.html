@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CS Teaching Toolkit | High-Impact Lesson Builder</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://unpkg.com/docx@8.5.0/build/index.umd.js"></script>
+  <script src="https://unpkg.com/file-saver@2.0.5/dist/FileSaver.min.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
     body { font-family: 'Inter', sans-serif; }
@@ -33,7 +36,16 @@
     textarea, input, select { transition: all .2s ease; }
     textarea:focus, input:focus, select:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59,130,246,.15); }
     .print-only { display: none; }
-    .lesson-grid { display: grid; grid-template-columns: 200px 1fr; }
+    .lesson-grid { display: grid; grid-template-columns: 220px 1fr; }
+    .export-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    .export-table th, .export-table td { border: 1px solid #cbd5e1; padding: .55rem .65rem; vertical-align: top; }
+    .export-table th { width: 22%; background: #e2e8f0; text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+    .export-table td { background: white; font-size: 13px; line-height: 1.45; }
+    .export-header { display: flex; justify-content: space-between; gap: 1rem; align-items: flex-start; margin-bottom: 1rem; }
+    .export-badge { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; padding: .35rem .55rem; border-radius: 999px; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+    .export-actions { display: flex; gap: .5rem; flex-wrap: wrap; }
+    .landscape-note { font-size: 11px; color: #64748b; }
+    @page { size: landscape; margin: 0.5in; }
     .lesson-grid div { padding: .7rem .85rem; border-bottom: 1px solid #e2e8f0; }
     .lesson-grid div:nth-child(4n+1), .lesson-grid div:nth-child(4n+2) { background: #f8fafc; }
     .bank-item.active { border-color: #2563eb; background: #eff6ff; }
@@ -374,26 +386,45 @@
         </div>
 
         <div id="finalView" class="hidden one-page-view section-card mt-6">
-          <div class="flex items-center justify-between mb-4">
+          <div class="export-header">
             <div>
-              <h3 class="text-lg font-black tracking-tight">Finalized One-Page Lesson View</h3>
-              <p class="text-sm text-slate-500">Visually condensed for viewing clarity and printing.</p>
+              <h3 class="text-lg font-black tracking-tight">Finalized Lesson Plan</h3>
+              <p class="text-sm text-slate-500">Landscape tabular format for printing, PDF export, and Word export.</p>
             </div>
-            <span class="step-pill completed-step">Final</span>
+            <div class="flex flex-col items-end gap-3 no-print">
+              <span class="step-pill completed-step">Final</span>
+              <div class="export-actions">
+                <button class="mini-btn" onclick="printLesson()">Print / Save PDF</button>
+                <button class="mini-btn mini-btn-primary" onclick="exportPDF()">Export PDF</button>
+                <button class="mini-btn" onclick="exportDOCX()">Export Word (.docx)</button>
+              </div>
+            </div>
           </div>
-          <div class="lesson-grid rounded-xl overflow-hidden border border-slate-200">
-            <div class="font-bold">Lesson</div><div id="finalTitle"></div>
-            <div class="font-bold">Grade / Standard</div><div id="finalStandard"></div>
-            <div class="font-bold">Course Context</div><div id="finalMeta"></div>
-            <div class="font-bold">Objective</div><div id="finalObjective"></div>
-            <div class="font-bold">Direct Instruction</div><div id="finalScript"></div>
-            <div class="font-bold">Student Activity</div><div id="finalActivity"></div>
-            <div class="font-bold">Student Workspace</div><div id="finalWorkspace"></div>
-            <div class="font-bold">Assessment</div><div id="finalAssessment"></div>
-            <div class="font-bold">Pacing</div><div id="finalPacing"></div>
-            <div class="font-bold">Supports</div><div id="finalSupport"></div>
-            <div class="font-bold">Agent Review</div><div id="finalReview"></div>
+          <div id="exportLessonPlan" class="rounded-xl overflow-hidden border border-slate-200 bg-white">
+            <div class="px-4 py-3 border-b border-slate-200 bg-slate-50">
+              <div class="flex flex-wrap items-center gap-2 mb-2">
+                <span class="export-badge" id="exportBadgeGrade"></span>
+                <span class="export-badge" id="exportBadgeStandard"></span>
+                <span class="export-badge" id="exportBadgeMeta"></span>
+              </div>
+              <h2 id="exportPlanTitle" class="text-2xl font-black tracking-tight"></h2>
+              <p id="exportPlanSubtitle" class="text-sm text-slate-600 mt-1"></p>
+            </div>
+            <div class="p-4">
+              <table class="export-table">
+                <tr><th>Objective</th><td id="finalObjective"></td></tr>
+                <tr><th>Lesson Focus</th><td id="exportFocus"></td></tr>
+                <tr><th>Direct Instruction</th><td id="finalScript"></td></tr>
+                <tr><th>Student Activity</th><td id="finalActivity"></td></tr>
+                <tr><th>Workspace</th><td id="finalWorkspace"></td></tr>
+                <tr><th>Assessment</th><td id="finalAssessment"></td></tr>
+                <tr><th>Pacing</th><td id="finalPacing"></td></tr>
+                <tr><th>Supports</th><td id="finalSupport"></td></tr>
+                <tr><th>Agent Review</th><td id="finalReview"></td></tr>
+              </table>
+            </div>
           </div>
+        </div>
         </div>
       </div>
     </section>
@@ -945,13 +976,17 @@
     function finalizeLesson() {
       if (!appState.lesson) return;
       const l = appState.lesson;
-      document.getElementById('finalTitle').textContent = l.topic;
-      document.getElementById('finalStandard').textContent = `${l.grade} · ${l.selected.code} · ${l.selected.concept}`;
-      document.getElementById('finalMeta').textContent = `${l.pathway} · ${l.classLength} min · ${l.courseLength === 'semester' ? 'Semester (2 Nine Weeks)' : 'Yearlong (4 Nine Weeks)'} · ${l.placement}`;
+      document.getElementById('exportPlanTitle').textContent = l.topic;
+      document.getElementById('exportPlanSubtitle').textContent = `${l.selected.label} | ${l.selected.concept} | ${l.selected.subconcept}`;
+      document.getElementById('exportBadgeGrade').textContent = `Grade ${l.grade}`;
+      document.getElementById('exportBadgeStandard').textContent = l.selected.code;
+      document.getElementById('exportBadgeMeta').textContent = `${l.pathway} · ${l.classLength} min · ${l.courseLength === 'semester' ? 'Semester' : 'Yearlong'} · ${l.placement}`;
       document.getElementById('finalObjective').textContent = l.objective;
-      document.getElementById('finalScript').textContent = l.directScript.replace(/\n+/g, ' ');
+      document.getElementById('exportFocus').textContent = l.focus;
+      document.getElementById('finalScript').textContent = l.directScript.replace(/
++/g, ' ');
       document.getElementById('finalActivity').textContent = `${l.activity} Steps: ${l.steps.join(' ')}`;
-      document.getElementById('finalWorkspace').textContent = `${l.workspace} Blocks: ${l.workspaceBlocks.join(', ')}.`;
+      document.getElementById('finalWorkspace').textContent = `${l.workspace} Blocks: ${l.workspaceBlocks.join(', ')}. Checkpoints: ${l.workspaceChecks.join(' ')}`;
       document.getElementById('finalAssessment').textContent = l.assessment;
       document.getElementById('finalPacing').textContent = l.pacingMap;
       document.getElementById('finalSupport').textContent = l.support;
@@ -1009,6 +1044,79 @@
       document.getElementById('agentNote').textContent = 'Lesson bank updated. Imported lessons will be used first; if no strong match exists, the toolkit will auto-generate a lesson from the selected standard and suggestions.';
       document.getElementById('aiInsight').textContent = 'Lesson bank refreshed. Build a lesson to see whether a bank lesson is reused or a new lesson is generated.';
     });
+
+    function getExportFilename() {
+      const title = (appState.lesson?.topic || 'lesson-plan').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      return title || 'lesson-plan';
+    }
+
+    function printLesson() {
+      window.print();
+    }
+
+    function exportPDF() {
+      const element = document.getElementById('exportLessonPlan');
+      if (!element) return;
+      const opt = {
+        margin: 0.35,
+        filename: `${getExportFilename()}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape' },
+        pagebreak: { mode: ['avoid-all', 'css'] }
+      };
+      html2pdf().set(opt).from(element).save();
+    }
+
+    async function exportDOCX() {
+      if (!appState.lesson || !window.docx) return;
+      const { Document, Packer, Paragraph, Table, TableRow, TableCell, WidthType, HeadingLevel, TextRun, ShadingType } = window.docx;
+      const l = appState.lesson;
+
+      const rows = [
+        ['Objective', l.objective],
+        ['Lesson Focus', l.focus],
+        ['Direct Instruction', l.directScript.replace(/
++/g, ' ')],
+        ['Student Activity', `${l.activity} Steps: ${l.steps.join(' ')}`],
+        ['Student Workspace', `${l.workspace} Blocks: ${l.workspaceBlocks.join(', ')}. Checkpoints: ${l.workspaceChecks.join(' ')}`],
+        ['Assessment', l.assessment],
+        ['Pacing', l.pacingMap],
+        ['Supports', l.support],
+        ['Agent Review', l.review]
+      ];
+
+      const table = new Table({
+        width: { size: 100, type: WidthType.PERCENTAGE },
+        rows: rows.map(([label, value]) => new TableRow({
+          children: [
+            new TableCell({
+              width: { size: 22, type: WidthType.PERCENTAGE },
+              shading: { type: ShadingType.CLEAR, color: 'auto', fill: 'E2E8F0' },
+              children: [new Paragraph({ children: [new TextRun({ text: label, bold: true })] })]
+            }),
+            new TableCell({
+              width: { size: 78, type: WidthType.PERCENTAGE },
+              children: [new Paragraph(String(value || ''))]
+            })
+          ]
+        }))
+      });
+
+      const doc = new Document({
+        sections: [{
+          properties: { page: { size: { orientation: 'landscape' }, margin: { top: 720, right: 720, bottom: 720, left: 720 } } },
+          children: [
+            new Paragraph({ text: l.topic, heading: HeadingLevel.HEADING_1 }),
+            new Paragraph({ children: [new TextRun({ text: `${l.selected.code} | ${l.selected.concept} | ${l.pathway} | ${l.classLength} min | ${l.placement}`, italics: true })] }),
+            table
+          ]
+        }]
+      });
+
+      const blob = await Packer.toBlob(doc);
+      saveAs(blob, `${getExportFilename()}.docx`);
+    }
 
     populateGradeBands();
     renderLessonBank();
