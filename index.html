@@ -3,79 +3,203 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CS Teaching Toolkit | High-Impact Lesson Builder</title>
+  <title>Teach Ready Toolkit | Version 3</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="https://unpkg.com/docx@8.5.0/build/index.umd.js"></script>
   <script src="https://unpkg.com/file-saver@2.0.5/dist/FileSaver.min.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
-    body { font-family: 'Inter', sans-serif; }
-    .glass { background: rgba(255,255,255,.88); backdrop-filter: blur(10px); }
-    .panel-card { background: white; border: 1px solid #e2e8f0; border-radius: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
-    .section-card { background: white; border: 1px solid #e2e8f0; border-radius: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,.05); padding: 1.25rem; }
-    .mini-btn { font-size: 12px; font-weight: 700; border-radius: .75rem; padding: .65rem .9rem; transition: all .2s ease; border: 1px solid #e2e8f0; background: white; }
-    .mini-btn:hover { background: #f8fafc; }
-    .mini-btn-primary { background: #0f172a; color: white; border-color: #0f172a; }
-    .mini-btn-primary:hover { background: #2563eb; border-color: #2563eb; }
-    .step-pill { font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; padding: .75rem 1rem; border-radius: 999px; border: 1px solid #e2e8f0; min-width: 96px; text-align: center; }
-    .active-step { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); color: #1d4ed8; border-color: #93c5fd; box-shadow: 0 8px 20px rgba(59,130,246,.16); }
-    .completed-step { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; border-color: #16a34a; box-shadow: 0 0 0 3px rgba(34,197,94,.12), 0 12px 24px rgba(34,197,94,.22); }
+
+    :root {
+      --brand-1: #1d4ed8;
+      --brand-2: #7c3aed;
+      --brand-3: #0f766e;
+      --ink: #0f172a;
+      --muted: #64748b;
+      --line: #dbe4f0;
+      --card: #ffffff;
+      --bg: linear-gradient(135deg, #f8fafc 0%, #eef2ff 45%, #ecfeff 100%);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+    .glass { background: rgba(255,255,255,.86); backdrop-filter: blur(12px); }
+    .panel-card {
+      background: linear-gradient(135deg, #ffffff 0%, #fbfdff 100%);
+      border: 1px solid var(--line);
+      border-radius: 1.25rem;
+      box-shadow: 0 10px 30px rgba(30, 41, 59, 0.06);
+    }
+    .section-card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 1rem;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
+      padding: 1rem;
+    }
+    .hero-card {
+      background: linear-gradient(135deg, rgba(29,78,216,.95) 0%, rgba(124,58,237,.94) 52%, rgba(15,118,110,.92) 100%);
+      color: white;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 1.25rem;
+      box-shadow: 0 20px 50px rgba(29, 78, 216, 0.18);
+    }
+    .mini-btn {
+      font-size: 12px;
+      font-weight: 800;
+      border-radius: .85rem;
+      padding: .72rem .95rem;
+      transition: all .2s ease;
+      border: 1px solid var(--line);
+      background: white;
+    }
+    .mini-btn:hover { background: #f8fafc; transform: translateY(-1px); }
+    .mini-btn-primary {
+      background: linear-gradient(135deg, var(--brand-1) 0%, var(--brand-2) 100%);
+      color: white;
+      border-color: transparent;
+    }
+    .mini-btn-primary:hover { filter: brightness(1.05); }
+    .mini-btn-success {
+      background: linear-gradient(135deg, #059669 0%, #0f766e 100%);
+      color: white;
+      border-color: transparent;
+    }
+    .step-pill {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: .75rem 1rem;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      min-width: 104px;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .active-step {
+      background: linear-gradient(135deg, #dbeafe 0%, #ede9fe 100%);
+      color: #312e81;
+      border-color: #c7d2fe;
+      box-shadow: 0 10px 22px rgba(99, 102, 241, .16);
+    }
+    .completed-step {
+      background: linear-gradient(135deg, #10b981 0%, #22c55e 100%);
+      color: white;
+      border-color: #10b981;
+      box-shadow: 0 0 0 3px rgba(16,185,129,.12), 0 12px 26px rgba(16,185,129,.22);
+    }
+    .idle-step {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      color: #64748b;
+      border-color: #e2e8f0;
+    }
     .pulse-step { animation: pulseGlow 1.4s ease-in-out infinite; }
     @keyframes pulseGlow {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(59,130,246,.15), 0 8px 20px rgba(59,130,246,.16); }
-      50% { box-shadow: 0 0 0 8px rgba(59,130,246,0), 0 10px 24px rgba(59,130,246,.22); }
+      0%, 100% { box-shadow: 0 0 0 0 rgba(99,102,241,.14), 0 8px 20px rgba(99,102,241,.16); }
+      50% { box-shadow: 0 0 0 10px rgba(99,102,241,0), 0 10px 24px rgba(99,102,241,.24); }
     }
-    .idle-step { background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); color: #64748b; border-color: #e2e8f0; }
     .workflow-panel { display: none; }
     .workflow-panel.active { display: block; }
-    .workflow-flow { display: flex; align-items: center; gap: .5rem; overflow-x: auto; }
-    .workflow-connector { display: flex; align-items: center; gap: .25rem; min-width: 60px; }
+    .workflow-flow { display: flex; align-items: center; gap: .45rem; overflow-x: auto; }
+    .workflow-connector { display: flex; align-items: center; gap: .2rem; min-width: 60px; }
     .workflow-line { height: 3px; flex: 1; border-radius: 999px; background: linear-gradient(to right, #e2e8f0, #e2e8f0); }
-    .workflow-arrow { font-size: 1.25rem; line-height: 1; color: #cbd5e1; }
-    textarea, input, select { transition: all .2s ease; }
-    textarea:focus, input:focus, select:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59,130,246,.15); }
-    .print-only { display: none; }
-    .lesson-grid { display: grid; grid-template-columns: 220px 1fr; }
-    .export-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-    .export-table th, .export-table td { border: 1px solid #cbd5e1; padding: .55rem .65rem; vertical-align: top; }
-    .export-table th { width: 22%; background: #e2e8f0; text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
-    .export-table td { background: white; font-size: 13px; line-height: 1.45; }
-    .export-header { display: flex; justify-content: space-between; gap: 1rem; align-items: flex-start; margin-bottom: 1rem; }
-    .export-badge { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; padding: .35rem .55rem; border-radius: 999px; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
-    .export-actions { display: flex; gap: .5rem; flex-wrap: wrap; }
-    .landscape-note { font-size: 11px; color: #64748b; }
-    @page { size: landscape; margin: 0.5in; }
-    .lesson-grid div { padding: .7rem .85rem; border-bottom: 1px solid #e2e8f0; }
-    .lesson-grid div:nth-child(4n+1), .lesson-grid div:nth-child(4n+2) { background: #f8fafc; }
-    .bank-item.active { border-color: #2563eb; background: #eff6ff; }
+    .workflow-arrow { font-size: 1.15rem; line-height: 1; color: #cbd5e1; }
+    input, textarea, select {
+      transition: all .18s ease;
+      outline: none;
+      border: 1px solid #d7e0eb;
+      background: white;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: #60a5fa;
+      box-shadow: 0 0 0 3px rgba(96,165,250,.15);
+    }
+    .sidebar-note {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: white;
+    }
     .collapse-body.hidden { display: none; }
-    .variation-visual { border-left: 4px solid #a855f7; background: #faf5ff; }
+    .variation-visual { border-left: 4px solid #8b5cf6; background: #faf5ff; }
     .variation-hands { border-left: 4px solid #16a34a; background: #f0fdf4; }
     .variation-discuss { border-left: 4px solid #d97706; background: #fffbeb; }
-    .soft-animate { animation: softFade .35s ease; }
+    .soft-animate { animation: softFade .3s ease; }
     @keyframes softFade { from { opacity: 0; transform: translateY(4px);} to { opacity: 1; transform: translateY(0);} }
-    .sidebar-note { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; }
+    .chip {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      border-radius: 999px;
+      padding: .35rem .55rem;
+      border: 1px solid #c7d2fe;
+      background: linear-gradient(135deg, #eff6ff 0%, #eef2ff 100%);
+      color: #3730a3;
+    }
+    .export-frame {
+      border: 1px solid #cbd5e1;
+      box-shadow: 0 16px 36px rgba(15, 23, 42, .08);
+      overflow: hidden;
+    }
+    .export-topline {
+      height: 10px;
+      background: linear-gradient(90deg, var(--brand-1) 0%, var(--brand-2) 50%, var(--brand-3) 100%);
+    }
+    .district-header {
+      background: linear-gradient(135deg, #1e3a8a 0%, #6d28d9 55%, #0f766e 100%);
+      color: white;
+    }
+    .district-subbar {
+      background: linear-gradient(135deg, #e0f2fe 0%, #ede9fe 100%);
+    }
+    .export-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    .export-table th, .export-table td {
+      border: 1px solid #cbd5e1;
+      padding: .6rem .7rem;
+      vertical-align: top;
+    }
+    .export-table th {
+      width: 22%;
+      background: linear-gradient(135deg, #dbeafe 0%, #e9d5ff 100%);
+      color: #1e293b;
+      text-align: left;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      font-weight: 800;
+    }
+    .export-table td {
+      background: white;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .hidden-admin { display: none; }
+    @page { size: landscape; margin: 0.5in; }
     @media print {
       .no-print { display: none !important; }
-      .print-only { display: block; }
       body { background: white; }
-      .section-card, .panel-card { break-inside: avoid; box-shadow: none; }
-      .one-page-view { border: 1px solid #cbd5e1; border-radius: .75rem; }
-      .one-page-view .lesson-grid { grid-template-columns: 180px 1fr; }
-      .one-page-view .lesson-grid div { font-size: 11px; padding: .45rem .6rem; }
+      .panel-card, .section-card { box-shadow: none; break-inside: avoid; }
     }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-900 min-h-screen pb-20">
+<body class="text-slate-900 min-h-screen pb-20">
   <nav class="glass border-b border-slate-200 sticky top-0 z-20 no-print">
     <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
       <div class="flex items-center gap-2">
         <div class="bg-blue-600 text-white p-1.5 rounded-lg font-bold">🛡️</div>
-        <span class="font-bold text-xl tracking-tight">CS Teaching Toolkit</span>
+        <span class="font-bold text-xl tracking-tight">Teach Ready Toolkit</span>
       </div>
       <div class="text-right text-xs text-slate-500">
-        <div>High-Impact Lesson Builder</div>
+        <div>Version 3 • Full Intelligence</div>
         <div class="uppercase tracking-widest text-[10px] text-blue-600 font-bold">Agentic Workflow Active</div>
       </div>
     </div>
@@ -83,31 +207,42 @@
 
   <main class="max-w-7xl mx-auto p-6 grid grid-cols-1 xl:grid-cols-12 gap-6">
     <aside class="xl:col-span-4 no-print space-y-5">
+      <div class="hero-card p-5">
+        <div class="flex items-center justify-between gap-4 mb-4">
+          <div>
+            <div class="text-[11px] uppercase tracking-[0.18em] font-bold text-blue-100">District-Ready Planning</div>
+            <h1 class="text-2xl font-black tracking-tight mt-1">Plan High-Impact Lessons Quickly</h1>
+          </div>
+          <span id="agentStatus" class="chip bg-white/10 border-white/20 text-white">Ready</span>
+        </div>
+        <p class="text-sm text-blue-50 leading-relaxed">This builder uses standards progression, intelligent lesson matching, guided direction, assessments, and export-ready formatting to help you move from idea to polished lesson fast.</p>
+      </div>
+
       <div class="panel-card p-5">
         <div class="flex items-center justify-between mb-4">
           <h2 class="text-xs font-bold uppercase tracking-widest text-slate-400">Workflow</h2>
-          <span id="agentStatus" class="text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-full bg-blue-50 text-blue-700">Ready</span>
+          <span class="text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-full bg-violet-50 text-violet-700">Progression-Aware</span>
         </div>
         <div class="rounded-2xl border border-slate-200 bg-gradient-to-r from-slate-50 via-white to-slate-50 p-4">
           <div class="workflow-flow" id="workflowFlow">
-            <div id="step1Pill" class="step-pill active-step pulse-step shrink-0">1 Setup</div>
+            <div id="step1Pill" class="step-pill active-step pulse-step">1 Setup</div>
             <div class="workflow-connector"><div class="workflow-line" data-line-index="0"></div><div class="workflow-arrow" data-arrow-index="0">➜</div></div>
-            <div id="step2Pill" class="step-pill idle-step shrink-0">2 Direction</div>
+            <div id="step2Pill" class="step-pill idle-step">2 Direction</div>
             <div class="workflow-connector"><div class="workflow-line" data-line-index="1"></div><div class="workflow-arrow" data-arrow-index="1">➜</div></div>
-            <div id="step3Pill" class="step-pill idle-step shrink-0">3 Build</div>
+            <div id="step3Pill" class="step-pill idle-step">3 Build</div>
             <div class="workflow-connector"><div class="workflow-line" data-line-index="2"></div><div class="workflow-arrow" data-arrow-index="2">➜</div></div>
-            <div id="step4Pill" class="step-pill idle-step shrink-0">4 Finalize</div>
+            <div id="step4Pill" class="step-pill idle-step">4 Finalize</div>
           </div>
         </div>
         <div class="mt-4 rounded-xl bg-slate-50 border border-slate-200 p-4">
           <div class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Agent Note</div>
-          <p id="agentNote" class="text-sm text-slate-700 leading-relaxed">Start with the lesson setup. The agent will suggest direction, build the lesson, explain why it matched a lesson, and convert it into a one-page tabular view.</p>
+          <p id="agentNote" class="text-sm text-slate-700 leading-relaxed">Start with the lesson setup. The agent will suggest direction, build the lesson, explain why it chose a lesson path, and finalize the lesson in a district-style one-page format.</p>
         </div>
       </div>
 
       <div class="panel-card p-5 sidebar-note">
         <div class="text-xs font-bold uppercase tracking-widest text-slate-300 mb-2">AI Assistant Sidebar</div>
-        <p id="aiInsight" class="text-sm leading-relaxed text-slate-100">Waiting for lesson setup. Once a lesson is built, the assistant will explain what it matched, why it matched, and what to teach next.</p>
+        <p id="aiInsight" class="text-sm leading-relaxed text-slate-100">Waiting for lesson setup. Once a lesson is built, the assistant will explain the match, show similar lessons, suggest variations, and recommend what to teach next.</p>
       </div>
 
       <div class="panel-card p-5">
@@ -115,20 +250,20 @@
         <div class="space-y-4">
           <div>
             <label class="block text-sm font-semibold mb-1">Topic / Concept</label>
-            <input id="topic" type="text" class="w-full px-4 py-2 rounded-xl border border-slate-200" placeholder="e.g., Unit Testing with unittest" />
+            <input id="topic" type="text" class="w-full px-4 py-2 rounded-xl" placeholder="e.g., Unit Testing with unittest" />
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label class="block text-sm font-semibold mb-1">Goal Area</label>
-              <select id="pathway" class="w-full px-4 py-2 rounded-xl border border-slate-200">
+              <select id="pathway" class="w-full px-4 py-2 rounded-xl">
                 <option value="CS">Computer Science</option>
                 <option value="CTE">Career and Technical Education</option>
               </select>
             </div>
             <div>
               <label class="block text-sm font-semibold mb-1">Course Length</label>
-              <select id="courseLength" class="w-full px-4 py-2 rounded-xl border border-slate-200">
+              <select id="courseLength" class="w-full px-4 py-2 rounded-xl">
                 <option value="semester">Semester (2 Nine Weeks)</option>
                 <option value="yearlong">Yearlong (4 Nine Weeks)</option>
               </select>
@@ -138,11 +273,11 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label class="block text-sm font-semibold mb-1">Grade Band</label>
-              <select id="gradeBand" class="w-full px-4 py-2 rounded-xl border border-slate-200"></select>
+              <select id="gradeBand" class="w-full px-4 py-2 rounded-xl"></select>
             </div>
             <div>
               <label class="block text-sm font-semibold mb-1">Class Length</label>
-              <select id="classLength" class="w-full px-4 py-2 rounded-xl border border-slate-200">
+              <select id="classLength" class="w-full px-4 py-2 rounded-xl">
                 <option value="45">45 minutes</option>
                 <option value="60">60 minutes</option>
                 <option value="90" selected>90 minutes</option>
@@ -154,17 +289,17 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label class="block text-sm font-semibold mb-1">Concept</label>
-              <select id="concept" class="w-full px-4 py-2 rounded-xl border border-slate-200"></select>
+              <select id="concept" class="w-full px-4 py-2 rounded-xl"></select>
             </div>
             <div>
               <label class="block text-sm font-semibold mb-1">Subconcept / Strand</label>
-              <select id="subconcept" class="w-full px-4 py-2 rounded-xl border border-slate-200"></select>
+              <select id="subconcept" class="w-full px-4 py-2 rounded-xl"></select>
             </div>
           </div>
 
           <div>
             <label class="block text-sm font-semibold mb-1">Standards Mode</label>
-            <select id="standardsMode" class="w-full px-4 py-2 rounded-xl border border-slate-200">
+            <select id="standardsMode" class="w-full px-4 py-2 rounded-xl">
               <option value="foundational" selected>Foundational Progression</option>
               <option value="specialty">High School Specialty Pathways</option>
             </select>
@@ -172,7 +307,7 @@
 
           <div>
             <label class="block text-sm font-semibold mb-1">Unit / Quarter Placement</label>
-            <select id="unitPlacement" class="w-full px-4 py-2 rounded-xl border border-slate-200">
+            <select id="unitPlacement" class="w-full px-4 py-2 rounded-xl">
               <option value="Quarter 1 / Unit 1">Quarter 1 / Unit 1</option>
               <option value="Quarter 1 / Unit 2">Quarter 1 / Unit 2</option>
               <option value="Quarter 2 / Unit 3">Quarter 2 / Unit 3</option>
@@ -186,15 +321,15 @@
 
           <div>
             <label class="block text-sm font-semibold mb-1">Search Standards Browser</label>
-            <input id="standardSearch" type="text" class="w-full px-4 py-2 rounded-xl border border-slate-200 mb-2" placeholder="Search by code, concept, or keyword" />
-            <select id="standard" class="w-full px-4 py-2 rounded-xl border border-slate-200 h-40"></select>
+            <input id="standardSearch" type="text" class="w-full px-4 py-2 rounded-xl mb-2" placeholder="Search by code, concept, or keyword" />
+            <select id="standard" class="w-full px-4 py-2 rounded-xl h-40"></select>
             <p class="text-xs text-slate-500 mt-2">Searchable standards browser for quick filtering.</p>
           </div>
 
           <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3">
             <div>
               <div class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Vertical Mapping Snapshot</div>
-              <p id="verticalMap" class="text-sm text-slate-700 leading-relaxed">Select a grade band and standard to see how this idea builds across bands.</p>
+              <p id="verticalMap" class="text-sm text-slate-700 leading-relaxed">Select a grade band and standard to see how this idea builds across grade bands.</p>
             </div>
             <div>
               <div class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Progression Intelligence</div>
@@ -210,25 +345,18 @@
         </div>
       </div>
 
-      <div class="panel-card p-5">
-        <div class="flex items-center justify-between mb-3">
-          <h2 class="text-xs font-bold uppercase tracking-widest text-slate-400">Advanced: Lesson Bank Manager</h2>
-          <span id="lessonBankCount" class="text-[10px] uppercase tracking-widest text-slate-500">1 Item</span>
-        </div>
-        <p class="text-sm text-slate-600 mb-2">This section is intended for behind-the-scenes uploads by a curriculum lead, coach, or toolkit manager.</p>
-        <p class="text-xs text-slate-500 mb-3">Use it to add strong sample lessons that improve lesson matching across the toolkit. Teachers do not need to upload files during normal lesson planning.</p>
-        <div class="mb-3">
-          <input type="file" id="lessonUpload" multiple class="text-xs" />
-        </div>
-        <div id="lessonBankList" class="space-y-2 max-h-72 overflow-y-auto"></div>
+      <div class="hidden-admin">
+        <input type="file" id="lessonUpload" multiple>
+        <div id="lessonBankList"></div>
+        <span id="lessonBankCount"></span>
       </div>
     </aside>
 
     <section class="xl:col-span-8 space-y-5">
       <div id="emptyState" class="panel-card p-12 text-center">
-        <div class="w-16 h-16 mx-auto rounded-full bg-slate-100 flex items-center justify-center text-3xl mb-4">✨</div>
-        <h1 class="text-2xl font-black tracking-tight">Plan High-Impact Lessons Quickly</h1>
-        <p class="mt-2 text-slate-500 max-w-xl mx-auto">This workflow moves from setup to direction to lesson build using your lesson bank first, progression mapping second, and new generation only when needed.</p>
+        <div class="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-blue-50 to-violet-50 flex items-center justify-center text-3xl mb-6">✨</div>
+        <h2 class="text-3xl font-black tracking-tight">Build Smarter Lessons in Minutes</h2>
+        <p class="mt-3 text-slate-500 max-w-2xl mx-auto">Use standards, progression, teacher guidance, and intelligent lesson support to create lessons that are classroom-ready, export-ready, and visually polished.</p>
       </div>
 
       <div id="panelDirection" class="workflow-panel panel-card p-6">
@@ -239,30 +367,32 @@
           </div>
           <span class="step-pill active-step">Direction</span>
         </div>
+
         <div class="grid gap-4">
           <div class="section-card">
             <label class="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Objective</label>
-            <textarea id="dirObjective" rows="3" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm"></textarea>
+            <textarea id="dirObjective" rows="3" class="w-full px-4 py-3 rounded-xl text-sm"></textarea>
           </div>
           <div class="section-card">
             <label class="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Lesson Focus</label>
-            <textarea id="dirFocus" rows="3" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm"></textarea>
+            <textarea id="dirFocus" rows="3" class="w-full px-4 py-3 rounded-xl text-sm"></textarea>
           </div>
           <div class="section-card">
             <label class="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Student Performance</label>
-            <textarea id="dirPerformance" rows="3" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm"></textarea>
+            <textarea id="dirPerformance" rows="3" class="w-full px-4 py-3 rounded-xl text-sm"></textarea>
           </div>
           <div class="grid md:grid-cols-2 gap-4">
             <div class="section-card">
               <label class="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Pacing Suggestion</label>
-              <textarea id="dirPacing" rows="4" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm"></textarea>
+              <textarea id="dirPacing" rows="4" class="w-full px-4 py-3 rounded-xl text-sm"></textarea>
             </div>
             <div class="section-card">
               <label class="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Student Workspace Suggestion</label>
-              <textarea id="dirWorkspace" rows="4" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm"></textarea>
+              <textarea id="dirWorkspace" rows="4" class="w-full px-4 py-3 rounded-xl text-sm"></textarea>
             </div>
           </div>
         </div>
+
         <div class="flex flex-wrap gap-2 mt-4">
           <button class="mini-btn mini-btn-primary" onclick="buildLesson()">Build Full Lesson</button>
           <button class="mini-btn" onclick="regenerateDirection()">Regenerate Direction</button>
@@ -273,19 +403,19 @@
         <div class="flex items-start justify-between gap-4 mb-6">
           <div>
             <h3 class="text-sm font-bold uppercase tracking-widest">Panel 3: Build and Review</h3>
-            <p class="text-sm text-slate-500 mt-1">The lesson output includes teacher script, step-by-step student instructions, workspace, pacing, explanation of lesson choice, and review notes.</p>
+            <p class="text-sm text-slate-500 mt-1">The lesson output includes teacher script, workspace, assessments, match reasoning, and export-ready formatting.</p>
           </div>
           <div class="flex gap-2 no-print">
-            <button class="mini-btn" onclick="finalizeLesson()">Finalize</button>
+            <button class="mini-btn mini-btn-success" onclick="finalizeLesson()">Finalize</button>
             <button class="mini-btn mini-btn-primary" onclick="window.print()">Print</button>
           </div>
         </div>
 
         <div class="section-card mb-4">
           <div class="flex flex-wrap gap-2 mb-4">
-            <span id="outGrade" class="step-pill idle-step"></span>
-            <span id="outStandard" class="step-pill idle-step"></span>
-            <span id="outMeta" class="step-pill idle-step"></span>
+            <span id="outGrade" class="chip"></span>
+            <span id="outStandard" class="chip"></span>
+            <span id="outMeta" class="chip"></span>
           </div>
           <h1 id="outTitle" class="text-4xl font-black tracking-tight"></h1>
           <p id="outSubtitle" class="text-slate-500 mt-2 text-sm"></p>
@@ -293,7 +423,7 @@
 
         <div class="section-card mb-4">
           <h3 class="text-sm font-bold uppercase tracking-widest mb-3">Lesson Direction Snapshot</h3>
-          <div id="directionContent" class="space-y-3 text-sm">
+          <div class="space-y-3 text-sm">
             <p><strong>Objective:</strong> <span id="outObjective"></span></p>
             <p><strong>Lesson Focus:</strong> <span id="outFocus"></span></p>
             <p><strong>Student Performance:</strong> <span id="outPerformance"></span></p>
@@ -302,52 +432,72 @@
         </div>
 
         <div class="section-card mb-4">
-          <h3 class="text-sm font-bold uppercase tracking-widest mb-3">Direct Instruction Script</h3>
-          <p id="outScript" class="text-sm leading-relaxed whitespace-pre-line"></p>
+          <div class="flex items-center justify-between gap-3 mb-3">
+            <h3 class="text-sm font-bold uppercase tracking-widest">Direct Instruction Script</h3>
+            <button class="mini-btn no-print" onclick="toggleCollapse('scriptBody')">Toggle</button>
+          </div>
+          <div id="scriptBody" class="collapse-body">
+            <p id="outScript" class="text-sm leading-relaxed whitespace-pre-line"></p>
+          </div>
         </div>
 
         <div class="section-card mb-4">
-          <h3 class="text-sm font-bold uppercase tracking-widest mb-3">Student Activity</h3>
-          <p id="outActivity" class="text-sm leading-relaxed mb-4"></p>
-          <h4 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Step-by-Step Student Directions</h4>
-          <ol id="outSteps" class="list-decimal pl-5 text-sm leading-relaxed space-y-1"></ol>
+          <div class="flex items-center justify-between gap-3 mb-3">
+            <h3 class="text-sm font-bold uppercase tracking-widest">Student Activity</h3>
+            <button class="mini-btn no-print" onclick="toggleCollapse('activityBody')">Toggle</button>
+          </div>
+          <div id="activityBody" class="collapse-body">
+            <p id="outActivity" class="text-sm leading-relaxed mb-4"></p>
+            <h4 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Step-by-Step Student Directions</h4>
+            <ol id="outSteps" class="list-decimal pl-5 text-sm leading-relaxed space-y-1"></ol>
+          </div>
         </div>
 
         <div class="section-card mb-4">
-          <h3 class="text-sm font-bold uppercase tracking-widest mb-3">Student Workspace Generator</h3>
-          <p id="outWorkspace" class="text-sm leading-relaxed mb-3"></p>
-          <div class="grid md:grid-cols-2 gap-3 text-sm">
-            <div class="rounded-xl border border-slate-200 p-4 bg-slate-50">
-              <div class="font-bold mb-2">Workspace Blocks</div>
-              <ul id="workspaceBlocks" class="list-disc pl-5 space-y-1"></ul>
-            </div>
-            <div class="rounded-xl border border-slate-200 p-4 bg-slate-50">
-              <div class="font-bold mb-2">Teacher Checkpoints</div>
-              <ul id="workspaceChecks" class="list-disc pl-5 space-y-1"></ul>
+          <div class="flex items-center justify-between gap-3 mb-3">
+            <h3 class="text-sm font-bold uppercase tracking-widest">Student Workspace Generator</h3>
+            <button class="mini-btn no-print" onclick="toggleCollapse('workspaceBody')">Toggle</button>
+          </div>
+          <div id="workspaceBody" class="collapse-body">
+            <p id="outWorkspace" class="text-sm leading-relaxed mb-3"></p>
+            <div class="grid md:grid-cols-2 gap-3 text-sm">
+              <div class="rounded-xl border border-slate-200 p-4 bg-slate-50">
+                <div class="font-bold mb-2">Workspace Blocks</div>
+                <ul id="workspaceBlocks" class="list-disc pl-5 space-y-1"></ul>
+              </div>
+              <div class="rounded-xl border border-slate-200 p-4 bg-slate-50">
+                <div class="font-bold mb-2">Teacher Checkpoints</div>
+                <ul id="workspaceChecks" class="list-disc pl-5 space-y-1"></ul>
+              </div>
             </div>
           </div>
         </div>
 
         <div class="grid md:grid-cols-2 gap-4 mb-4">
           <div class="section-card">
-            <h3 class="text-sm font-bold uppercase tracking-widest mb-3">Assessment</h3>
-            <p id="outAssessment" class="text-sm leading-relaxed"></p>
+            <h3 class="text-sm font-bold uppercase tracking-widest mb-3">Formative Assessment</h3>
+            <p id="outFormative" class="text-sm leading-relaxed"></p>
           </div>
+          <div class="section-card">
+            <h3 class="text-sm font-bold uppercase tracking-widest mb-3">Summative Assessment</h3>
+            <p id="outSummative" class="text-sm leading-relaxed"></p>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-4 mb-4">
           <div class="section-card">
             <h3 class="text-sm font-bold uppercase tracking-widest mb-3">Pacing Map</h3>
             <p id="outPacingMap" class="text-sm leading-relaxed"></p>
           </div>
-        </div>
-
-        <div class="grid md:grid-cols-2 gap-4 mb-4">
           <div class="section-card">
             <h3 class="text-sm font-bold uppercase tracking-widest mb-3">Differentiation & Accessibility</h3>
             <p id="outSupport" class="text-sm leading-relaxed"></p>
           </div>
-          <div class="section-card bg-amber-50 border-amber-100">
-            <h3 class="text-sm font-bold uppercase tracking-widest mb-3 text-amber-800">Agent Review</h3>
-            <p id="outReview" class="text-sm leading-relaxed text-amber-900"></p>
-          </div>
+        </div>
+
+        <div class="section-card bg-amber-50 border-amber-100 mb-4">
+          <h3 class="text-sm font-bold uppercase tracking-widest mb-3 text-amber-800">Agent Review</h3>
+          <p id="outReview" class="text-sm leading-relaxed text-amber-900"></p>
         </div>
 
         <div class="section-card mb-4 soft-animate">
@@ -386,30 +536,46 @@
           </div>
         </div>
 
-        <div id="finalView" class="hidden one-page-view section-card mt-6">
-          <div class="export-header">
+        <div id="finalView" class="hidden section-card export-frame mt-6">
+          <div class="export-header mb-4">
             <div>
               <h3 class="text-lg font-black tracking-tight">Finalized Lesson Plan</h3>
               <p class="text-sm text-slate-500">Landscape tabular format for printing, PDF export, and Word export.</p>
             </div>
             <div class="flex flex-col items-end gap-3 no-print">
               <span class="step-pill completed-step">Final</span>
-              <div class="export-actions">
+              <div class="flex gap-2 flex-wrap">
                 <button class="mini-btn" onclick="printLesson()">Print / Save PDF</button>
                 <button class="mini-btn mini-btn-primary" onclick="exportPDF()">Export PDF</button>
                 <button class="mini-btn" onclick="exportDOCX()">Export Word (.docx)</button>
               </div>
             </div>
           </div>
-          <div id="exportLessonPlan" class="rounded-xl overflow-hidden border border-slate-200 bg-white">
-            <div class="px-4 py-3 border-b border-slate-200 bg-slate-50">
-              <div class="flex flex-wrap items-center gap-2 mb-2">
-                <span class="export-badge" id="exportBadgeGrade"></span>
-                <span class="export-badge" id="exportBadgeStandard"></span>
-                <span class="export-badge" id="exportBadgeMeta"></span>
+
+          <div id="exportLessonPlan" class="bg-white">
+            <div class="export-topline"></div>
+            <div class="district-header px-5 py-4 border-b border-slate-200">
+              <div class="flex items-start justify-between gap-4 flex-wrap">
+                <div>
+                  <div class="text-[11px] uppercase tracking-[0.2em] font-bold text-blue-100">District-Ready Lesson Plan</div>
+                  <h1 class="text-2xl font-black tracking-tight mt-1">Teach Ready Toolkit</h1>
+                  <p class="text-sm text-blue-100 mt-1">Standards-aligned computer science lesson planning template</p>
+                </div>
+                <div class="text-right text-sm text-blue-50">
+                  <div id="exportDistrictName" class="font-bold">District / School Header</div>
+                  <div id="exportTeacherLine">Teacher: ____________________</div>
+                  <div id="exportCourseLine">Course: ____________________</div>
+                </div>
               </div>
-              <h2 id="exportPlanTitle" class="text-2xl font-black tracking-tight"></h2>
-              <p id="exportPlanSubtitle" class="text-sm text-slate-600 mt-1"></p>
+            </div>
+            <div class="district-subbar px-4 py-3 border-b border-slate-200">
+              <div class="flex flex-wrap items-center gap-2 mb-2">
+                <span class="chip" id="exportBadgeGrade"></span>
+                <span class="chip" id="exportBadgeStandard"></span>
+                <span class="chip" id="exportBadgeMeta"></span>
+              </div>
+              <h2 id="exportPlanTitle" class="text-2xl font-black tracking-tight text-slate-900"></h2>
+              <p id="exportPlanSubtitle" class="text-sm text-slate-700 mt-1"></p>
             </div>
             <div class="p-4">
               <table class="export-table">
@@ -417,15 +583,15 @@
                 <tr><th>Lesson Focus</th><td id="exportFocus"></td></tr>
                 <tr><th>Direct Instruction</th><td id="finalScript"></td></tr>
                 <tr><th>Student Activity</th><td id="finalActivity"></td></tr>
-                <tr><th>Workspace</th><td id="finalWorkspace"></td></tr>
-                <tr><th>Assessment</th><td id="finalAssessment"></td></tr>
+                <tr><th>Student Workspace</th><td id="finalWorkspace"></td></tr>
+                <tr><th>Formative Assessment</th><td id="finalFormative"></td></tr>
+                <tr><th>Summative Assessment</th><td id="finalSummative"></td></tr>
                 <tr><th>Pacing</th><td id="finalPacing"></td></tr>
                 <tr><th>Supports</th><td id="finalSupport"></td></tr>
                 <tr><th>Agent Review</th><td id="finalReview"></td></tr>
               </table>
             </div>
           </div>
-        </div>
         </div>
       </div>
     </section>
@@ -436,8 +602,7 @@
       foundational: {
         "PK/K": [
           { code: "EK-ALG-01", label: "EK-ALG-01: Follow and describe simple algorithms in familiar routines", concept: "Algorithms & Design", subconcept: "Algorithm Fundamentals", keywords: ["algorithm","steps","routine","sequence"], progression: "PK/K experience simple step-by-step processes; E1-E2 create and compare simple algorithms; E3-E5 represent and refine more complex algorithms; MS and HS evaluate and justify algorithmic approaches.", now: "Students are beginning to notice and describe simple sequences in everyday life.", next: "Next, students should move into creating and revising simple algorithms with clearer conditions and representations." },
-          { code: "EK-PRO-01", label: "EK-PRO-01: Use age-appropriate tools to create simple programs", concept: "Programming", subconcept: "Programming Fundamentals", keywords: ["programming","coding","blocks","tools"], progression: "PK/K explore simple programming behaviors; E1-E2 read and create simple programs; E3-E5 use more structured constructs; MS-HS develop, test, document, and refine code.", now: "Students are beginning to connect commands to visible outcomes.", next: "Next, students should read and create simple programs with clearer control over program flow." },
-          { code: "EK-CAS-01", label: "EK-CAS-01: Identify how computing helps people in daily life", concept: "Computing & Society", subconcept: "Humans and Computing", keywords: ["daily life","people","technology","society"], progression: "PK/K identify computing in daily life; elementary explores how technology changes experiences; middle school analyzes impacts; high school evaluates tradeoffs and policy implications.", now: "Students are noticing computing technologies around them and who uses them.", next: "Next, students should compare how technologies support different people and situations." }
+          { code: "EK-PRO-01", label: "EK-PRO-01: Use age-appropriate tools to create simple programs", concept: "Programming", subconcept: "Programming Fundamentals", keywords: ["programming","coding","blocks","tools"], progression: "PK/K explore simple programming behaviors; E1-E2 read and create simple programs; E3-E5 use more structured constructs; MS-HS develop, test, document, and refine code.", now: "Students are beginning to connect commands to visible outcomes.", next: "Next, students should read and create simple programs with clearer control over program flow." }
         ],
         "E1": [
           { code: "E1-ALG-03", label: "E1-ALG-03: Create and revise simple step-by-step algorithms", concept: "Algorithms & Design", subconcept: "Algorithm Fundamentals", keywords: ["create","revise","steps","algorithm"], progression: "PK/K describe routines; E1 create and revise algorithms; E2-E5 represent and compare algorithms; MS-HS evaluate efficiency and opaque systems.", now: "Students are generating their own simple step-by-step solutions.", next: "Next, students should represent algorithms more explicitly and compare alternatives." },
@@ -489,10 +654,40 @@
         concept: 'Programming',
         objective: 'Students test and debug code using unittest.',
         activity: 'Students write and test functions.',
-        assessment: 'Students fix failing tests.',
+        formativeAssessment: 'Teacher observation during guided practice and checkpoint review of test cases.',
+        summativeAssessment: 'Students submit a corrected function and a unittest file that demonstrates accurate behavior.',
         tags: ['testing','debugging','unittest'],
+        standards: ['HS-PRO-38'],
         sourceType: 'STARTER',
         raw: 'Students test and debug code using unittest.'
+      },
+      {
+        id: 2,
+        title: 'Conditional Logic with If Else',
+        gradeBand: 'HS',
+        concept: 'Programming',
+        objective: 'Students use if/else statements to make decisions in code.',
+        activity: 'Students analyze scenarios and write decision-based code responses.',
+        formativeAssessment: 'Students explain why each branch condition is triggered during guided examples.',
+        summativeAssessment: 'Students complete a short coding task and justify the use of conditional logic.',
+        tags: ['programming','decisions','conditional','if','else'],
+        standards: ['HS-PRO-38'],
+        sourceType: 'CURATED',
+        raw: 'if else conditional logic branching decisions python'
+      },
+      {
+        id: 3,
+        title: 'Pseudocode Translation Task',
+        gradeBand: 'HS',
+        concept: 'Algorithms & Design',
+        objective: 'Students translate pseudocode into more formal logic and explain the output.',
+        activity: 'Students analyze pseudocode, determine output, and rewrite it as structured statements.',
+        formativeAssessment: 'Teacher checks whether students can identify the sequence and output before rewriting.',
+        summativeAssessment: 'Students submit a translated algorithm and explanation of output reasoning.',
+        tags: ['pseudocode','algorithm','logic','output'],
+        standards: ['HS-ALG-44'],
+        sourceType: 'CURATED',
+        raw: 'pseudocode algorithm output logic translation'
       }
     ];
 
@@ -566,45 +761,29 @@
 
     function updateVerticalMap() {
       const selected = getSelectedStandard();
-      document.getElementById('verticalMap').textContent = selected ? selected.progression : 'Select a grade band and standard to see how this idea builds across bands.';
+      document.getElementById('verticalMap').textContent = selected ? selected.progression : 'Select a grade band and standard to see how this idea builds across grade bands.';
       document.getElementById('progressionNow').textContent = selected ? `Now: ${selected.now}` : '';
       document.getElementById('progressionNext').textContent = selected ? `Next: ${selected.next}` : '';
     }
 
     function updateLessonBankCount() {
-      const count = lessonBank.length;
-      document.getElementById('lessonBankCount').textContent = `${count} ${count === 1 ? 'Item' : 'Items'}`;
+      const el = document.getElementById('lessonBankCount');
+      if (el) {
+        const count = lessonBank.length;
+        el.textContent = `${count} ${count === 1 ? 'Item' : 'Items'}`;
+      }
     }
 
     function renderLessonBank() {
       const list = document.getElementById('lessonBankList');
+      if (!list) return;
       list.innerHTML = lessonBank.map(item => `
-        <button class="bank-item w-full text-left rounded-xl border border-slate-200 p-3 hover:bg-slate-50 transition-all" onclick="loadLessonBankItem(${item.id})">
-          <div class="flex items-center justify-between gap-2">
-            <div class="font-bold text-sm text-slate-800">${item.title}</div>
-            <span class="text-[10px] uppercase tracking-widest text-slate-500">${item.sourceType || 'BANK'}</span>
-          </div>
-          <div class="text-xs text-slate-500 mt-1">${item.gradeBand} · ${item.concept}</div>
-          <div class="text-xs text-slate-600 mt-2">${item.objective || 'No objective extracted yet.'}</div>
-        </button>
+        <div class="rounded-xl border border-slate-200 p-3 text-sm">
+          <div class="font-bold">${item.title}</div>
+          <div class="text-slate-500 text-xs mt-1">${item.gradeBand} · ${item.concept}</div>
+        </div>
       `).join('');
       updateLessonBankCount();
-    }
-
-    function loadLessonBankItem(id) {
-      const item = lessonBank.find(x => x.id === id);
-      if (!item) return;
-      document.getElementById('topic').value = item.title;
-      if ([...document.getElementById('gradeBand').options].some(opt => opt.value === item.gradeBand)) {
-        document.getElementById('gradeBand').value = item.gradeBand;
-      }
-      if ([...document.getElementById('concept').options].some(opt => opt.value === item.concept)) {
-        document.getElementById('concept').value = item.concept;
-      }
-      populateSubconcepts();
-      populateStandards(document.getElementById('standardSearch').value);
-      document.getElementById('agentNote').textContent = `Loaded lesson bank item: ${item.title}. The toolkit will try to reuse this lesson when it is a strong match.`;
-      document.getElementById('aiInsight').textContent = `Loaded ${item.title}. Build a lesson to see match reasoning, similar lessons, and suggested next steps.`;
     }
 
     function updateWorkflowConnectors(step) {
@@ -684,9 +863,10 @@
       const placement = document.getElementById('unitPlacement').value;
       const selected = getSelectedStandard();
       if (!selected) return;
+
       const pacing = classLength >= 90
-        ? 'Use a 10-minute hook, 15-minute teacher model, 35-minute student activity, 15-minute share-out, and 10-minute exit ticket or reflection.'
-        : 'Use a tight structure with a short hook, brief direct instruction, one focused activity, and a concise exit check.';
+        ? 'Use a 10-minute hook, 15-minute teacher model, 35-minute student activity, 15-minute share-out, and 10-minute reflection or closure.'
+        : 'Use a short hook, brief direct instruction, one focused activity, and a concise closing check.';
 
       document.getElementById('dirObjective').value = `Students will apply ${selected.concept.toLowerCase()} ideas to ${topic} and show understanding through explanation, design, or evaluation aligned to ${selected.code}. The task should reflect what students are expected to know now and prepare them for the next step in the progression.`;
       document.getElementById('dirFocus').value = `${pathway} pathway focus: this lesson should feel practical, high-impact, and classroom-ready. This lesson sits in ${placement}, so the task should match where students are in the sequence. Use the progression note to distinguish what students should already know, what they are learning now, and what comes next.`;
@@ -695,7 +875,7 @@
       document.getElementById('dirWorkspace').value = `Suggested workspace: a guided student handout with a warm-up box, vocabulary box, model/example space, task checklist, response workspace, and reflection box. For coding lessons, include predict-run-observe-fix sections.`;
 
       document.getElementById('agentNote').textContent = 'The agent suggested a lesson direction with pacing, unit placement, workspace, and pathway-aware framing. Edit as needed, then build the lesson.';
-      document.getElementById('aiInsight').textContent = `Direction suggested for ${selected.code}. Build the lesson to see whether the toolkit reuses a bank lesson or generates a new one.`;
+      document.getElementById('aiInsight').textContent = `Direction suggested for ${selected.code}. Build the lesson to see whether the toolkit reuses a curated lesson or generates a new one.`;
       setStep(2);
       openPanel('panelDirection');
     }
@@ -706,54 +886,99 @@
       document.getElementById('agentNote').textContent = 'The direction was regenerated with stronger student judgment and pacing cues.';
     }
 
-    function extractLessonData(text, filename) {
-      const cleanTitle = filename.replace(/\.[^/.]+$/, '');
-      const normalized = (text || '').replace(/\s+/g, ' ').trim();
-      return {
-        title: cleanTitle,
-        gradeBand: detectGradeBand(normalized),
-        concept: detectConceptFromText(normalized),
-        objective: extractSection(normalized, ['objective', 'goal', 'students will']) || 'Imported lesson objective not clearly detected.',
-        activity: extractSection(normalized, ['activity', 'student engage', 'task', 'procedure', 'challenge']) || 'Imported lesson activity not clearly detected.',
-        assessment: extractSection(normalized, ['assessment', 'assess', 'exit ticket', 'evaluation', 'quiz']) || 'Imported lesson assessment not clearly detected.',
-        tags: extractTagsFromText(normalized),
-        sourceType: 'FILE',
-        raw: normalized
-      };
-    }
-
     function extractSection(text, labels) {
       for (const label of labels) {
-        const regex = new RegExp(label + '\\s*[:\\-]\\s*([^\\n\\r]{10,240})', 'i');
+        const regex = new RegExp(label + '\\s*[:\\-]\\s*([^\\n\\r]{10,260})', 'i');
         const match = text.match(regex);
         if (match && match[1]) return match[1].trim();
       }
       return '';
     }
 
-    function detectGradeBand(text) {
-      const t = text.toLowerCase();
+    function detectGradeBand(text, title = '') {
+      const t = (title + ' ' + text).toLowerCase();
       if (/pre[- ]?k|pk\/?k|kindergarten|early elementary/.test(t)) return 'PK/K';
-      if (/grade 1|first grade|e1/.test(t)) return 'E1';
-      if (/grade 2|second grade|e2/.test(t)) return 'E2';
+      if (/grade 1|first grade|e1\b/.test(t)) return 'E1';
+      if (/grade 2|second grade|e2\b/.test(t)) return 'E2';
       if (/grade 3|third grade|grade 4|fourth grade|grade 5|fifth grade|elementary/.test(t)) return 'E3';
-      if (/middle school|grade 6|grade 7|grade 8|ms/.test(t)) return 'MS';
-      if (/high school|grade 9|grade 10|grade 11|grade 12|hs|11th/.test(t)) return 'HS';
+      if (/middle school|grade 6|grade 7|grade 8|ms\b/.test(t)) return 'MS';
+      if (/high school|grade 9|grade 10|grade 11|grade 12|11th|12th|hs\b|workshop/.test(t)) return 'HS';
       return 'HS';
     }
 
-    function detectConceptFromText(text) {
-      const t = text.toLowerCase();
-      if (/algorithm|pseudocode|flowchart|bias|machine learning/.test(t)) return 'Algorithms & Design';
-      if (/program|code|debug|function|class|unittest|script|python|variable|data type|if\/else|conditional/.test(t)) return 'Programming';
-      if (/data|dataset|visualization|analysis|spreadsheet|chart/.test(t)) return 'Data & Analysis';
+    function detectConceptFromText(text, title = '') {
+      const t = (title + ' ' + text).toLowerCase();
+      if (/algorithm|pseudocode|flowchart|logic design|bias|machine learning/.test(t)) return 'Algorithms & Design';
+      if (/program|code|debug|function|class|unittest|script|python|variable|data type|if\/else|conditional|loop|iteration|syntax|type error|exercism/.test(t)) return 'Programming';
+      if (/data|dataset|visualization|analysis|spreadsheet|chart|csv/.test(t)) return 'Data & Analysis';
       if (/security|network|hardware|software|device|cyber/.test(t)) return 'Systems & Security';
       if (/society|impact|career|ethics|emerging technologies/.test(t)) return 'Computing & Society';
       return 'Programming';
     }
 
     function extractTagsFromText(text) {
-      return [...new Set((text.toLowerCase().match(/\b[a-z][a-z\-]{4,}\b/g) || []).slice(0, 15))];
+      const lower = text.toLowerCase();
+      const tags = new Set((lower.match(/\b[a-z][a-z\-]{4,}\b/g) || []).slice(0, 15));
+      const keywordBuckets = {
+        debugging: /debug|syntax|type error|logical error|runtime|scope|fix/i,
+        testing: /unittest|test case|assert|testing/i,
+        variables: /variable|variables|assign/i,
+        datatypes: /data types|integer|float|string|boolean/i,
+        decisions: /if|else|decision|conditional/i,
+        loops: /loop|iteration|for |while /i,
+        pseudocode: /pseudocode|flowchart|ipo/i,
+        worksheet: /worksheet|independent practice/i,
+        challenge: /challenge|exercism/i,
+        certification: /certiport|its python|gmetrix|workshop/i
+      };
+      Object.entries(keywordBuckets).forEach(([tag, regex]) => {
+        if (regex.test(lower)) tags.add(tag);
+      });
+      return [...tags].slice(0, 12);
+    }
+
+    function inferStandardsFromLesson(lesson) {
+      const candidates = flatStandards().filter(s => s.gradeBand === lesson.gradeBand);
+      const scored = candidates.map(std => {
+        let score = 0;
+        if (std.concept === lesson.concept) score += 5;
+        const hay = (lesson.title + ' ' + lesson.raw + ' ' + (lesson.tags || []).join(' ')).toLowerCase();
+        (std.keywords || []).forEach(k => {
+          if (hay.includes(String(k).toLowerCase())) score += 2;
+        });
+        if (hay.includes('career') && std.code === 'HS-CAS-47') score += 4;
+        if (hay.includes('unittest') && std.code === 'HS-PRO-38') score += 4;
+        if ((hay.includes('debug') || hay.includes('syntax') || hay.includes('type error')) && (std.code === 'MS-PRO-24' || std.code === 'HS-PRO-38')) score += 4;
+        if (hay.includes('pseudocode') && (std.code.includes('ALG') || std.concept === 'Algorithms & Design')) score += 4;
+        if ((hay.includes('data types') || hay.includes('variable')) && std.concept === 'Programming') score += 3;
+        if ((hay.includes('if/else') || hay.includes('conditional')) && std.concept === 'Programming') score += 3;
+        return { code: std.code, score };
+      }).filter(x => x.score > 0).sort((a, b) => b.score - a.score);
+      return scored.slice(0, 2).map(x => x.code);
+    }
+
+    function extractLessonData(text, filename) {
+      const cleanTitle = filename.replace(/\.[^/.]+$/, '');
+      const normalized = (text || '').replace(/\s+/g, ' ').trim();
+      const gradeBand = detectGradeBand(normalized, cleanTitle);
+      const concept = detectConceptFromText(normalized, cleanTitle);
+      const tags = extractTagsFromText(cleanTitle + ' ' + normalized);
+      const standards = inferStandardsFromLesson({ title: cleanTitle, raw: normalized, concept, gradeBand, tags });
+      const formativeAssessment = extractSection(normalized, ['formative assessment', 'check for understanding', 'observation', 'guided questions']) || 'Teacher observation, questioning, and checkpoint review during guided practice.';
+      const summativeAssessment = extractSection(normalized, ['summative assessment', 'assessment', 'exit ticket', 'evaluation', 'quiz']) || 'Final student product, completed task, or exit ticket aligned to the lesson objective.';
+      return {
+        title: cleanTitle,
+        gradeBand,
+        concept,
+        objective: extractSection(normalized, ['objective', 'goal', 'students will']) || 'Imported lesson objective not clearly detected.',
+        activity: extractSection(normalized, ['activity', 'student engage', 'task', 'procedure', 'challenge']) || 'Imported lesson activity not clearly detected.',
+        formativeAssessment,
+        summativeAssessment,
+        tags,
+        standards,
+        sourceType: 'FILE',
+        raw: normalized
+      };
     }
 
     function scoreLessonMatch(lesson, standard, topic, grade) {
@@ -769,6 +994,9 @@
         const lower = String(word).toLowerCase();
         if ((lesson.tags || []).includes(lower)) score += 2;
         if ((lesson.raw || '').toLowerCase().includes(lower)) score += 1;
+      });
+      (lesson.standards || []).forEach(code => {
+        if (code === standard.code) score += 5;
       });
       return score;
     }
@@ -828,12 +1056,12 @@
       const el = document.getElementById('similarLessonsList');
       el.innerHTML = similar.length
         ? similar.map(item => `
-            <div class="rounded-xl border border-slate-200 p-3 bg-slate-50">
-              <div class="font-bold text-sm">${item.lesson.title}</div>
-              <div class="text-xs text-slate-500 mt-1">${item.lesson.gradeBand} · ${item.lesson.concept} · Match score ${item.score}</div>
-              <div class="text-sm mt-2">${item.lesson.activity || item.lesson.objective}</div>
-            </div>
-          `).join('')
+          <div class="rounded-xl border border-slate-200 p-3 bg-slate-50">
+            <div class="font-bold text-sm">${item.lesson.title}</div>
+            <div class="text-xs text-slate-500 mt-1">${item.lesson.gradeBand} · ${item.lesson.concept} · Match score ${item.score}</div>
+            <div class="text-sm mt-2">${item.lesson.activity || item.lesson.objective}</div>
+          </div>
+        `).join('')
         : '<div class="text-slate-500">No similar lessons were found yet.</div>';
     }
 
@@ -853,15 +1081,11 @@
 
     function explainMatch(matchResult, selected, topic, grade) {
       if (matchResult.lesson) {
-        return `The toolkit chose “${matchResult.lesson.title}” because it strongly aligned to ${selected.code}. The match considered grade band (${grade}), concept (${selected.concept}), topic keywords from “${topic}”, and overlapping terms in the lesson’s extracted content.`;
+        const lesson = matchResult.lesson;
+        const standardsText = (lesson.standards || []).length ? ` Inferred lesson standards: ${lesson.standards.join(', ')}.` : '';
+        return `The toolkit chose “${lesson.title}” because it strongly aligned to ${selected.code}. The match considered grade band (${grade}), concept (${selected.concept}), topic keywords from “${topic}”, extracted tags (${(lesson.tags || []).join(', ')}), and the lesson’s inferred standards.${standardsText}`;
       }
       return `No strong lesson bank match was found for ${selected.code}, so the toolkit generated a new lesson using the selected standard, progression notes, and setup suggestions.`;
-    }
-
-    function regenerateDirection() {
-      document.getElementById('dirFocus').value += ' Add one decision-making checkpoint where students must justify why their chosen response is strongest.';
-      document.getElementById('dirWorkspace').value += ' Include teacher check-in boxes so pacing stays visible during class.';
-      document.getElementById('agentNote').textContent = 'The direction was regenerated with stronger student judgment and pacing cues.';
     }
 
     function buildLesson() {
@@ -878,14 +1102,8 @@
       const matchedLesson = matchResult.lesson;
       const usingLessonBank = Boolean(matchedLesson);
 
-      const objective = usingLessonBank
-        ? (matchedLesson.objective || document.getElementById('dirObjective').value)
-        : document.getElementById('dirObjective').value;
-
-      const focus = usingLessonBank
-        ? `Adapted from lesson bank item: ${matchedLesson.title}. ${document.getElementById('dirFocus').value}`
-        : document.getElementById('dirFocus').value;
-
+      const objective = usingLessonBank ? (matchedLesson.objective || document.getElementById('dirObjective').value) : document.getElementById('dirObjective').value;
+      const focus = usingLessonBank ? `Adapted from lesson bank item: ${matchedLesson.title}. ${document.getElementById('dirFocus').value}` : document.getElementById('dirFocus').value;
       const performance = document.getElementById('dirPerformance').value;
       const pacing = document.getElementById('dirPacing').value;
       const workspace = document.getElementById('dirWorkspace').value;
@@ -919,20 +1137,29 @@
       const workspaceBlocks = ['Warm-Up / Hook Response', 'Key Vocabulary Box', 'Model Example Notes', 'Task Checklist', 'Evidence / Code / Design Workspace', 'Reflection and Exit Ticket Box'];
       const workspaceChecks = ['Checkpoint 1: students can identify the main issue or target.', 'Checkpoint 2: students can explain the evidence they are using.', 'Checkpoint 3: students can justify their response before turning it in.'];
 
-      const assessment = usingLessonBank
-        ? (matchedLesson.assessment || `Exit Ticket: Explain how the adapted lesson activity now aligns to ${selected.code} and justify one revision you made.`)
-        : `Exit Ticket: In 3-5 sentences, explain what you learned about ${topic}, describe the choice or issue you addressed, and justify why your response is effective. For coding tasks, add one test, fix, or revision note.`;
+      const formative = usingLessonBank
+        ? (matchedLesson.formativeAssessment || 'Teacher observation, questioning, and checkpoint review during guided practice.')
+        : 'Teacher observation during guided practice, short oral checks, and review of student workspace notes before independent completion.';
+
+      const summative = usingLessonBank
+        ? (matchedLesson.summativeAssessment || `Final student product or exit ticket aligned to ${selected.code}.`)
+        : `Students submit a completed artifact and an exit ticket in which they explain what they learned about ${topic}, describe the choice or issue they addressed, and justify why their response is effective.`;
 
       const pacingMap = classLength >= 90
-        ? `${placement}: 10 min opening hook, 15 min direct instruction and model, 30-35 min guided student work, 10-15 min collaboration or check-in, 10 min share-out, 5-10 min exit ticket.`
-        : `${placement}: 5 min hook, 10 min direct instruction, 20 min focused activity, 5-10 min share-out, 5 min exit check.`;
+        ? `${placement}: 10 min opening hook, 15 min direct instruction and model, 30–35 min guided student work, 10–15 min collaboration or check-in, 10 min share-out, 5–10 min assessment closure.`
+        : `${placement}: 5 min hook, 10 min direct instruction, 20 min focused activity, 5–10 min share-out, 5 min assessment closure.`;
 
       const support = 'Supports: chunked directions, model example, sentence frames, visual supports, optional read-aloud, flexible output choices, peer collaboration, extension prompt for advanced learners, and a teacher checkpoint midway through the activity.';
       const review = usingLessonBank
         ? 'Agent Review: A matching lesson was found in the lesson bank and used as the instructional base. The toolkit adapted that lesson to the selected standard instead of generating from scratch.'
         : 'Agent Review: No strong lesson bank match was found, so the toolkit auto-generated a lesson from the selected standard, progression notes, and setup suggestions.';
 
-      appState.lesson = { topic, pathway, grade, classLength, courseLength, placement, selected, objective, focus, performance, pacing, workspace, workspaceBlocks, workspaceChecks, directScript, activity, steps, assessment, pacingMap, support, review, usingLessonBank, matchedLessonTitle: matchedLesson?.title || '' };
+      appState.lesson = {
+        topic, pathway, grade, classLength, courseLength, placement, selected,
+        objective, focus, performance, pacing, workspace, workspaceBlocks, workspaceChecks,
+        directScript, activity, steps, formative, summative, pacingMap, support, review,
+        usingLessonBank, matchedLessonTitle: matchedLesson?.title || ''
+      };
 
       document.getElementById('outGrade').textContent = `Grade ${grade}`;
       document.getElementById('outStandard').textContent = selected.code;
@@ -948,15 +1175,15 @@
       document.getElementById('outWorkspace').textContent = workspace;
       document.getElementById('workspaceBlocks').innerHTML = workspaceBlocks.map(x => `<li>${x}</li>`).join('');
       document.getElementById('workspaceChecks').innerHTML = workspaceChecks.map(x => `<li>${x}</li>`).join('');
-      document.getElementById('outAssessment').textContent = assessment;
+      document.getElementById('outFormative').textContent = formative;
+      document.getElementById('outSummative').textContent = summative;
       document.getElementById('outPacingMap').textContent = pacingMap;
       document.getElementById('outSupport').textContent = support;
       document.getElementById('outReview').textContent = review;
       document.getElementById('outSteps').innerHTML = steps.map(s => `<li>${s}</li>`).join('');
       document.getElementById('outWhyMatch').textContent = explainMatch(matchResult, selected, topic, grade);
 
-      const similar = getSimilarLessons(selected, topic, grade, matchedLesson?.id || null);
-      renderSimilarLessons(similar);
+      renderSimilarLessons(getSimilarLessons(selected, topic, grade, matchedLesson?.id || null));
       renderVariations(generateVariations(activity, topic, selected.concept));
       updateCoverage(selected.code);
       renderCoverage();
@@ -967,8 +1194,8 @@
         ? `Lesson built from the lesson bank using ${matchedLesson.title}.`
         : 'No lesson bank match was found, so a new lesson was generated from the selected standard and suggestions.';
       document.getElementById('aiInsight').textContent = usingLessonBank
-        ? `I matched ${matchedLesson.title} to ${selected.code} using grade band, concept, topic keywords, and extracted lesson content. Open the panels to review similar lessons, variations, coverage, and next-week guidance.`
-        : `I did not find a strong lesson bank match for ${selected.code}, so I generated a lesson from the standard, progression notes, and your planning inputs. Open the panels to review why, plus next-week guidance.`;
+        ? `I matched ${matchedLesson.title} to ${selected.code} using grade band, concept, topic keywords, extracted tags, and inferred standards.`
+        : `I did not find a strong lesson bank match for ${selected.code}, so I generated a lesson from the standard, progression notes, and your planning inputs.`;
 
       setStep(3);
       openPanel('panelBuild');
@@ -977,6 +1204,9 @@
     function finalizeLesson() {
       if (!appState.lesson) return;
       const l = appState.lesson;
+      document.getElementById('exportDistrictName').textContent = 'District / School Header';
+      document.getElementById('exportTeacherLine').textContent = 'Teacher: ____________________';
+      document.getElementById('exportCourseLine').textContent = 'Course: ____________________';
       document.getElementById('exportPlanTitle').textContent = l.topic;
       document.getElementById('exportPlanSubtitle').textContent = `${l.selected.label} | ${l.selected.concept} | ${l.selected.subconcept}`;
       document.getElementById('exportBadgeGrade').textContent = `Grade ${l.grade}`;
@@ -984,67 +1214,20 @@
       document.getElementById('exportBadgeMeta').textContent = `${l.pathway} · ${l.classLength} min · ${l.courseLength === 'semester' ? 'Semester' : 'Yearlong'} · ${l.placement}`;
       document.getElementById('finalObjective').textContent = l.objective;
       document.getElementById('exportFocus').textContent = l.focus;
-      document.getElementById('finalScript').textContent = l.directScript.replace(/
-+/g, ' ');
+      document.getElementById('finalScript').textContent = l.directScript.replace(/\n+/g, ' ');
       document.getElementById('finalActivity').textContent = `${l.activity} Steps: ${l.steps.join(' ')}`;
       document.getElementById('finalWorkspace').textContent = `${l.workspace} Blocks: ${l.workspaceBlocks.join(', ')}. Checkpoints: ${l.workspaceChecks.join(' ')}`;
-      document.getElementById('finalAssessment').textContent = l.assessment;
+      document.getElementById('finalFormative').textContent = l.formative;
+      document.getElementById('finalSummative').textContent = l.summative;
       document.getElementById('finalPacing').textContent = l.pacingMap;
       document.getElementById('finalSupport').textContent = l.support;
       document.getElementById('finalReview').textContent = l.review;
       document.getElementById('finalView').classList.remove('hidden');
       document.getElementById('agentStatus').textContent = 'Finalized';
-      document.getElementById('agentNote').textContent = 'This lesson is finalized and now displayed in a one-page tabular layout for clear viewing and printing.';
-      document.getElementById('aiInsight').textContent = 'Lesson finalized. You can print the one-page version or revise inputs and rebuild.';
+      document.getElementById('agentNote').textContent = 'This lesson is finalized and now displayed in a district-style one-page layout for clear viewing and export.';
+      document.getElementById('aiInsight').textContent = 'Lesson finalized. You can print, export PDF, or export Word.';
       setStep(4);
     }
-
-    function runSelfTests() {
-      console.assert(flatStandards().length >= 16, 'Expected at least 16 standards in starter progression-aware catalog.');
-      console.assert(flatStandards().some(s => s.code === 'MS-SAS-32'), 'Expected MS-SAS-32 in progression-aware catalog.');
-      console.assert(flatStandards().some(s => s.code === 'HS-CAS-47'), 'Expected HS-CAS-47 in progression-aware catalog.');
-      console.assert(typeof matchLessonToStandard === 'function', 'Match function missing.');
-      console.assert(typeof generateNextWeekPlan === 'function', 'Next week planner missing.');
-      console.assert(typeof explainMatch === 'function', 'Explanation layer missing.');
-    }
-
-    document.getElementById('standardsMode').addEventListener('change', (e) => {
-      appState.currentMode = e.target.value;
-      populateGradeBands();
-      document.getElementById('agentNote').textContent = appState.currentMode === 'foundational'
-        ? 'Foundational progression mode active. The tool is now prioritizing what students should know now and what comes next.'
-        : 'Specialty pathways mode active. Use this for advanced high school study after foundational CS.';
-    });
-    document.getElementById('gradeBand').addEventListener('change', () => {
-      populateSubconcepts();
-      populateStandards(document.getElementById('standardSearch').value);
-    });
-    document.getElementById('concept').addEventListener('change', () => {
-      populateSubconcepts();
-      populateStandards(document.getElementById('standardSearch').value);
-    });
-    document.getElementById('subconcept').addEventListener('change', () => populateStandards(document.getElementById('standardSearch').value));
-    document.getElementById('standard').addEventListener('change', updateVerticalMap);
-    document.getElementById('standardSearch').addEventListener('input', (e) => populateStandards(e.target.value));
-    document.getElementById('lessonUpload').addEventListener('change', async (e) => {
-      const files = Array.from(e.target.files || []);
-      if (!files.length) return;
-      document.getElementById('agentNote').textContent = `Importing ${files.length} lesson file${files.length === 1 ? '' : 's'} into the lesson bank...`;
-      for (const file of files) {
-        let text = '';
-        try {
-          text = await file.text();
-        } catch {
-          text = '';
-        }
-        const extracted = extractLessonData(text, file.name);
-        extracted.sourceType = file.name.split('.').pop()?.toUpperCase() || 'FILE';
-        lessonBank.push({ id: Date.now() + Math.random(), ...extracted });
-      }
-      renderLessonBank();
-      document.getElementById('agentNote').textContent = 'Lesson bank updated behind the scenes. These sample lessons will improve matching across the toolkit; teachers can continue planning without uploading files.';
-      document.getElementById('aiInsight').textContent = 'Lesson bank refreshed behind the scenes. The toolkit will now use these sample lessons to improve matching before generating new lessons.';
-    });
 
     function getExportFilename() {
       const title = (appState.lesson?.topic || 'lesson-plan').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -1073,15 +1256,14 @@
       if (!appState.lesson || !window.docx) return;
       const { Document, Packer, Paragraph, Table, TableRow, TableCell, WidthType, HeadingLevel, TextRun, ShadingType } = window.docx;
       const l = appState.lesson;
-
       const rows = [
         ['Objective', l.objective],
         ['Lesson Focus', l.focus],
-        ['Direct Instruction', l.directScript.replace(/
-+/g, ' ')],
+        ['Direct Instruction', l.directScript.replace(/\n+/g, ' ')],
         ['Student Activity', `${l.activity} Steps: ${l.steps.join(' ')}`],
         ['Student Workspace', `${l.workspace} Blocks: ${l.workspaceBlocks.join(', ')}. Checkpoints: ${l.workspaceChecks.join(' ')}`],
-        ['Assessment', l.assessment],
+        ['Formative Assessment', l.formative],
+        ['Summative Assessment', l.summative],
         ['Pacing', l.pacingMap],
         ['Supports', l.support],
         ['Agent Review', l.review]
@@ -1108,8 +1290,8 @@
         sections: [{
           properties: { page: { size: { orientation: 'landscape' }, margin: { top: 720, right: 720, bottom: 720, left: 720 } } },
           children: [
-            new Paragraph({ text: l.topic, heading: HeadingLevel.HEADING_1 }),
-            new Paragraph({ children: [new TextRun({ text: `${l.selected.code} | ${l.selected.concept} | ${l.pathway} | ${l.classLength} min | ${l.placement}`, italics: true })] }),
+            new Paragraph({ text: 'Teach Ready Toolkit', heading: HeadingLevel.HEADING_1 }),
+            new Paragraph({ children: [new TextRun({ text: `${l.topic} | ${l.selected.code} | ${l.selected.concept} | ${l.pathway} | ${l.classLength} min | ${l.placement}`, italics: true })] }),
             table
           ]
         }]
@@ -1118,6 +1300,59 @@
       const blob = await Packer.toBlob(doc);
       saveAs(blob, `${getExportFilename()}.docx`);
     }
+
+    function runSelfTests() {
+      console.assert(flatStandards().length >= 16, 'Expected at least 16 standards in the catalog.');
+      console.assert(flatStandards().some(s => s.code === 'MS-SAS-32'), 'Expected MS-SAS-32 in the catalog.');
+      console.assert(flatStandards().some(s => s.code === 'HS-CAS-47'), 'Expected HS-CAS-47 in the catalog.');
+      console.assert(typeof matchLessonToStandard === 'function', 'Match function missing.');
+      console.assert(typeof generateNextWeekPlan === 'function', 'Next week planner missing.');
+      console.assert(typeof explainMatch === 'function', 'Explanation layer missing.');
+      console.assert(typeof inferStandardsFromLesson === 'function', 'Standard inference missing.');
+      console.assert(typeof detectGradeBand === 'function', 'Grade detection missing.');
+    }
+
+    document.getElementById('standardsMode').addEventListener('change', (e) => {
+      appState.currentMode = e.target.value;
+      populateGradeBands();
+      document.getElementById('agentNote').textContent = appState.currentMode === 'foundational'
+        ? 'Foundational progression mode active. The tool is now prioritizing what students should know now and what comes next.'
+        : 'Specialty pathways mode active. Use this for advanced high school study after foundational CS.';
+    });
+
+    document.getElementById('gradeBand').addEventListener('change', () => {
+      populateSubconcepts();
+      populateStandards(document.getElementById('standardSearch').value);
+    });
+
+    document.getElementById('concept').addEventListener('change', () => {
+      populateSubconcepts();
+      populateStandards(document.getElementById('standardSearch').value);
+    });
+
+    document.getElementById('subconcept').addEventListener('change', () => populateStandards(document.getElementById('standardSearch').value));
+    document.getElementById('standard').addEventListener('change', updateVerticalMap);
+    document.getElementById('standardSearch').addEventListener('input', (e) => populateStandards(e.target.value));
+
+    document.getElementById('lessonUpload').addEventListener('change', async (e) => {
+      const files = Array.from(e.target.files || []);
+      if (!files.length) return;
+      document.getElementById('agentNote').textContent = `Importing ${files.length} lesson file${files.length === 1 ? '' : 's'} into the hidden lesson bank...`;
+      for (const file of files) {
+        let text = '';
+        try {
+          text = await file.text();
+        } catch {
+          text = '';
+        }
+        const extracted = extractLessonData(text, file.name);
+        extracted.sourceType = file.name.split('.').pop()?.toUpperCase() || 'FILE';
+        lessonBank.push({ id: Date.now() + Math.random(), ...extracted });
+      }
+      renderLessonBank();
+      document.getElementById('agentNote').textContent = 'Hidden lesson bank updated. These sample lessons will improve matching across the toolkit.';
+      document.getElementById('aiInsight').textContent = 'Lesson bank refreshed behind the scenes. The toolkit will now use those sample lessons to improve matching before generating new lessons.';
+    });
 
     populateGradeBands();
     renderLessonBank();
