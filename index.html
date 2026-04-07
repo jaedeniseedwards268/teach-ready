@@ -188,7 +188,27 @@
       color: var(--ink);
     }
     .hidden-admin { display: none; }
-    button:hover { filter: brightness(.98); }
+    .mini-btn:hover, .mini-btn:focus-visible {
+      opacity: 1;
+      visibility: visible;
+      color: var(--ink);
+      background: #f8fafc;
+      filter: none;
+    }
+    .mini-btn-primary:hover, .mini-btn-primary:focus-visible {
+      color: var(--safe-dark-text);
+      background: linear-gradient(135deg, var(--brand-1) 0%, var(--brand-2) 100%);
+      filter: brightness(1.04);
+    }
+    .mini-btn-success:hover, .mini-btn-success:focus-visible {
+      color: var(--safe-dark-text);
+      background: linear-gradient(135deg, #059669 0%, #0f766e 100%);
+      filter: brightness(1.04);
+    }
+    button:hover {
+      opacity: 1;
+      visibility: visible;
+    }
     @page { size: landscape; margin: 0.5in; }
     @media print {
       .no-print { display: none !important; }
@@ -710,6 +730,16 @@
     ];
 
     const coverageTracker = {};
+
+    function setText(id, value) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = value;
+    }
+
+    function setHTML(id, value) {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = value;
+    }
     const appState = {
       step: 1,
       lesson: null,
@@ -1279,29 +1309,22 @@
         usingLessonBank, matchedLessonTitle: matchedLesson?.title || ''
       };
 
-      document.getElementById('outGrade').textContent = `Grade ${grade}`;
-      document.getElementById('outStandard').textContent = selected.code;
-      document.getElementById('outMeta').textContent = `${pathway} · ${classLength} min · ${courseLength === 'semester' ? 'Semester' : 'Yearlong'} · ${placement}`;
-      document.getElementById('outLessonType').textContent = formatLessonType(lessonType);
-      document.getElementById('outTitle').textContent = topic;
-      document.getElementById('outSubtitle').textContent = `${selected.label} | ${selected.concept} | ${selected.subconcept}`;
-      document.getElementById('outBellringer').textContent = bellringer;
-      document.getElementById('outObjective').textContent = objective;
-      document.getElementById('outFocus').textContent = focus;
-      document.getElementById('outPerformance').textContent = performance;
-      document.getElementById('outPacing').textContent = pacing;
-      document.getElementById('outScript').textContent = directScript;
-      document.getElementById('outActivity').textContent = activity;
-      document.getElementById('outWorkspace').textContent = workspace;
-      document.getElementById('workspaceBlocks').innerHTML = workspaceBlocks.map(x => `<li>${x}</li>`).join('');
-      document.getElementById('workspaceChecks').innerHTML = workspaceChecks.map(x => `<li>${x}</li>`).join('');
-      document.getElementById('outFormative').textContent = formative;
-      document.getElementById('outSummative').textContent = summative;
-      document.getElementById('outPacingMap').textContent = pacingMap;
-      document.getElementById('outSupport').textContent = support;
-      document.getElementById('outReview').textContent = review;
-      document.getElementById('outSteps').innerHTML = steps.map(s => `<li>${s}</li>`).join('');
-      document.getElementById('outWhyMatch').textContent = explainMatch(matchResult, selected, topic, grade);
+      setText('outGrade', `Grade ${grade}`);
+      setText('outStandard', selected.code);
+      setText('outMeta', `${pathway} · ${classLength} min · ${courseLength === 'semester' ? 'Semester' : 'Yearlong'} · ${placement}`);
+      setText('outLessonType', formatLessonType(lessonType));
+      setText('outTitle', topic);
+      setText('outSubtitle', `${selected.label} | ${selected.concept} | ${selected.subconcept}`);
+      setText('outBellringer', bellringer);
+      setText('outObjective', objective);
+      setText('outFocus', focus);
+      setText('outPerformance', performance);
+      setText('outPacing', pacing);
+      setText('outScript', directScript);
+      setText('outActivity', activity);
+      setText('outWorkspace', workspace);
+      setHTML('workspaceBlocks', workspaceBlocks.map(x => `<li>${x}</li>`).join(''));
+      setHTML('workspaceChecks', workspaceChecks.map(x => `<li
 
       renderSimilarLessons(getSimilarLessons(selected, topic, grade, matchedLesson?.id || null));
       renderVariations(generateVariations(activity, topic, selected.concept));
