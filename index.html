@@ -10,7 +10,6 @@
   <script src="https://unpkg.com/file-saver@2.0.5/dist/FileSaver.min.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
-
     body { font-family: 'Inter', sans-serif; }
     .glass { background: rgba(255,255,255,.88); backdrop-filter: blur(10px); }
     .panel-card { background: white; border: 1px solid #e2e8f0; border-radius: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
@@ -36,6 +35,19 @@
     .workflow-arrow { font-size: 1.25rem; line-height: 1; color: #cbd5e1; }
     textarea, input, select { transition: all .2s ease; }
     textarea:focus, input:focus, select:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59,130,246,.15); }
+    .print-only { display: none; }
+    .lesson-grid { display: grid; grid-template-columns: 220px 1fr; }
+    .export-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    .export-table th, .export-table td { border: 1px solid #cbd5e1; padding: .55rem .65rem; vertical-align: top; }
+    .export-table th { width: 22%; background: #e2e8f0; text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+    .export-table td { background: white; font-size: 13px; line-height: 1.45; }
+    .export-header { display: flex; justify-content: space-between; gap: 1rem; align-items: flex-start; margin-bottom: 1rem; }
+    .export-badge { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; padding: .35rem .55rem; border-radius: 999px; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+    .export-actions { display: flex; gap: .5rem; flex-wrap: wrap; }
+    .landscape-note { font-size: 11px; color: #64748b; }
+    @page { size: landscape; margin: 0.5in; }
+    .lesson-grid div { padding: .7rem .85rem; border-bottom: 1px solid #e2e8f0; }
+    .lesson-grid div:nth-child(4n+1), .lesson-grid div:nth-child(4n+2) { background: #f8fafc; }
     .bank-item.active { border-color: #2563eb; background: #eff6ff; }
     .collapse-body.hidden { display: none; }
     .variation-visual { border-left: 4px solid #a855f7; background: #faf5ff; }
@@ -44,21 +56,14 @@
     .soft-animate { animation: softFade .35s ease; }
     @keyframes softFade { from { opacity: 0; transform: translateY(4px);} to { opacity: 1; transform: translateY(0);} }
     .sidebar-note { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; }
-
-    .export-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-    .export-table th, .export-table td { border: 1px solid #cbd5e1; padding: .55rem .65rem; vertical-align: top; }
-    .export-table th { width: 22%; background: #e2e8f0; text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
-    .export-table td { background: white; font-size: 13px; line-height: 1.45; }
-    .export-header { display: flex; justify-content: space-between; gap: 1rem; align-items: flex-start; margin-bottom: 1rem; }
-    .export-badge { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; padding: .35rem .55rem; border-radius: 999px; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
-    .export-actions { display: flex; gap: .5rem; flex-wrap: wrap; }
-
-    @page { size: landscape; margin: 0.5in; }
-
     @media print {
       .no-print { display: none !important; }
+      .print-only { display: block; }
       body { background: white; }
       .section-card, .panel-card { break-inside: avoid; box-shadow: none; }
+      .one-page-view { border: 1px solid #cbd5e1; border-radius: .75rem; }
+      .one-page-view .lesson-grid { grid-template-columns: 180px 1fr; }
+      .one-page-view .lesson-grid div { font-size: 11px; padding: .45rem .6rem; }
     }
   </style>
 </head>
@@ -96,17 +101,13 @@
         </div>
         <div class="mt-4 rounded-xl bg-slate-50 border border-slate-200 p-4">
           <div class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Agent Note</div>
-          <p id="agentNote" class="text-sm text-slate-700 leading-relaxed">
-            Start with the lesson setup. The agent will suggest direction, build the lesson, explain why it matched a lesson, and convert it into a one-page tabular view.
-          </p>
+          <p id="agentNote" class="text-sm text-slate-700 leading-relaxed">Start with the lesson setup. The agent will suggest direction, build the lesson, explain why it matched a lesson, and convert it into a one-page tabular view.</p>
         </div>
       </div>
 
       <div class="panel-card p-5 sidebar-note">
         <div class="text-xs font-bold uppercase tracking-widest text-slate-300 mb-2">AI Assistant Sidebar</div>
-        <p id="aiInsight" class="text-sm leading-relaxed text-slate-100">
-          Waiting for lesson setup. Once a lesson is built, the assistant will explain what it matched, why it matched, and what to teach next.
-        </p>
+        <p id="aiInsight" class="text-sm leading-relaxed text-slate-100">Waiting for lesson setup. Once a lesson is built, the assistant will explain what it matched, why it matched, and what to teach next.</p>
       </div>
 
       <div class="panel-card p-5">
@@ -211,12 +212,11 @@
 
       <div class="panel-card p-5">
         <div class="flex items-center justify-between mb-3">
-          <h2 class="text-xs font-bold uppercase tracking-widest text-slate-400">Lesson Bank</h2>
+          <h2 class="text-xs font-bold uppercase tracking-widest text-slate-400">Advanced: Lesson Bank Manager</h2>
           <span id="lessonBankCount" class="text-[10px] uppercase tracking-widest text-slate-500">1 Item</span>
         </div>
-        <p class="text-sm text-slate-600 mb-3">
-          Upload lesson files. The toolkit will use the lesson bank first and only generate a new lesson when no strong match exists.
-        </p>
+        <p class="text-sm text-slate-600 mb-2">This section is intended for behind-the-scenes uploads by a curriculum lead, coach, or toolkit manager.</p>
+        <p class="text-xs text-slate-500 mb-3">Use it to add strong sample lessons that improve lesson matching across the toolkit. Teachers do not need to upload files during normal lesson planning.</p>
         <div class="mb-3">
           <input type="file" id="lessonUpload" multiple class="text-xs" />
         </div>
@@ -228,9 +228,7 @@
       <div id="emptyState" class="panel-card p-12 text-center">
         <div class="w-16 h-16 mx-auto rounded-full bg-slate-100 flex items-center justify-center text-3xl mb-4">✨</div>
         <h1 class="text-2xl font-black tracking-tight">Plan High-Impact Lessons Quickly</h1>
-        <p class="mt-2 text-slate-500 max-w-xl mx-auto">
-          This workflow moves from setup to direction to lesson build using your lesson bank first, progression mapping second, and new generation only when needed.
-        </p>
+        <p class="mt-2 text-slate-500 max-w-xl mx-auto">This workflow moves from setup to direction to lesson build using your lesson bank first, progression mapping second, and new generation only when needed.</p>
       </div>
 
       <div id="panelDirection" class="workflow-panel panel-card p-6">
@@ -241,23 +239,19 @@
           </div>
           <span class="step-pill active-step">Direction</span>
         </div>
-
         <div class="grid gap-4">
           <div class="section-card">
             <label class="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Objective</label>
             <textarea id="dirObjective" rows="3" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm"></textarea>
           </div>
-
           <div class="section-card">
             <label class="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Lesson Focus</label>
             <textarea id="dirFocus" rows="3" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm"></textarea>
           </div>
-
           <div class="section-card">
             <label class="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Student Performance</label>
             <textarea id="dirPerformance" rows="3" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm"></textarea>
           </div>
-
           <div class="grid md:grid-cols-2 gap-4">
             <div class="section-card">
               <label class="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Pacing Suggestion</label>
@@ -269,7 +263,6 @@
             </div>
           </div>
         </div>
-
         <div class="flex flex-wrap gap-2 mt-4">
           <button class="mini-btn mini-btn-primary" onclick="buildLesson()">Build Full Lesson</button>
           <button class="mini-btn" onclick="regenerateDirection()">Regenerate Direction</button>
@@ -337,29 +330,24 @@
 
         <div class="grid md:grid-cols-2 gap-4 mb-4">
           <div class="section-card">
-            <h3 class="text-sm font-bold uppercase tracking-widest mb-3">Formative Assessment</h3>
-            <p id="outFormativeAssessment" class="text-sm leading-relaxed"></p>
+            <h3 class="text-sm font-bold uppercase tracking-widest mb-3">Assessment</h3>
+            <p id="outAssessment" class="text-sm leading-relaxed"></p>
           </div>
           <div class="section-card">
-            <h3 class="text-sm font-bold uppercase tracking-widest mb-3">Summative Assessment</h3>
-            <p id="outSummativeAssessment" class="text-sm leading-relaxed"></p>
+            <h3 class="text-sm font-bold uppercase tracking-widest mb-3">Pacing Map</h3>
+            <p id="outPacingMap" class="text-sm leading-relaxed"></p>
           </div>
         </div>
 
         <div class="grid md:grid-cols-2 gap-4 mb-4">
           <div class="section-card">
-            <h3 class="text-sm font-bold uppercase tracking-widest mb-3">Pacing Map</h3>
-            <p id="outPacingMap" class="text-sm leading-relaxed"></p>
-          </div>
-          <div class="section-card">
             <h3 class="text-sm font-bold uppercase tracking-widest mb-3">Differentiation & Accessibility</h3>
             <p id="outSupport" class="text-sm leading-relaxed"></p>
           </div>
-        </div>
-
-        <div class="section-card bg-amber-50 border-amber-100 mb-4">
-          <h3 class="text-sm font-bold uppercase tracking-widest mb-3 text-amber-800">Agent Review</h3>
-          <p id="outReview" class="text-sm leading-relaxed text-amber-900"></p>
+          <div class="section-card bg-amber-50 border-amber-100">
+            <h3 class="text-sm font-bold uppercase tracking-widest mb-3 text-amber-800">Agent Review</h3>
+            <p id="outReview" class="text-sm leading-relaxed text-amber-900"></p>
+          </div>
         </div>
 
         <div class="section-card mb-4 soft-animate">
@@ -398,7 +386,7 @@
           </div>
         </div>
 
-        <div id="finalView" class="hidden section-card mt-6">
+        <div id="finalView" class="hidden one-page-view section-card mt-6">
           <div class="export-header">
             <div>
               <h3 class="text-lg font-black tracking-tight">Finalized Lesson Plan</h3>
@@ -413,7 +401,6 @@
               </div>
             </div>
           </div>
-
           <div id="exportLessonPlan" class="rounded-xl overflow-hidden border border-slate-200 bg-white">
             <div class="px-4 py-3 border-b border-slate-200 bg-slate-50">
               <div class="flex flex-wrap items-center gap-2 mb-2">
@@ -424,7 +411,6 @@
               <h2 id="exportPlanTitle" class="text-2xl font-black tracking-tight"></h2>
               <p id="exportPlanSubtitle" class="text-sm text-slate-600 mt-1"></p>
             </div>
-
             <div class="p-4">
               <table class="export-table">
                 <tr><th>Objective</th><td id="finalObjective"></td></tr>
@@ -432,14 +418,14 @@
                 <tr><th>Direct Instruction</th><td id="finalScript"></td></tr>
                 <tr><th>Student Activity</th><td id="finalActivity"></td></tr>
                 <tr><th>Workspace</th><td id="finalWorkspace"></td></tr>
-                <tr><th>Formative Assessment</th><td id="finalFormativeAssessment"></td></tr>
-                <tr><th>Summative Assessment</th><td id="finalSummativeAssessment"></td></tr>
+                <tr><th>Assessment</th><td id="finalAssessment"></td></tr>
                 <tr><th>Pacing</th><td id="finalPacing"></td></tr>
                 <tr><th>Supports</th><td id="finalSupport"></td></tr>
                 <tr><th>Agent Review</th><td id="finalReview"></td></tr>
               </table>
             </div>
           </div>
+        </div>
         </div>
       </div>
     </section>
@@ -503,10 +489,8 @@
         concept: 'Programming',
         objective: 'Students test and debug code using unittest.',
         activity: 'Students write and test functions.',
-        formativeAssessment: 'Teacher observes whether students can write and interpret passing and failing tests during guided practice.',
-        summativeAssessment: 'Students submit a corrected function and matching unittest cases that demonstrate accurate behavior.',
+        assessment: 'Students fix failing tests.',
         tags: ['testing','debugging','unittest'],
-        standards: ['HS-PRO-38'],
         sourceType: 'STARTER',
         raw: 'Students test and debug code using unittest.'
       }
@@ -535,14 +519,9 @@
       const conceptSelect = document.getElementById('concept');
       const catalog = getCurrentCatalog();
       const gradeBands = Object.keys(catalog);
-
-      gradeSelect.innerHTML = gradeBands.map(g =>
-        `<option value="${g}" ${g === (appState.currentMode === 'foundational' ? 'MS' : 'HS Specialty I') ? 'selected' : ''}>${g}</option>`
-      ).join('');
-
+      gradeSelect.innerHTML = gradeBands.map(g => `<option value="${g}" ${g === (appState.currentMode === 'foundational' ? 'MS' : 'HS Specialty I') ? 'selected' : ''}>${g}</option>`).join('');
       const concepts = [...new Set(flatStandards().map(s => s.concept))].sort();
       conceptSelect.innerHTML = ['<option value="">All Concepts</option>', ...concepts.map(c => `<option value="${c}">${c}</option>`)].join('');
-
       populateSubconcepts();
       populateStandards();
     }
@@ -552,9 +531,7 @@
       const grade = document.getElementById('gradeBand').value;
       const concept = document.getElementById('concept').value;
       let items = (getCurrentCatalog()[grade] || []).slice();
-
       if (concept) items = items.filter(i => i.concept === concept);
-
       const subconcepts = [...new Set(items.map(i => i.subconcept))].filter(Boolean).sort();
       subconceptSelect.innerHTML = ['<option value="">All Subconcepts</option>', ...subconcepts.map(sc => `<option value="${sc}">${sc}</option>`)].join('');
     }
@@ -564,11 +541,9 @@
       const concept = document.getElementById('concept').value;
       const subconcept = document.getElementById('subconcept').value;
       const standardSelect = document.getElementById('standard');
-
       let items = (getCurrentCatalog()[grade] || []).slice();
       if (concept) items = items.filter(s => s.concept === concept);
       if (subconcept) items = items.filter(s => s.subconcept === subconcept);
-
       const term = filter.trim().toLowerCase();
       if (term) {
         items = flatStandards().filter(s =>
@@ -579,12 +554,8 @@
           s.keywords.some(k => k.toLowerCase().includes(term))
         );
       }
-
       appState.filteredStandards = items;
-      standardSelect.innerHTML = items.map((s, idx) =>
-        `<option value="${s.code}" data-grade="${s.gradeBand || grade}" ${idx === 0 ? 'selected' : ''}>${s.gradeBand || grade} | ${s.label}</option>`
-      ).join('');
-
+      standardSelect.innerHTML = items.map((s, idx) => `<option value="${s.code}" data-grade="${s.gradeBand || grade}" ${idx === 0 ? 'selected' : ''}>${s.gradeBand || grade} | ${s.label}</option>`).join('');
       updateVerticalMap();
     }
 
@@ -615,32 +586,23 @@
           </div>
           <div class="text-xs text-slate-500 mt-1">${item.gradeBand} · ${item.concept}</div>
           <div class="text-xs text-slate-600 mt-2">${item.objective || 'No objective extracted yet.'}</div>
-          <div class="mt-2 flex flex-wrap gap-1">
-            ${(item.tags || []).slice(0, 6).map(tag => `<span class="text-[10px] px-2 py-1 rounded-full bg-slate-100 text-slate-600">${tag}</span>`).join('')}
-          </div>
-          <div class="text-[10px] text-blue-700 mt-2">${(item.standards || []).join(', ') || 'Standard not inferred yet'}</div>
         </button>
       `).join('');
-
       updateLessonBankCount();
     }
 
     function loadLessonBankItem(id) {
       const item = lessonBank.find(x => x.id === id);
       if (!item) return;
-
       document.getElementById('topic').value = item.title;
-
       if ([...document.getElementById('gradeBand').options].some(opt => opt.value === item.gradeBand)) {
         document.getElementById('gradeBand').value = item.gradeBand;
       }
       if ([...document.getElementById('concept').options].some(opt => opt.value === item.concept)) {
         document.getElementById('concept').value = item.concept;
       }
-
       populateSubconcepts();
       populateStandards(document.getElementById('standardSearch').value);
-
       document.getElementById('agentNote').textContent = `Loaded lesson bank item: ${item.title}. The toolkit will try to reuse this lesson when it is a strong match.`;
       document.getElementById('aiInsight').textContent = `Loaded ${item.title}. Build a lesson to see match reasoning, similar lessons, and suggested next steps.`;
     }
@@ -648,12 +610,10 @@
     function updateWorkflowConnectors(step) {
       const arrows = document.querySelectorAll('[data-arrow-index]');
       const lines = document.querySelectorAll('[data-line-index]');
-
       arrows.forEach((arrow, idx) => {
         arrow.textContent = '➜';
         arrow.style.color = idx < step - 1 ? '#10b981' : idx === step - 1 ? '#3b82f6' : '#cbd5e1';
       });
-
       lines.forEach((line, idx) => {
         line.style.background = idx < step - 1
           ? 'linear-gradient(to right, #34d399, #86efac)'
@@ -671,12 +631,10 @@
         { id: 'step3Pill', label: 'Build' },
         { id: 'step4Pill', label: 'Finalize' }
       ];
-
       stepMeta.forEach((item, idx) => {
         const el = document.getElementById(item.id);
         const stepNumber = idx + 1;
         el.classList.remove('active-step', 'idle-step', 'completed-step', 'pulse-step');
-
         if (stepNumber < step) {
           el.classList.add('completed-step');
           el.textContent = `✓ ${item.label}`;
@@ -688,10 +646,8 @@
           el.textContent = `${stepNumber} ${item.label}`;
         }
       });
-
       updateWorkflowConnectors(step);
-      document.getElementById('agentStatus').textContent =
-        step === 4 ? 'Finalized' : step === 3 ? 'Built' : step === 2 ? 'Direction' : 'Ready';
+      document.getElementById('agentStatus').textContent = step === 4 ? 'Finalized' : step === 3 ? 'Built' : step === 2 ? 'Direction' : 'Ready';
     }
 
     function openPanel(panelId) {
@@ -706,9 +662,7 @@
       document.getElementById('topic').value = 'Unit Testing with unittest';
       document.getElementById('pathway').value = 'CTE';
       document.getElementById('courseLength').value = 'semester';
-
       populateGradeBands();
-
       document.getElementById('gradeBand').value = 'HS';
       document.getElementById('concept').value = 'Programming';
       populateSubconcepts();
@@ -717,7 +671,6 @@
       document.getElementById('standard').value = 'HS-PRO-38';
       document.getElementById('classLength').value = '90';
       document.getElementById('unitPlacement').value = 'Quarter 2 / Unit 3';
-
       updateVerticalMap();
       suggestDirection();
     }
@@ -731,32 +684,18 @@
       const placement = document.getElementById('unitPlacement').value;
       const selected = getSelectedStandard();
       if (!selected) return;
-
       const pacing = classLength >= 90
-        ? 'Use a 10-minute hook, 15-minute teacher model, 35-minute student activity, 15-minute share-out, and 10-minute reflection.'
-        : 'Use a short hook, brief direct instruction, one focused activity, and a concise closing check.';
+        ? 'Use a 10-minute hook, 15-minute teacher model, 35-minute student activity, 15-minute share-out, and 10-minute exit ticket or reflection.'
+        : 'Use a tight structure with a short hook, brief direct instruction, one focused activity, and a concise exit check.';
 
-      document.getElementById('dirObjective').value =
-        `Students will apply ${selected.concept.toLowerCase()} ideas to ${topic} and show understanding through explanation, design, or evaluation aligned to ${selected.code}.`;
+      document.getElementById('dirObjective').value = `Students will apply ${selected.concept.toLowerCase()} ideas to ${topic} and show understanding through explanation, design, or evaluation aligned to ${selected.code}. The task should reflect what students are expected to know now and prepare them for the next step in the progression.`;
+      document.getElementById('dirFocus').value = `${pathway} pathway focus: this lesson should feel practical, high-impact, and classroom-ready. This lesson sits in ${placement}, so the task should match where students are in the sequence. Use the progression note to distinguish what students should already know, what they are learning now, and what comes next.`;
+      document.getElementById('dirPerformance').value = `Students should explain their thinking, complete a structured task, and produce an artifact that shows how they applied ${selected.code} at the ${grade} level.`;
+      document.getElementById('dirPacing').value = `${pacing} Because this is a ${courseLength} course, the lesson should be strong enough to stand alone but still fit into a larger sequence.`;
+      document.getElementById('dirWorkspace').value = `Suggested workspace: a guided student handout with a warm-up box, vocabulary box, model/example space, task checklist, response workspace, and reflection box. For coding lessons, include predict-run-observe-fix sections.`;
 
-      document.getElementById('dirFocus').value =
-        `${pathway} pathway focus: this lesson should feel practical, high-impact, and classroom-ready. This lesson sits in ${placement}, so the task should match where students are in the sequence.`;
-
-      document.getElementById('dirPerformance').value =
-        `Students should explain their thinking, complete a structured task, and produce an artifact that shows how they applied ${selected.code} at the ${grade} level.`;
-
-      document.getElementById('dirPacing').value =
-        `${pacing} Because this is a ${courseLength} course, the lesson should be strong enough to stand alone but still fit into a larger sequence.`;
-
-      document.getElementById('dirWorkspace').value =
-        `Suggested workspace: a guided student handout with a warm-up box, vocabulary box, model/example space, task checklist, response workspace, and reflection box. For coding lessons, include predict-run-observe-fix sections.`;
-
-      document.getElementById('agentNote').textContent =
-        'The agent suggested a lesson direction with pacing, unit placement, workspace, and pathway-aware framing. Edit as needed, then build the lesson.';
-
-      document.getElementById('aiInsight').textContent =
-        `Direction suggested for ${selected.code}. Build the lesson to see whether the toolkit reuses a bank lesson or generates a new one.`;
-
+      document.getElementById('agentNote').textContent = 'The agent suggested a lesson direction with pacing, unit placement, workspace, and pathway-aware framing. Edit as needed, then build the lesson.';
+      document.getElementById('aiInsight').textContent = `Direction suggested for ${selected.code}. Build the lesson to see whether the toolkit reuses a bank lesson or generates a new one.`;
       setStep(2);
       openPanel('panelDirection');
     }
@@ -767,151 +706,76 @@
       document.getElementById('agentNote').textContent = 'The direction was regenerated with stronger student judgment and pacing cues.';
     }
 
+    function extractLessonData(text, filename) {
+      const cleanTitle = filename.replace(/\.[^/.]+$/, '');
+      const normalized = (text || '').replace(/\s+/g, ' ').trim();
+      return {
+        title: cleanTitle,
+        gradeBand: detectGradeBand(normalized),
+        concept: detectConceptFromText(normalized),
+        objective: extractSection(normalized, ['objective', 'goal', 'students will']) || 'Imported lesson objective not clearly detected.',
+        activity: extractSection(normalized, ['activity', 'student engage', 'task', 'procedure', 'challenge']) || 'Imported lesson activity not clearly detected.',
+        assessment: extractSection(normalized, ['assessment', 'assess', 'exit ticket', 'evaluation', 'quiz']) || 'Imported lesson assessment not clearly detected.',
+        tags: extractTagsFromText(normalized),
+        sourceType: 'FILE',
+        raw: normalized
+      };
+    }
+
     function extractSection(text, labels) {
       for (const label of labels) {
-        const regex = new RegExp(label + '\\s*[:\\-]\\s*([^\\n\\r]{10,260})', 'i');
+        const regex = new RegExp(label + '\\s*[:\\-]\\s*([^\\n\\r]{10,240})', 'i');
         const match = text.match(regex);
         if (match && match[1]) return match[1].trim();
       }
       return '';
     }
 
-    function detectGradeBand(text, title = '') {
-      const t = (title + ' ' + text).toLowerCase();
+    function detectGradeBand(text) {
+      const t = text.toLowerCase();
       if (/pre[- ]?k|pk\/?k|kindergarten|early elementary/.test(t)) return 'PK/K';
-      if (/grade 1|first grade|e1\b/.test(t)) return 'E1';
-      if (/grade 2|second grade|e2\b/.test(t)) return 'E2';
+      if (/grade 1|first grade|e1/.test(t)) return 'E1';
+      if (/grade 2|second grade|e2/.test(t)) return 'E2';
       if (/grade 3|third grade|grade 4|fourth grade|grade 5|fifth grade|elementary/.test(t)) return 'E3';
-      if (/middle school|grade 6|grade 7|grade 8|ms\b/.test(t)) return 'MS';
-      if (/high school|grade 9|grade 10|grade 11|grade 12|11th|12th|hs\b|workshop/.test(t)) return 'HS';
+      if (/middle school|grade 6|grade 7|grade 8|ms/.test(t)) return 'MS';
+      if (/high school|grade 9|grade 10|grade 11|grade 12|hs|11th/.test(t)) return 'HS';
       return 'HS';
     }
 
-    function detectConceptFromText(text, title = '') {
-      const t = (title + ' ' + text).toLowerCase();
-      if (/algorithm|pseudocode|flowchart|logic design|bias|machine learning/.test(t)) return 'Algorithms & Design';
-      if (/program|code|debug|function|class|unittest|script|python|variable|data type|if\/else|conditional|loop|iteration|syntax|type error|exercism/.test(t)) return 'Programming';
-      if (/data|dataset|visualization|analysis|spreadsheet|chart|csv/.test(t)) return 'Data & Analysis';
+    function detectConceptFromText(text) {
+      const t = text.toLowerCase();
+      if (/algorithm|pseudocode|flowchart|bias|machine learning/.test(t)) return 'Algorithms & Design';
+      if (/program|code|debug|function|class|unittest|script|python|variable|data type|if\/else|conditional/.test(t)) return 'Programming';
+      if (/data|dataset|visualization|analysis|spreadsheet|chart/.test(t)) return 'Data & Analysis';
       if (/security|network|hardware|software|device|cyber/.test(t)) return 'Systems & Security';
       if (/society|impact|career|ethics|emerging technologies/.test(t)) return 'Computing & Society';
       return 'Programming';
     }
 
     function extractTagsFromText(text) {
-      const lower = text.toLowerCase();
-      const tags = new Set((lower.match(/\b[a-z][a-z\-]{4,}\b/g) || []).slice(0, 15));
-
-      const keywordBuckets = {
-        debugging: /debug|syntax|type error|logical error|runtime|scope|fix/i,
-        testing: /unittest|test case|assert|testing/i,
-        variables: /variable|variables|assign/i,
-        datatypes: /data types|integer|float|string|boolean/i,
-        decisions: /if|else|decision|conditional/i,
-        loops: /loop|iteration|for |while /i,
-        pseudocode: /pseudocode|flowchart|ipo/i,
-        worksheet: /worksheet|independent practice/i,
-        challenge: /challenge|exercism/i,
-        certification: /certiport|its python|gmetrix|workshop/i
-      };
-
-      Object.entries(keywordBuckets).forEach(([tag, regex]) => {
-        if (regex.test(lower)) tags.add(tag);
-      });
-
-      return [...tags].slice(0, 12);
-    }
-
-    function inferStandardsFromLesson(lesson) {
-      const candidates = flatStandards().filter(s => s.gradeBand === lesson.gradeBand);
-
-      const scored = candidates.map(std => {
-        let score = 0;
-        if (std.concept === lesson.concept) score += 5;
-
-        const hay = (lesson.title + ' ' + lesson.raw + ' ' + (lesson.tags || []).join(' ')).toLowerCase();
-
-        (std.keywords || []).forEach(k => {
-          if (hay.includes(String(k).toLowerCase())) score += 2;
-        });
-
-        if (hay.includes('career') && std.code === 'HS-CAS-47') score += 4;
-        if (hay.includes('unittest') && std.code === 'HS-PRO-38') score += 4;
-        if ((hay.includes('debug') || hay.includes('syntax') || hay.includes('type error')) && (std.code === 'MS-PRO-24' || std.code === 'HS-PRO-38')) score += 4;
-        if (hay.includes('pseudocode') && (std.code.includes('ALG') || std.concept === 'Algorithms & Design')) score += 4;
-        if ((hay.includes('data types') || hay.includes('variable')) && std.concept === 'Programming') score += 3;
-        if ((hay.includes('if/else') || hay.includes('conditional')) && std.concept === 'Programming') score += 3;
-
-        return { code: std.code, score };
-      }).filter(x => x.score > 0).sort((a, b) => b.score - a.score);
-
-      return scored.slice(0, 2).map(x => x.code);
-    }
-
-    function extractLessonData(text, filename) {
-      const cleanTitle = filename.replace(/\.[^/.]+$/, '');
-      const normalized = (text || '').replace(/\s+/g, ' ').trim();
-      const gradeBand = detectGradeBand(normalized, cleanTitle);
-      const concept = detectConceptFromText(normalized, cleanTitle);
-      const inferredTags = extractTagsFromText(cleanTitle + ' ' + normalized);
-      const inferredStandards = inferStandardsFromLesson({
-        title: cleanTitle,
-        raw: normalized,
-        concept,
-        gradeBand,
-        tags: inferredTags
-      });
-
-      const formativeAssessment =
-        extractSection(normalized, ['formative assessment', 'check for understanding', 'observation', 'guided questions']) ||
-        'Teacher observation, questioning, and checkpoint review during guided practice.';
-
-      const summativeAssessment =
-        extractSection(normalized, ['summative assessment', 'assessment', 'exit ticket', 'evaluation', 'quiz']) ||
-        'Final student product, completed task, or exit ticket aligned to the lesson objective.';
-
-      return {
-        title: cleanTitle,
-        gradeBand,
-        concept,
-        objective: extractSection(normalized, ['objective', 'goal', 'students will']) || 'Imported lesson objective not clearly detected.',
-        activity: extractSection(normalized, ['activity', 'student engage', 'task', 'procedure', 'challenge']) || 'Imported lesson activity not clearly detected.',
-        formativeAssessment,
-        summativeAssessment,
-        tags: inferredTags,
-        standards: inferredStandards,
-        sourceType: 'FILE',
-        raw: normalized
-      };
+      return [...new Set((text.toLowerCase().match(/\b[a-z][a-z\-]{4,}\b/g) || []).slice(0, 15))];
     }
 
     function scoreLessonMatch(lesson, standard, topic, grade) {
       let score = 0;
       if (lesson.gradeBand === grade) score += 4;
       if (lesson.concept === standard.concept) score += 5;
-
       const topicWords = topic.toLowerCase().split(/\W+/).filter(Boolean);
       topicWords.forEach(word => {
         if ((lesson.title || '').toLowerCase().includes(word)) score += 2;
         if ((lesson.raw || '').toLowerCase().includes(word)) score += 1;
       });
-
       (standard.keywords || []).forEach(word => {
         const lower = String(word).toLowerCase();
         if ((lesson.tags || []).includes(lower)) score += 2;
         if ((lesson.raw || '').toLowerCase().includes(lower)) score += 1;
       });
-
-      (lesson.standards || []).forEach(code => {
-        if (code === standard.code) score += 5;
-      });
-
       return score;
     }
 
     function matchLessonToStandard(standard, topic, grade) {
       let best = null;
       let bestScore = 0;
-
       lessonBank.forEach(lesson => {
         const score = scoreLessonMatch(lesson, standard, topic, grade);
         if (score > bestScore) {
@@ -919,7 +783,6 @@
           bestScore = score;
         }
       });
-
       return { lesson: bestScore >= 5 ? best : null, score: bestScore };
     }
 
@@ -955,11 +818,9 @@
       const sameConcept = flatStandards().filter(s => s.concept === selected.concept);
       const index = sameConcept.findIndex(s => s.code === selected.code);
       const next = sameConcept[index + 1];
-
       if (!next) {
         return `Next week suggestion: extend ${selected.code} with a project, peer review, or performance task because this appears to be the end of the current progression path.`;
       }
-
       return `Next week suggestion: move from ${selected.code} to ${next.code}. Keep the same concept focus (${selected.concept}) but increase student independence, complexity, or evidence of reasoning.`;
     }
 
@@ -967,12 +828,12 @@
       const el = document.getElementById('similarLessonsList');
       el.innerHTML = similar.length
         ? similar.map(item => `
-          <div class="rounded-xl border border-slate-200 p-3 bg-slate-50">
-            <div class="font-bold text-sm">${item.lesson.title}</div>
-            <div class="text-xs text-slate-500 mt-1">${item.lesson.gradeBand} · ${item.lesson.concept} · Match score ${item.score}</div>
-            <div class="text-sm mt-2">${item.lesson.activity || item.lesson.objective}</div>
-          </div>
-        `).join('')
+            <div class="rounded-xl border border-slate-200 p-3 bg-slate-50">
+              <div class="font-bold text-sm">${item.lesson.title}</div>
+              <div class="text-xs text-slate-500 mt-1">${item.lesson.gradeBand} · ${item.lesson.concept} · Match score ${item.score}</div>
+              <div class="text-sm mt-2">${item.lesson.activity || item.lesson.objective}</div>
+            </div>
+          `).join('')
         : '<div class="text-slate-500">No similar lessons were found yet.</div>';
     }
 
@@ -992,11 +853,15 @@
 
     function explainMatch(matchResult, selected, topic, grade) {
       if (matchResult.lesson) {
-        const lesson = matchResult.lesson;
-        const standardsText = (lesson.standards || []).length ? ` Inferred lesson standards: ${lesson.standards.join(', ')}.` : '';
-        return `The toolkit chose “${lesson.title}” because it strongly aligned to ${selected.code}. The match considered grade band (${grade}), concept (${selected.concept}), topic keywords from “${topic}”, extracted tags (${(lesson.tags || []).join(', ')}), and the lesson’s inferred standards.${standardsText}`;
+        return `The toolkit chose “${matchResult.lesson.title}” because it strongly aligned to ${selected.code}. The match considered grade band (${grade}), concept (${selected.concept}), topic keywords from “${topic}”, and overlapping terms in the lesson’s extracted content.`;
       }
       return `No strong lesson bank match was found for ${selected.code}, so the toolkit generated a new lesson using the selected standard, progression notes, and setup suggestions.`;
+    }
+
+    function regenerateDirection() {
+      document.getElementById('dirFocus').value += ' Add one decision-making checkpoint where students must justify why their chosen response is strongest.';
+      document.getElementById('dirWorkspace').value += ' Include teacher check-in boxes so pacing stays visible during class.';
+      document.getElementById('agentNote').textContent = 'The direction was regenerated with stronger student judgment and pacing cues.';
     }
 
     function buildLesson() {
@@ -1035,61 +900,39 @@
 
       const steps = usingLessonBank
         ? [
-          'Review the original lesson task and identify what parts can be reused.',
-          'Compare the original lesson focus to the selected standard.',
-          'Revise the task so the activity clearly targets the new standard.',
-          'Complete the adapted task and gather evidence of understanding.',
-          'Explain what was changed and why the revision improves alignment.',
-          'Complete the final reflection or exit ticket.'
-        ]
+            'Review the original lesson task and identify what parts can be reused.',
+            'Compare the original lesson focus to the selected standard.',
+            'Revise the task so the activity clearly targets the new standard.',
+            'Complete the adapted task and gather evidence of understanding.',
+            'Explain what was changed and why the revision improves alignment.',
+            'Complete the final reflection or exit ticket.'
+          ]
         : [
-          'Read or examine the starter example with your partner or group.',
-          'Identify the main problem, design decision, or pattern you notice.',
-          'Use the guided workspace to record evidence, vocabulary, and observations.',
-          'Complete the core task by creating your explanation, design, test, or evaluation response.',
-          'Check your work against the success criteria before sharing.',
-          'Complete the exit reflection and explain how your work connects to the standard.'
-        ];
+            'Read or examine the starter example with your partner or group.',
+            'Identify the main problem, design decision, or pattern you notice.',
+            'Use the guided workspace to record evidence, vocabulary, and observations.',
+            'Complete the core task by creating your explanation, design, test, or evaluation response.',
+            'Check your work against the success criteria before sharing.',
+            'Complete the exit reflection and explain how your work connects to the standard.'
+          ];
 
-      const workspaceBlocks = [
-        'Warm-Up / Hook Response',
-        'Key Vocabulary Box',
-        'Model Example Notes',
-        'Task Checklist',
-        'Evidence / Code / Design Workspace',
-        'Reflection and Exit Ticket Box'
-      ];
+      const workspaceBlocks = ['Warm-Up / Hook Response', 'Key Vocabulary Box', 'Model Example Notes', 'Task Checklist', 'Evidence / Code / Design Workspace', 'Reflection and Exit Ticket Box'];
+      const workspaceChecks = ['Checkpoint 1: students can identify the main issue or target.', 'Checkpoint 2: students can explain the evidence they are using.', 'Checkpoint 3: students can justify their response before turning it in.'];
 
-      const workspaceChecks = [
-        'Checkpoint 1: students can identify the main issue or target.',
-        'Checkpoint 2: students can explain the evidence they are using.',
-        'Checkpoint 3: students can justify their response before turning it in.'
-      ];
-
-      const formativeAssessment = usingLessonBank
-        ? (matchedLesson.formativeAssessment || 'Teacher observation, questioning, and checkpoint review during guided practice.')
-        : 'Formative assessment: teacher observation during guided practice, checkpoint questioning, and review of student workspace notes before independent completion.';
-
-      const summativeAssessment = usingLessonBank
-        ? (matchedLesson.summativeAssessment || `Summative assessment: final student product or exit ticket aligned to ${selected.code}.`)
-        : `Summative assessment: students submit a completed artifact and an exit ticket in which they explain what they learned about ${topic}, describe the choice or issue they addressed, and justify why their response is effective.`;
+      const assessment = usingLessonBank
+        ? (matchedLesson.assessment || `Exit Ticket: Explain how the adapted lesson activity now aligns to ${selected.code} and justify one revision you made.`)
+        : `Exit Ticket: In 3-5 sentences, explain what you learned about ${topic}, describe the choice or issue you addressed, and justify why your response is effective. For coding tasks, add one test, fix, or revision note.`;
 
       const pacingMap = classLength >= 90
-        ? `${placement}: 10 min opening hook, 15 min direct instruction and model, 30–35 min guided student work, 10–15 min collaboration or check-in, 10 min share-out, 5–10 min assessment closure.`
-        : `${placement}: 5 min hook, 10 min direct instruction, 20 min focused activity, 5–10 min share-out, 5 min assessment closure.`;
+        ? `${placement}: 10 min opening hook, 15 min direct instruction and model, 30-35 min guided student work, 10-15 min collaboration or check-in, 10 min share-out, 5-10 min exit ticket.`
+        : `${placement}: 5 min hook, 10 min direct instruction, 20 min focused activity, 5-10 min share-out, 5 min exit check.`;
 
       const support = 'Supports: chunked directions, model example, sentence frames, visual supports, optional read-aloud, flexible output choices, peer collaboration, extension prompt for advanced learners, and a teacher checkpoint midway through the activity.';
-
       const review = usingLessonBank
         ? 'Agent Review: A matching lesson was found in the lesson bank and used as the instructional base. The toolkit adapted that lesson to the selected standard instead of generating from scratch.'
         : 'Agent Review: No strong lesson bank match was found, so the toolkit auto-generated a lesson from the selected standard, progression notes, and setup suggestions.';
 
-      appState.lesson = {
-        topic, pathway, grade, classLength, courseLength, placement, selected,
-        objective, focus, performance, pacing, workspace, workspaceBlocks, workspaceChecks,
-        directScript, activity, steps, formativeAssessment, summativeAssessment,
-        pacingMap, support, review, usingLessonBank, matchedLessonTitle: matchedLesson?.title || ''
-      };
+      appState.lesson = { topic, pathway, grade, classLength, courseLength, placement, selected, objective, focus, performance, pacing, workspace, workspaceBlocks, workspaceChecks, directScript, activity, steps, assessment, pacingMap, support, review, usingLessonBank, matchedLessonTitle: matchedLesson?.title || '' };
 
       document.getElementById('outGrade').textContent = `Grade ${grade}`;
       document.getElementById('outStandard').textContent = selected.code;
@@ -1105,8 +948,7 @@
       document.getElementById('outWorkspace').textContent = workspace;
       document.getElementById('workspaceBlocks').innerHTML = workspaceBlocks.map(x => `<li>${x}</li>`).join('');
       document.getElementById('workspaceChecks').innerHTML = workspaceChecks.map(x => `<li>${x}</li>`).join('');
-      document.getElementById('outFormativeAssessment').textContent = formativeAssessment;
-      document.getElementById('outSummativeAssessment').textContent = summativeAssessment;
+      document.getElementById('outAssessment').textContent = assessment;
       document.getElementById('outPacingMap').textContent = pacingMap;
       document.getElementById('outSupport').textContent = support;
       document.getElementById('outReview').textContent = review;
@@ -1121,14 +963,12 @@
       document.getElementById('nextWeekPlan').textContent = generateNextWeekPlan(selected);
 
       document.getElementById('finalView').classList.add('hidden');
-
       document.getElementById('agentNote').textContent = usingLessonBank
         ? `Lesson built from the lesson bank using ${matchedLesson.title}.`
         : 'No lesson bank match was found, so a new lesson was generated from the selected standard and suggestions.';
-
       document.getElementById('aiInsight').textContent = usingLessonBank
-        ? `I matched ${matchedLesson.title} to ${selected.code} using grade band, concept, topic keywords, extracted tags, and inferred standards.`
-        : `I did not find a strong lesson bank match for ${selected.code}, so I generated a lesson from the standard, progression notes, and your planning inputs.`;
+        ? `I matched ${matchedLesson.title} to ${selected.code} using grade band, concept, topic keywords, and extracted lesson content. Open the panels to review similar lessons, variations, coverage, and next-week guidance.`
+        : `I did not find a strong lesson bank match for ${selected.code}, so I generated a lesson from the standard, progression notes, and your planning inputs. Open the panels to review why, plus next-week guidance.`;
 
       setStep(3);
       openPanel('panelBuild');
@@ -1137,24 +977,21 @@
     function finalizeLesson() {
       if (!appState.lesson) return;
       const l = appState.lesson;
-
       document.getElementById('exportPlanTitle').textContent = l.topic;
       document.getElementById('exportPlanSubtitle').textContent = `${l.selected.label} | ${l.selected.concept} | ${l.selected.subconcept}`;
       document.getElementById('exportBadgeGrade').textContent = `Grade ${l.grade}`;
       document.getElementById('exportBadgeStandard').textContent = l.selected.code;
       document.getElementById('exportBadgeMeta').textContent = `${l.pathway} · ${l.classLength} min · ${l.courseLength === 'semester' ? 'Semester' : 'Yearlong'} · ${l.placement}`;
-
       document.getElementById('finalObjective').textContent = l.objective;
       document.getElementById('exportFocus').textContent = l.focus;
-      document.getElementById('finalScript').textContent = l.directScript.replace(/\n+/g, ' ');
+      document.getElementById('finalScript').textContent = l.directScript.replace(/
++/g, ' ');
       document.getElementById('finalActivity').textContent = `${l.activity} Steps: ${l.steps.join(' ')}`;
       document.getElementById('finalWorkspace').textContent = `${l.workspace} Blocks: ${l.workspaceBlocks.join(', ')}. Checkpoints: ${l.workspaceChecks.join(' ')}`;
-      document.getElementById('finalFormativeAssessment').textContent = l.formativeAssessment;
-      document.getElementById('finalSummativeAssessment').textContent = l.summativeAssessment;
+      document.getElementById('finalAssessment').textContent = l.assessment;
       document.getElementById('finalPacing').textContent = l.pacingMap;
       document.getElementById('finalSupport').textContent = l.support;
       document.getElementById('finalReview').textContent = l.review;
-
       document.getElementById('finalView').classList.remove('hidden');
       document.getElementById('agentStatus').textContent = 'Finalized';
       document.getElementById('agentNote').textContent = 'This lesson is finalized and now displayed in a one-page tabular layout for clear viewing and printing.';
@@ -1162,11 +999,55 @@
       setStep(4);
     }
 
+    function runSelfTests() {
+      console.assert(flatStandards().length >= 16, 'Expected at least 16 standards in starter progression-aware catalog.');
+      console.assert(flatStandards().some(s => s.code === 'MS-SAS-32'), 'Expected MS-SAS-32 in progression-aware catalog.');
+      console.assert(flatStandards().some(s => s.code === 'HS-CAS-47'), 'Expected HS-CAS-47 in progression-aware catalog.');
+      console.assert(typeof matchLessonToStandard === 'function', 'Match function missing.');
+      console.assert(typeof generateNextWeekPlan === 'function', 'Next week planner missing.');
+      console.assert(typeof explainMatch === 'function', 'Explanation layer missing.');
+    }
+
+    document.getElementById('standardsMode').addEventListener('change', (e) => {
+      appState.currentMode = e.target.value;
+      populateGradeBands();
+      document.getElementById('agentNote').textContent = appState.currentMode === 'foundational'
+        ? 'Foundational progression mode active. The tool is now prioritizing what students should know now and what comes next.'
+        : 'Specialty pathways mode active. Use this for advanced high school study after foundational CS.';
+    });
+    document.getElementById('gradeBand').addEventListener('change', () => {
+      populateSubconcepts();
+      populateStandards(document.getElementById('standardSearch').value);
+    });
+    document.getElementById('concept').addEventListener('change', () => {
+      populateSubconcepts();
+      populateStandards(document.getElementById('standardSearch').value);
+    });
+    document.getElementById('subconcept').addEventListener('change', () => populateStandards(document.getElementById('standardSearch').value));
+    document.getElementById('standard').addEventListener('change', updateVerticalMap);
+    document.getElementById('standardSearch').addEventListener('input', (e) => populateStandards(e.target.value));
+    document.getElementById('lessonUpload').addEventListener('change', async (e) => {
+      const files = Array.from(e.target.files || []);
+      if (!files.length) return;
+      document.getElementById('agentNote').textContent = `Importing ${files.length} lesson file${files.length === 1 ? '' : 's'} into the lesson bank...`;
+      for (const file of files) {
+        let text = '';
+        try {
+          text = await file.text();
+        } catch {
+          text = '';
+        }
+        const extracted = extractLessonData(text, file.name);
+        extracted.sourceType = file.name.split('.').pop()?.toUpperCase() || 'FILE';
+        lessonBank.push({ id: Date.now() + Math.random(), ...extracted });
+      }
+      renderLessonBank();
+      document.getElementById('agentNote').textContent = 'Lesson bank updated behind the scenes. These sample lessons will improve matching across the toolkit; teachers can continue planning without uploading files.';
+      document.getElementById('aiInsight').textContent = 'Lesson bank refreshed behind the scenes. The toolkit will now use these sample lessons to improve matching before generating new lessons.';
+    });
+
     function getExportFilename() {
-      const title = (appState.lesson?.topic || 'lesson-plan')
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-|-$/g, '');
+      const title = (appState.lesson?.topic || 'lesson-plan').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
       return title || 'lesson-plan';
     }
 
@@ -1177,7 +1058,6 @@
     function exportPDF() {
       const element = document.getElementById('exportLessonPlan');
       if (!element) return;
-
       const opt = {
         margin: 0.35,
         filename: `${getExportFilename()}.pdf`,
@@ -1186,28 +1066,22 @@
         jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape' },
         pagebreak: { mode: ['avoid-all', 'css'] }
       };
-
       html2pdf().set(opt).from(element).save();
     }
 
     async function exportDOCX() {
       if (!appState.lesson || !window.docx) return;
-
-      const {
-        Document, Packer, Paragraph, Table, TableRow, TableCell,
-        WidthType, HeadingLevel, TextRun, ShadingType
-      } = window.docx;
-
+      const { Document, Packer, Paragraph, Table, TableRow, TableCell, WidthType, HeadingLevel, TextRun, ShadingType } = window.docx;
       const l = appState.lesson;
 
       const rows = [
         ['Objective', l.objective],
         ['Lesson Focus', l.focus],
-        ['Direct Instruction', l.directScript.replace(/\n+/g, ' ')],
+        ['Direct Instruction', l.directScript.replace(/
++/g, ' ')],
         ['Student Activity', `${l.activity} Steps: ${l.steps.join(' ')}`],
         ['Student Workspace', `${l.workspace} Blocks: ${l.workspaceBlocks.join(', ')}. Checkpoints: ${l.workspaceChecks.join(' ')}`],
-        ['Formative Assessment', l.formativeAssessment],
-        ['Summative Assessment', l.summativeAssessment],
+        ['Assessment', l.assessment],
         ['Pacing', l.pacingMap],
         ['Supports', l.support],
         ['Agent Review', l.review]
@@ -1232,22 +1106,10 @@
 
       const doc = new Document({
         sections: [{
-          properties: {
-            page: {
-              size: { orientation: 'landscape' },
-              margin: { top: 720, right: 720, bottom: 720, left: 720 }
-            }
-          },
+          properties: { page: { size: { orientation: 'landscape' }, margin: { top: 720, right: 720, bottom: 720, left: 720 } } },
           children: [
             new Paragraph({ text: l.topic, heading: HeadingLevel.HEADING_1 }),
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: `${l.selected.code} | ${l.selected.concept} | ${l.pathway} | ${l.classLength} min | ${l.placement}`,
-                  italics: true
-                })
-              ]
-            }),
+            new Paragraph({ children: [new TextRun({ text: `${l.selected.code} | ${l.selected.concept} | ${l.pathway} | ${l.classLength} min | ${l.placement}`, italics: true })] }),
             table
           ]
         }]
@@ -1256,69 +1118,6 @@
       const blob = await Packer.toBlob(doc);
       saveAs(blob, `${getExportFilename()}.docx`);
     }
-
-    function runSelfTests() {
-      console.assert(flatStandards().length >= 16, 'Expected at least 16 standards in starter progression-aware catalog.');
-      console.assert(flatStandards().some(s => s.code === 'MS-SAS-32'), 'Expected MS-SAS-32 in progression-aware catalog.');
-      console.assert(flatStandards().some(s => s.code === 'HS-CAS-47'), 'Expected HS-CAS-47 in progression-aware catalog.');
-      console.assert(typeof matchLessonToStandard === 'function', 'Match function missing.');
-      console.assert(typeof generateNextWeekPlan === 'function', 'Next week planner missing.');
-      console.assert(typeof explainMatch === 'function', 'Explanation layer missing.');
-      console.assert(typeof inferStandardsFromLesson === 'function', 'Standard inference missing.');
-      console.assert(typeof detectGradeBand === 'function', 'Grade detection missing.');
-    }
-
-    document.getElementById('standardsMode').addEventListener('change', (e) => {
-      appState.currentMode = e.target.value;
-      populateGradeBands();
-      document.getElementById('agentNote').textContent = appState.currentMode === 'foundational'
-        ? 'Foundational progression mode active. The tool is now prioritizing what students should know now and what comes next.'
-        : 'Specialty pathways mode active. Use this for advanced high school study after foundational CS.';
-    });
-
-    document.getElementById('gradeBand').addEventListener('change', () => {
-      populateSubconcepts();
-      populateStandards(document.getElementById('standardSearch').value);
-    });
-
-    document.getElementById('concept').addEventListener('change', () => {
-      populateSubconcepts();
-      populateStandards(document.getElementById('standardSearch').value);
-    });
-
-    document.getElementById('subconcept').addEventListener('change', () => {
-      populateStandards(document.getElementById('standardSearch').value);
-    });
-
-    document.getElementById('standard').addEventListener('change', updateVerticalMap);
-    document.getElementById('standardSearch').addEventListener('input', (e) => populateStandards(e.target.value));
-
-    document.getElementById('lessonUpload').addEventListener('change', async (e) => {
-      const files = Array.from(e.target.files || []);
-      if (!files.length) return;
-
-      document.getElementById('agentNote').textContent =
-        `Importing ${files.length} lesson file${files.length === 1 ? '' : 's'} into the lesson bank...`;
-
-      for (const file of files) {
-        let text = '';
-        try {
-          text = await file.text();
-        } catch {
-          text = '';
-        }
-
-        const extracted = extractLessonData(text, file.name);
-        extracted.sourceType = file.name.split('.').pop()?.toUpperCase() || 'FILE';
-        lessonBank.push({ id: Date.now() + Math.random(), ...extracted });
-      }
-
-      renderLessonBank();
-      document.getElementById('agentNote').textContent =
-        'Lesson bank updated. Auto-tagging, auto-grade detection, auto-standard inference, and assessment extraction have been applied to imported lessons.';
-      document.getElementById('aiInsight').textContent =
-        'Lesson bank refreshed. Imported lessons were auto-tagged, assigned a grade band, mapped to likely standards, and given formative/summative assessment fields.';
-    });
 
     populateGradeBands();
     renderLessonBank();
